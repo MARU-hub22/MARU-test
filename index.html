@@ -257,7 +257,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 <div id="splash" onclick="this.style.display='none';scr('offerScreen')">
 <div style="position:relative;width:90%;text-align:center">
 <div class="spl-logo">MARU</div>
-<div class="spl-over">это...</div>
+
 </div>
 <div class="spl-foot">> следуй за мной...</div>
 </div>
@@ -996,10 +996,10 @@ console.log('Gender buttons initialized. Total buttons:', document.querySelector
 </button>
 <div class="payment-logo">MARU</div>
 
-<h2 class="payment-title">Полный доступ</h2>
+<h2 class="payment-title">Корпоративный доступ</h2>
 
 <p class="payment-subtitle">
-Получите развернутый системный, психологический разбор вашего мужчины в проекте MARU
+Комплексная диагностика личностных качеств сотрудников по методологии 16PF Кеттелла
 </p>
 
 <div class="region-switch">
@@ -1014,30 +1014,74 @@ console.log('Gender buttons initialized. Total buttons:', document.querySelector
 <div class="price-block" id="priceBlock">
 <div class="info-icon">i</div>
 <div class="price-label">Единоразовый платёж</div>
-<div class="old-price" id="oldPrice">6000₽ у психолога</div>
+<div class="old-price" id="oldPrice">6000₽ за внешний ассесмент</div>
 <div class="price-amount" id="priceAmount">999<span class="currency">₽</span></div>
 </div>
 
 <div class="benefits-block">
 <div class="benefit-item">
 <div class="benefit-icon"></div>
-<div class="benefit-text">Подробное описание личности</div>
+<div class="benefit-text"><strong>A — Теплота</strong><br>Коммуникабельность и открытость в команде</div>
 </div>
 <div class="benefit-item">
 <div class="benefit-icon"></div>
-<div class="benefit-text">Фрустрации и триггеры</div>
+<div class="benefit-text"><strong>B — Интеллект</strong><br>Аналитическое мышление, обучаемость</div>
 </div>
 <div class="benefit-item">
 <div class="benefit-icon"></div>
-<div class="benefit-text">Рекомендации СВРЭ</div>
+<div class="benefit-text"><strong>C — Эмоц. стабильность</strong><br>Устойчивость под давлением</div>
 </div>
 <div class="benefit-item">
 <div class="benefit-icon"></div>
-<div class="benefit-text">ДЭКА-профиль</div>
+<div class="benefit-text"><strong>E — Доминантность</strong><br>Лидерство, способность влиять</div>
 </div>
 <div class="benefit-item">
 <div class="benefit-icon"></div>
-<div class="benefit-text">Либидо и сексуальность</div>
+<div class="benefit-text"><strong>F — Жизнерадостность</strong><br>Энергичность, мотивация команды</div>
+</div>
+<div class="benefit-item">
+<div class="benefit-icon"></div>
+<div class="benefit-text"><strong>G — Нормативность</strong><br>Ответственность, следование стандартам</div>
+</div>
+<div class="benefit-item">
+<div class="benefit-icon"></div>
+<div class="benefit-text"><strong>H — Смелость</strong><br>Инициативность, готовность к риску</div>
+</div>
+<div class="benefit-item">
+<div class="benefit-icon"></div>
+<div class="benefit-text"><strong>I — Чувствительность</strong><br>Эмпатия, внимание к людям</div>
+</div>
+<div class="benefit-item">
+<div class="benefit-icon"></div>
+<div class="benefit-text"><strong>L — Бдительность</strong><br>Критическое мышление, осторожность</div>
+</div>
+<div class="benefit-item">
+<div class="benefit-icon"></div>
+<div class="benefit-text"><strong>M — Мечтательность</strong><br>Креативность, стратегическое видение</div>
+</div>
+<div class="benefit-item">
+<div class="benefit-icon"></div>
+<div class="benefit-text"><strong>N — Дипломатичность</strong><br>Тактичность, навыки переговоров</div>
+</div>
+<div class="benefit-item">
+<div class="benefit-icon"></div>
+<div class="benefit-text"><strong>O — Тревожность</strong><br>Самокритичность, внимание к деталям</div>
+</div>
+<div class="benefit-item">
+<div class="benefit-icon"></div>
+<div class="benefit-text"><strong>Q1 — Гибкость</strong><br>Адаптивность, открытость изменениям</div>
+</div>
+<div class="benefit-item">
+<div class="benefit-icon"></div>
+<div class="benefit-text"><strong>Q2 — Самодостаточность</strong><br>Автономность, самоуправление</div>
+</div>
+<div class="benefit-item">
+<div class="benefit-icon"></div>
+<div class="benefit-text"><strong>Q3 — Самоконтроль</strong><br>Дисциплина, организованность</div>
+</div>
+<div class="benefit-item">
+<div class="benefit-icon"></div>
+<div class="benefit-text"><strong>Q4 — Напряжённость</strong><br>Драйв, целеустремлённость</div>
 </div>
 </div>
 
@@ -1206,7 +1250,7 @@ console.log('Gender buttons initialized. Total buttons:', document.querySelector
 
 <script>
 // Обработчики для paymentScreen - выполняются ПОСЛЕ загрузки всех элементов
-if($('regionRU'))$('regionRU').onclick=function(){if(tg)tg.HapticFeedback.impactOccurred('light');$('regionRU').classList.add('active');$('regionBY').classList.remove('active');$('oldPrice').innerHTML='6000₽ у психолога';$('priceAmount').innerHTML='999<span class="currency">₽</span>'};
+if($('regionRU'))$('regionRU').onclick=function(){if(tg)tg.HapticFeedback.impactOccurred('light');$('regionRU').classList.add('active');$('regionBY').classList.remove('active');$('oldPrice').innerHTML='6000₽ за внешний ассесмент';$('priceAmount').innerHTML='999<span class="currency">₽</span>'};
 if($('regionBY'))$('regionBY').onclick=function(){if(tg)tg.HapticFeedback.impactOccurred('light');$('regionBY').classList.add('active');$('regionRU').classList.remove('active');$('oldPrice').innerHTML='250 byn у психолога';$('priceAmount').innerHTML='36<span class="currency">byn</span>'};
 if($('payBoostyBtn'))$('payBoostyBtn').onclick=()=>{if(tg)tg.HapticFeedback.notificationOccurred('success');alert('Переход на Boosty для оплаты...')};
 // Кастомный prompt с коралловым дизайном
