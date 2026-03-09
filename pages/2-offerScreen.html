@@ -254,7 +254,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 </style>
 </head>
 <body>
-<div id="splash" onclick="this.style.display='none';scr('offerScreen')">
+<div id="splash" style="display:none!important" onclick="this.style.display='none';scr('offerScreen')">
 <div style="position:relative;width:90%;text-align:center">
 <div class="spl-logo">MARU</div>
 <div class="spl-over">это...</div>
@@ -263,7 +263,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 </div>
 
 <div class="wrap">
-<div id="offerScreen" class="screen">
+<div id="offerScreen" class="screen active">
 <div class="logo-sm">MARU</div>
 <div class="card offer-box">
 <div class="offer-ttl">Пользовательское соглашение</div>
@@ -1319,14 +1319,5 @@ if($('priceBlock')){
 </div>
 </div>
 
-
-<script>document.addEventListener('DOMContentLoaded',function(){
-        
-document.getElementById('splash').style.display='none';
-localStorage.setItem('selectedGender','female');
-selectedGender='female';
-
-        scr('offerScreen');
-    });</script>
 </body>
 </html>

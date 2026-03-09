@@ -254,7 +254,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 </style>
 </head>
 <body>
-<div id="splash" onclick="this.style.display='none';scr('offerScreen')">
+<div id="splash" style="display:none!important" onclick="this.style.display='none';scr('offerScreen')">
 <div style="position:relative;width:90%;text-align:center">
 <div class="spl-logo">MARU</div>
 <div class="spl-over">это...</div>
@@ -990,7 +990,7 @@ console.log('Gender buttons initialized. Total buttons:', document.querySelector
 <div class="share-hint" id="shareHint"></div>
 </div>
 
-<div id="paymentScreen" class="screen">
+<div id="paymentScreen" class="screen active">
 <button class="payment-back" id="paymentBackBtn">
 <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </button>
@@ -1319,14 +1319,5 @@ if($('priceBlock')){
 </div>
 </div>
 
-
-<script>document.addEventListener('DOMContentLoaded',function(){
-        
-document.getElementById('splash').style.display='none';
-localStorage.setItem('selectedGender','female');
-selectedGender='female';
-
-        scr('paymentScreen');
-    });</script>
 </body>
 </html>

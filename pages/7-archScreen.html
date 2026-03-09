@@ -254,7 +254,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 </style>
 </head>
 <body>
-<div id="splash" onclick="this.style.display='none';scr('offerScreen')">
+<div id="splash" style="display:none!important" onclick="this.style.display='none';scr('offerScreen')">
 <div style="position:relative;width:90%;text-align:center">
 <div class="spl-logo">MARU</div>
 <div class="spl-over">это...</div>
@@ -933,7 +933,7 @@ document.querySelectorAll('.gender-btn').forEach(btn => {
 console.log('Gender buttons initialized. Total buttons:', document.querySelectorAll('.gender-btn').length);
 </script>
 
-<div id="archScreen">
+<div id="archScreen" style="display:block">
 <button class="arch-back" id="archBackBtn">
 <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
 </button>
@@ -1319,17 +1319,5 @@ if($('priceBlock')){
 </div>
 </div>
 
-
-<script>document.addEventListener('DOMContentLoaded',function(){
-        
-document.getElementById('splash').style.display='none';
-localStorage.setItem('selectedGender','female');
-selectedGender='female';
-
-        document.getElementById('archScreen').classList.add('active');
-        // Set sample archetype name
-        var archName = document.getElementById('archName');
-        if(archName) archName.textContent = 'Архетип';
-    });</script>
 </body>
 </html>

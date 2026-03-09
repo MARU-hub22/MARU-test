@@ -254,7 +254,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 </style>
 </head>
 <body>
-<div id="splash" onclick="this.style.display='none';scr('offerScreen')">
+<div id="splash" style="display:none!important" onclick="this.style.display='none';scr('offerScreen')">
 <div style="position:relative;width:90%;text-align:center">
 <div class="spl-logo">MARU</div>
 <div class="spl-over">это...</div>
@@ -415,7 +415,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 <button class="btn" id="acceptBtn" style="opacity:0.5;pointer-events:none">Принять и продолжить</button>
 </div>
 
-<div id="introScreen" class="screen">
+<div id="introScreen" class="screen active">
 <button class="intro-back" id="introBackBtn">
 <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
 </button>
@@ -428,7 +428,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 <p class="intro-greeting">Привет.</p>
 
 <!-- Женский вариант -->
-<div id="textFemale" style="display:none">
+<div id="textFemale" style="display:block">
 <p>Просыпаешься и снова оно — ощущение что живешь не своей жизнью. Играешь роль, а настоящая ты спряталась где-то глубоко.</p>
 
 <p>Почему он не слышит? Почему дети не слушаются? Читаешь книги, ходишь к психологам, проходишь тесты. Получаешь диагнозы: тревожная, созависимая, эмпат. Но ничего не меняется.</p>
@@ -438,10 +438,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 <p><span class="intro-highlight">MARU</span> — не психологический тест. Это система распознавания природы. Два года создавали философ Игорь Макаров и психолог Евгений Мельников. То, чего не было раньше.</p>
 
 <div class="intro-read-more-wrapper">
-<button class="intro-read-more-btn" id="introReadMoreBtn">читать дальше</button>
+<button class="intro-read-more-btn" id="introReadMoreBtn" style="display:none">читать дальше</button>
 </div>
 
-<div class="intro-more-text" id="introMoreText">
+<div class="intro-more-text expanded" id="introMoreText">
 
 <p>В основе — пять врожденных энергий. Родилась с конкретным набором сил. Они формируют всё: как любишь, как принимаешь решения, что триггерит, как воспитываешь детей, как зарабатываешь.</p>
 
@@ -1319,20 +1319,5 @@ if($('priceBlock')){
 </div>
 </div>
 
-
-<script>document.addEventListener('DOMContentLoaded',function(){
-        
-document.getElementById('splash').style.display='none';
-localStorage.setItem('selectedGender','female');
-selectedGender='female';
-
-        showIntroText();
-        scr('introScreen');
-        // Expand "read more" text
-        var moreText = document.getElementById('introMoreText');
-        if(moreText) moreText.classList.add('expanded');
-        var readBtn = document.getElementById('introReadMoreBtn');
-        if(readBtn) readBtn.style.display='none';
-    });</script>
 </body>
 </html>
