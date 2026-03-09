@@ -557,12 +557,22 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 <img class="res-photo" src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22 viewBox=%220 0 200 200%22%3E%3Crect width=%22200%22 height=%22200%22 fill=%22%23d0d0d0%22 rx=%2220%22/%3E%3Ccircle cx=%22100%22 cy=%2280%22 r=%2230%22 fill=%22%23b0b0b0%22/%3E%3Cellipse cx=%22100%22 cy=%22160%22 rx=%2250%22 ry=%2235%22 fill=%22%23b0b0b0%22/%3E%3C/svg%3E">
 <div class="res-head">
 <div class="res-lbl">Ваш архетип</div>
-<div class="res-name" id="resName"></div>
+<div class="res-name" id="resName">Герой</div>
 <div class="res-combo" id="resCombo"></div>
 </div>
-<div class="card"><div class="valid-badge" id="validBadge"></div></div>
-<div class="card"><div class="sec-ttl">Распределение энергий</div><div id="energyBars"></div></div>
-<div class="card"><div class="sec-ttl">Топ-3 энергии</div><div id="top3List"></div></div>
+<div class="card"><div class="valid-badge high" id="validBadge">✓ Высокая достоверность</div></div>
+<div class="card"><div class="sec-ttl">Распределение энергий</div><div id="energyBars">
+<div class="bar-row"><span class="bar-lbl">Ф</span><div class="bar-track"><div class="bar-fill" style="width:35.2%"></div></div><span class="bar-pct">35.2%</span></div>
+<div class="bar-row"><span class="bar-lbl">ЗН</span><div class="bar-track"><div class="bar-fill" style="width:24.1%"></div></div><span class="bar-pct">24.1%</span></div>
+<div class="bar-row"><span class="bar-lbl">СМ</span><div class="bar-track"><div class="bar-fill" style="width:18.5%"></div></div><span class="bar-pct">18.5%</span></div>
+<div class="bar-row"><span class="bar-lbl">ЗВ</span><div class="bar-track"><div class="bar-fill" style="width:12.8%"></div></div><span class="bar-pct">12.8%</span></div>
+<div class="bar-row"><span class="bar-lbl">Э</span><div class="bar-track"><div class="bar-fill" style="width:9.4%"></div></div><span class="bar-pct">9.4%</span></div>
+</div></div>
+<div class="card"><div class="sec-ttl">Топ-3 энергии</div><div id="top3List">
+<div class="top-row"><span class="top-name">1. Формулы</span><span class="top-lvl">Высокий</span></div>
+<div class="top-row"><span class="top-name">2. Знания</span><span class="top-lvl">Средний</span></div>
+<div class="top-row"><span class="top-name">3. Смысл</span><span class="top-lvl">Средний</span></div>
+</div></div>
 <div class="card" id="warningsCard" style="display:none">
 <div class="warn-box" id="validWarn" style="display:none"><div class="warn-txt" id="validWarnTxt"></div></div>
 <div class="warn-box" id="speedWarn" style="display:none"><div class="warn-txt">Тест пройден довольно быстро. Для большей точности рекомендуем повторить.</div></div>
