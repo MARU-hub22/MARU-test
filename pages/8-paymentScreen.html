@@ -1320,6 +1320,13 @@ if($('priceBlock')){
 </div>
 
 
-<script>document.addEventListener('DOMContentLoaded',function(){document.getElementById('splash').style.display='none';scr('paymentScreen');});</script>
+<script>document.addEventListener('DOMContentLoaded',function(){
+        
+document.getElementById('splash').style.display='none';
+localStorage.setItem('selectedGender','female');
+selectedGender='female';
+
+        scr('paymentScreen');
+    });</script>
 </body>
 </html>

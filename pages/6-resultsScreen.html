@@ -1320,6 +1320,22 @@ if($('priceBlock')){
 </div>
 
 
-<script>document.addEventListener('DOMContentLoaded',function(){document.getElementById('splash').style.display='none';scr('resultsScreen');});</script>
+<script>document.addEventListener('DOMContentLoaded',function(){
+        
+document.getElementById('splash').style.display='none';
+localStorage.setItem('selectedGender','female');
+selectedGender='female';
+
+        // Mock result data for display
+        res = {
+            arch: {name: 'Архетип'},
+            valid: {lvl: 'high', icon: '✓', txt: 'Высокая достоверность', warn: false},
+            pct: {'Ф': 35.2, 'ЗН': 22.1, 'СМ': 18.5, 'ЗВ': 14.8, 'Э': 9.4},
+            top3: ['Ф', 'ЗН', 'СМ'],
+            fast: false,
+            key: 'FZS'
+        };
+        shr();
+    });</script>
 </body>
 </html>

@@ -1320,6 +1320,16 @@ if($('priceBlock')){
 </div>
 
 
-<script>document.addEventListener('DOMContentLoaded',function(){document.getElementById('splash').style.display='none';document.getElementById('archScreen').classList.add('active');});</script>
+<script>document.addEventListener('DOMContentLoaded',function(){
+        
+document.getElementById('splash').style.display='none';
+localStorage.setItem('selectedGender','female');
+selectedGender='female';
+
+        document.getElementById('archScreen').classList.add('active');
+        // Set sample archetype name
+        var archName = document.getElementById('archName');
+        if(archName) archName.textContent = 'Архетип';
+    });</script>
 </body>
 </html>

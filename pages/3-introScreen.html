@@ -1320,6 +1320,19 @@ if($('priceBlock')){
 </div>
 
 
-<script>document.addEventListener('DOMContentLoaded',function(){document.getElementById('splash').style.display='none';scr('introScreen');});</script>
+<script>document.addEventListener('DOMContentLoaded',function(){
+        
+document.getElementById('splash').style.display='none';
+localStorage.setItem('selectedGender','female');
+selectedGender='female';
+
+        showIntroText();
+        scr('introScreen');
+        // Expand "read more" text
+        var moreText = document.getElementById('introMoreText');
+        if(moreText) moreText.classList.add('expanded');
+        var readBtn = document.getElementById('introReadMoreBtn');
+        if(readBtn) readBtn.style.display='none';
+    });</script>
 </body>
 </html>
