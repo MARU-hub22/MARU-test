@@ -84,17 +84,19 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 .btn-back.hide{visibility:hidden}
 .q-txt{font-size:18px;font-weight:600;line-height:1.5;padding:0 4px;margin-bottom:20px;color:var(--t1)}
 .ans-list{display:flex;flex-direction:column;gap:10px;padding-bottom:24px;flex:1}
-.ans{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border-radius:16px;background:var(--bg);cursor:pointer;box-shadow:inset 3px 3px 6px var(--sd),inset -4px -4px 8px var(--sl);transition:all .15s,opacity .3s ease,transform .3s ease;border:1.5px solid transparent}
-.ans:hover{transform:translateY(0);box-shadow:inset 4px 4px 8px var(--sd),inset -5px -5px 10px var(--sl)}
-.ans:active{box-shadow:inset 5px 5px 10px var(--sd),inset -6px -6px 12px var(--sl)}
-.ans.sel{box-shadow:inset 3px 3px 6px var(--sd),inset -3px -3px 6px var(--sl);border-color:var(--acc)}
-.ans-rad{width:20px;height:20px;min-width:20px;border-radius:50%;border:2px solid var(--sd);background:var(--bg);display:flex;align-items:center;justify-content:center;margin-top:2px;transition:all .2s}
-.ans.sel .ans-rad{background:var(--acc);border-color:var(--acc);box-shadow:0 0 8px rgba(232,112,90,0.3)}
+.ans{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border-radius:16px;background:var(--bg);cursor:pointer;box-shadow:inset 5px 5px 10px var(--sd),inset -6px -6px 12px var(--sl);transition:all .2s,opacity .3s ease,transform .3s ease;border:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.ans:active{box-shadow:inset 7px 7px 14px var(--sd),inset -8px -8px 16px var(--sl)}
+.ans.sel{box-shadow:inset 6px 6px 12px var(--sd),inset -7px -7px 14px var(--sl);position:relative}
+.ans.sel::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;border-radius:16px;border:2px solid var(--acc);pointer-events:none}
+.ans-rad{width:20px;height:20px;min-width:20px;border-radius:50%;border:none;background:var(--bg);box-shadow:inset 2px 2px 4px var(--sd),inset -2px -2px 4px var(--sl);display:flex;align-items:center;justify-content:center;margin-top:2px;transition:all .2s}
+.ans.sel .ans-rad{background:var(--acc);box-shadow:2px 2px 4px var(--sd),-2px -2px 4px var(--sl)}
 .ans.sel .ans-rad::after{content:'';width:6px;height:6px;background:#fff;border-radius:50%}
 .ans-txt{font-size:14px;line-height:1.55;color:var(--t2)}
-.ans.sel .ans-txt{color:var(--t1)}
-.ans.fade-out{opacity:0.12;transform:scale(0.96);pointer-events:none}
+.ans.sel .ans-txt{color:var(--t1);font-weight:500}
+.ans.fade-out{opacity:0.1;transform:scale(0.95);pointer-events:none}
 .ans.sel.fade-out{opacity:1;transform:scale(1)}
+.ans-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.08);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:50;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.ans-overlay.active{opacity:1}
 .q-txt.fade-in{animation:qFadeIn .35s ease forwards}
 .ans.slide-in{animation:ansFadeIn .3s ease forwards;opacity:0}
 @keyframes qFadeIn{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:translateY(0)}}
@@ -561,6 +563,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 </div>
 
 <div id="questionScreen" class="screen active">
+<div class="ans-overlay" id="ansOverlay"></div>
 <div class="q-head">
 <div class="q-prog">
 <div class="progress-ring">
