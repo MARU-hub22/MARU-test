@@ -83,14 +83,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 .btn-back svg{width:16px;height:16px;stroke:var(--t2);stroke-width:2;fill:none}
 .btn-back.hide{visibility:hidden}
 .q-txt{font-size:18px;font-weight:600;line-height:1.5;padding:0 4px;margin-bottom:20px;color:var(--t1)}
-.ans-list{display:flex;flex-direction:column;gap:10px;padding-bottom:24px;flex:1}
-.ans{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border-radius:16px;background:var(--bg);cursor:pointer;box-shadow:inset 2px 2px 5px var(--sd),inset -2px -2px 5px var(--sl);transition:all .15s,opacity .3s ease,transform .3s ease;border:1px solid rgba(0,0,0,0.04);-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.ans-list{display:flex;flex-direction:column;gap:8px;padding-bottom:24px;flex:1}
+.ans{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;background:var(--bg);cursor:pointer;box-shadow:inset 2px 2px 5px var(--sd),inset -2px -2px 5px var(--sl);transition:all .15s,opacity .3s ease,transform .3s ease;border:1px solid rgba(0,0,0,0.04);-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .ans:active{box-shadow:inset 3px 3px 6px var(--sd),inset -3px -3px 6px var(--sl)}
 .ans.sel{box-shadow:inset 2px 2px 5px var(--sd),inset -2px -2px 5px var(--sl);border-color:var(--acc)}
-.ans-rad{width:20px;height:20px;min-width:20px;border-radius:50%;border:1.5px solid var(--sd);background:var(--bg);display:flex;align-items:center;justify-content:center;margin-top:2px;transition:all .2s}
+.ans-rad{width:18px;height:18px;min-width:18px;border-radius:50%;border:1.5px solid var(--sd);background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
 .ans.sel .ans-rad{background:var(--acc);border-color:var(--acc);box-shadow:0 0 6px rgba(232,112,90,0.25)}
 .ans.sel .ans-rad::after{content:'';width:6px;height:6px;background:#fff;border-radius:50%}
-.ans-txt{font-size:14px;line-height:1.55;color:var(--t2)}
+.ans-txt{font-size:14px;line-height:1.5;color:var(--t2)}
 .ans.sel .ans-txt{color:var(--t1)}
 .ans.fade-out{opacity:0.12;transform:scale(0.96);pointer-events:none}
 .ans.sel.fade-out{opacity:1;transform:scale(1)}
