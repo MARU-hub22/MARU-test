@@ -68,31 +68,43 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 .chk-row.checked .chk-box svg{opacity:1}
 .chk-lbl{font-size:13px;line-height:1.4;color:var(--t2);flex:1}
 .chk-row.checked .chk-lbl{color:var(--t1)}
-#questionScreen.active{display:flex;flex-direction:column;justify-content:center;min-height:calc(100vh - 32px)}
-.q-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+#questionScreen.active{display:flex;flex-direction:column;min-height:100vh;padding:16px;padding-top:calc(16px + env(safe-area-inset-top));padding-bottom:calc(32px + env(safe-area-inset-bottom))}
+.q-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
 .q-prog{display:flex;align-items:center;gap:12px}
-.progress-ring{width:50px;height:50px;position:relative;border-radius:50%;background:var(--bg);box-shadow:4px 4px 8px var(--sd),-5px -5px 10px var(--sl);display:flex;align-items:center;justify-content:center}
-.progress-ring svg{transform:rotate(-90deg);width:42px;height:42px}
-.progress-ring-bg{fill:none;stroke:var(--sd);stroke-width:2}
-.progress-ring-fill{fill:none;stroke:var(--acc);stroke-width:2;stroke-linecap:round;transition:stroke-dashoffset .3s}
-.progress-text{position:absolute;font-size:10px;font-weight:700;color:var(--acc)}
-.q-cnt{font-size:12px;color:var(--t3)}
-.btn-back{width:44px;height:44px;border-radius:12px;border:none;background:var(--bg);box-shadow:5px 5px 10px var(--sd),-6px -6px 12px var(--sl);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-.btn-back:hover{transform:translateY(-2px);box-shadow:6px 6px 12px var(--sd),-4px -4px 8px var(--sl)}
-.btn-back:active{box-shadow:inset 4px 4px 8px var(--sd)}
-.btn-back svg{width:14px;height:14px;stroke:var(--t2);stroke-width:2;fill:none}
+.progress-ring{width:44px;height:44px;position:relative;border-radius:50%;background:var(--bg);box-shadow:3px 3px 6px var(--sd),-3px -3px 6px var(--sl);display:flex;align-items:center;justify-content:center}
+.progress-ring svg{transform:rotate(-90deg);width:36px;height:36px}
+.progress-ring-bg{fill:none;stroke:var(--sd);stroke-width:2.5}
+.progress-ring-fill{fill:none;stroke:var(--acc);stroke-width:2.5;stroke-linecap:round;transition:stroke-dashoffset .3s}
+.progress-text{position:absolute;font-size:9px;font-weight:700;color:var(--acc)}
+.q-cnt{font-size:13px;color:var(--t3);font-weight:500}
+.btn-back{width:40px;height:40px;border-radius:50%;border:none;background:var(--bg);box-shadow:3px 3px 6px var(--sd),-3px -3px 6px var(--sl);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.btn-back:hover{transform:translateY(-1px);box-shadow:4px 4px 8px var(--sd),-4px -4px 8px var(--sl)}
+.btn-back:active{box-shadow:inset 3px 3px 6px var(--sd),inset -3px -3px 6px var(--sl)}
+.btn-back svg{width:16px;height:16px;stroke:var(--t2);stroke-width:2;fill:none}
 .btn-back.hide{visibility:hidden}
-.q-txt{font-size:17px;font-weight:600;line-height:1.5;background:var(--bg);border-radius:20px;box-shadow:8px 8px 16px var(--sd),-10px -10px 18px var(--sl);padding:20px;margin-bottom:16px}
-.ans-list{display:flex;flex-direction:column;gap:10px;padding-bottom:24px}
-.ans{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:14px;background:var(--bg);cursor:pointer;box-shadow:5px 5px 10px var(--sd),-7px -7px 14px var(--sl);transition:all .15s}
-.ans:hover{transform:translateY(-1px);box-shadow:6px 6px 12px var(--sd),-5px -5px 10px var(--sl)}
-.ans:active{box-shadow:inset 3px 3px 6px var(--sd)}
-.ans.sel{box-shadow:inset 4px 4px 8px var(--sd)}
-.ans-rad{width:20px;height:20px;min-width:20px;border-radius:50%;box-shadow:inset 2px 2px 4px var(--sd),inset -3px -3px 6px var(--sl);display:flex;align-items:center;justify-content:center;margin-top:2px}
-.ans.sel .ans-rad{background:var(--acc);box-shadow:2px 2px 4px var(--sd),-3px -3px 5px var(--sl)}
+.q-txt{font-size:18px;font-weight:600;line-height:1.5;padding:0 4px;margin-bottom:20px;color:var(--t1)}
+.ans-list{display:flex;flex-direction:column;gap:10px;padding-bottom:24px;flex:1}
+.ans{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border-radius:16px;background:var(--bg);cursor:pointer;box-shadow:4px 4px 8px var(--sd),-4px -4px 8px var(--sl);transition:all .15s;border:1.5px solid transparent}
+.ans:hover{transform:translateY(-1px);box-shadow:5px 5px 10px var(--sd),-5px -5px 10px var(--sl)}
+.ans:active{box-shadow:inset 3px 3px 6px var(--sd),inset -3px -3px 6px var(--sl)}
+.ans.sel{box-shadow:inset 3px 3px 6px var(--sd),inset -3px -3px 6px var(--sl);border-color:var(--acc)}
+.ans-rad{width:20px;height:20px;min-width:20px;border-radius:50%;border:2px solid var(--sd);background:var(--bg);display:flex;align-items:center;justify-content:center;margin-top:2px;transition:all .2s}
+.ans.sel .ans-rad{background:var(--acc);border-color:var(--acc);box-shadow:0 0 8px rgba(232,112,90,0.3)}
 .ans.sel .ans-rad::after{content:'';width:6px;height:6px;background:#fff;border-radius:50%}
-.ans-txt{font-size:13px;line-height:1.5;color:var(--t2)}
+.ans-txt{font-size:14px;line-height:1.55;color:var(--t2)}
 .ans.sel .ans-txt{color:var(--t1)}
+.continue-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;z-index:600;align-items:center;justify-content:center}
+.continue-overlay.active{display:flex}
+.continue-box{background:var(--bg);border-radius:20px;padding:32px 24px;width:88%;max-width:320px;box-shadow:8px 8px 16px var(--sd),-8px -8px 16px var(--sl);text-align:center}
+.continue-icon{width:48px;height:48px;margin:0 auto 16px;border-radius:50%;background:var(--bg);box-shadow:inset 3px 3px 6px var(--sd),inset -3px -3px 6px var(--sl);display:flex;align-items:center;justify-content:center}
+.continue-icon svg{width:22px;height:22px;stroke:var(--acc);stroke-width:1.5;fill:none}
+.continue-title{font-size:17px;font-weight:600;color:var(--t1);margin-bottom:8px}
+.continue-subtitle{font-size:13px;color:var(--t3);line-height:1.5;margin-bottom:24px}
+.continue-btn{width:100%;padding:14px;border:none;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px;font-family:'Inter',sans-serif;transition:all .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.continue-btn-primary{background:var(--bg);color:var(--acc);box-shadow:4px 4px 8px var(--sd),-4px -4px 8px var(--sl);letter-spacing:1px;text-transform:uppercase;font-size:12px}
+.continue-btn-primary:active{box-shadow:inset 3px 3px 6px var(--sd),inset -3px -3px 6px var(--sl)}
+.continue-btn-secondary{background:var(--bg);color:var(--t3);box-shadow:3px 3px 6px var(--sd),-3px -3px 6px var(--sl);letter-spacing:1px;text-transform:uppercase;font-size:12px}
+.continue-btn-secondary:active{box-shadow:inset 3px 3px 6px var(--sd),inset -3px -3px 6px var(--sl)}
 .res-photo{width:120px;height:120px;border-radius:50%;object-fit:cover;filter:grayscale(1);box-shadow:5px 5px 10px var(--sd),-6px -6px 12px var(--sl);display:block;margin:20px auto 16px}
 .res-head{text-align:center;margin-bottom:16px}
 .res-lbl{font-size:10px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;margin-top:0}
@@ -541,7 +553,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 <div class="q-head">
 <div class="q-prog">
 <div class="progress-ring">
-<svg viewBox="0 0 42 42"><circle class="progress-ring-bg" cx="21" cy="21" r="18.5"/><circle class="progress-ring-fill" cx="21" cy="21" r="18.5"/></svg>
+<svg viewBox="0 0 36 36"><circle class="progress-ring-bg" cx="18" cy="18" r="15.5"/><circle class="progress-ring-fill" cx="18" cy="18" r="15.5"/></svg>
 <div class="progress-text">1%</div>
 </div>
 <div class="q-cnt"><span id="qNum">1</span> из 96</div>
@@ -555,6 +567,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 <div class="ans"><div class="ans-rad"></div><div class="ans-txt">Отстранённо. Меня не особо волнуют внешние обстоятельства — я чаще погружён в свои мысли.</div></div>
 <div class="ans"><div class="ans-rad"></div><div class="ans-txt">С энтузиазмом! Это повод обсудить новую ситуацию и проговорить варианты.</div></div>
 <div class="ans"><div class="ans-rad"></div><div class="ans-txt">Могу ощутить тревожность за то, как это повлияет на людей вокруг и на атмосферу.</div></div>
+</div>
+</div>
+
+<div id="continueOverlay" class="continue-overlay">
+<div class="continue-box">
+<div class="continue-icon">
+<svg viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+</div>
+<div class="continue-title">Продолжить тест?</div>
+<div class="continue-subtitle" id="continueSubtitle">Вы прошли 0 из 96 вопросов.<br>Прогресс сохранён.</div>
+<button class="continue-btn continue-btn-primary" id="continueBtn">Продолжить</button>
+<button class="continue-btn continue-btn-secondary" id="restartBtn">Начать заново</button>
 </div>
 </div>
 
@@ -598,15 +622,15 @@ var cq=0,ans={},msg={},res=null,st=Date.now();
 function $(i){return document.getElementById(i)}
 function sh(a){var c=a.slice();for(var i=c.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));[c[i],c[j]]=[c[j],c[i]]}return c}
 function scr(i){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(i).classList.add('active')}
-function upd(n){var p=Math.round((n/96)*100),c=document.querySelector('.progress-ring-fill'),cm=2*Math.PI*18.5;c.style.strokeDasharray=cm;c.style.strokeDashoffset=cm-(p/100)*cm;document.querySelector('.progress-text').textContent=p+'%'}
+function upd(n){var p=Math.round((n/96)*100),c=document.querySelector('.progress-ring-fill'),cm=2*Math.PI*15.5;c.style.strokeDasharray=cm;c.style.strokeDashoffset=cm-(p/100)*cm;document.querySelector('.progress-text').textContent=p+'%'}
 function ren(){var q=Q[cq],n=q.id;upd(n);$('qNum').textContent=n;var mil={11:0,22:1,33:2,48:3,55:4,66:5,77:6,88:7,95:8};if(mil[n]&&!msg[n]){msg[n]=1;var t=document.createElement('div');t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--bg);padding:12px 18px;border-radius:14px;box-shadow:6px 6px 12px var(--sd),-4px -4px 8px var(--sl);font-size:11px;color:var(--t2);z-index:200;max-width:90%;text-align:center';t.textContent=MS[mil[n]];document.body.appendChild(t);setTimeout(()=>t.remove(),3500)}$('qText').textContent=q.text;$('backBtn').classList.toggle('hide',cq===0);var l=$('ansList');l.innerHTML='';sh(Object.keys(q.answers)).forEach(e=>{var d=document.createElement('div');d.className='ans'+(ans[n]===e?' sel':'');d.setAttribute('data-e',e);d.innerHTML='<div class="ans-rad"></div><div class="ans-txt">'+q.answers[e]+'</div>';d.onclick=()=>sel(e);l.appendChild(d)});window.scrollTo(0,0)}
-function sel(e){if(tg)tg.HapticFeedback.impactOccurred('light');ans[Q[cq].id]=e;document.querySelectorAll('.ans').forEach(a=>{a.classList.toggle('sel',a.getAttribute('data-e')===e)});setTimeout(()=>{cq<95?ren(++cq):cal()},200)}
-$('backBtn').onclick=()=>cq>0&&ren(--cq);
-function cal(){var sc={'Ф':0,'ЗН':0,'СМ':0,'ЗВ':0,'Э':0};for(var i=1;i<=96;i++){var a=ans[i];if(a&&sc[a]!=null)sc[a]++}var pc={};for(var e in sc)pc[e]=(sc[e]/96)*100;var ar=[];for(var e in pc)ar.push([e,pc[e]]);ar.sort((a,b)=>b[1]!==a[1]?b[1]-a[1]:PR.indexOf(a[0])-PR.indexOf(b[0]));var t3=[ar[0][0],ar[1][0],ar[2][0]],k=t3.join('-'),ac=A[k]||{name:'Уникальный'},mm=PA.reduce((c,p)=>c+(ans[p[0]]!==ans[p[1]]?1:0),0),v=mm<=2?{lvl:'high',txt:'Высокая достоверность',icon:'✓',warn:0}:mm<=4?{lvl:'med',txt:'Средняя достоверность',icon:'!',warn:1}:{lvl:'low',txt:'Низкая достоверность',icon:'!!',warn:1};res={scores:sc,pct:pc,arr:ar,top3:t3,arch:ac,key:k,valid:v,fast:(Date.now()-st)/1000<MT};shr()}
+function sel(e){if(tg)tg.HapticFeedback.impactOccurred('light');ans[Q[cq].id]=e;document.querySelectorAll('.ans').forEach(a=>{a.classList.toggle('sel',a.getAttribute('data-e')===e)});try{localStorage.setItem('maru_answers',JSON.stringify(ans));localStorage.setItem('maru_cq',String(cq))}catch(ex){}setTimeout(()=>{cq<95?ren(++cq):cal()},200)}
+$('backBtn').onclick=()=>{if(cq>0){cq--;try{localStorage.setItem('maru_cq',String(cq))}catch(ex){}ren()}};
+function cal(){try{localStorage.removeItem('maru_answers');localStorage.removeItem('maru_cq')}catch(ex){}var sc={'Ф':0,'ЗН':0,'СМ':0,'ЗВ':0,'Э':0};for(var i=1;i<=96;i++){var a=ans[i];if(a&&sc[a]!=null)sc[a]++}var pc={};for(var e in sc)pc[e]=(sc[e]/96)*100;var ar=[];for(var e in pc)ar.push([e,pc[e]]);ar.sort((a,b)=>b[1]!==a[1]?b[1]-a[1]:PR.indexOf(a[0])-PR.indexOf(b[0]));var t3=[ar[0][0],ar[1][0],ar[2][0]],k=t3.join('-'),ac=A[k]||{name:'Уникальный'},mm=PA.reduce((c,p)=>c+(ans[p[0]]!==ans[p[1]]?1:0),0),v=mm<=2?{lvl:'high',txt:'Высокая достоверность',icon:'✓',warn:0}:mm<=4?{lvl:'med',txt:'Средняя достоверность',icon:'!',warn:1}:{lvl:'low',txt:'Низкая достоверность',icon:'!!',warn:1};res={scores:sc,pct:pc,arr:ar,top3:t3,arch:ac,key:k,valid:v,fast:(Date.now()-st)/1000<MT};shr()}
 function glv(p){return p>=28?'Доминантная':p>=22?'Выраженная':p>=16?'Умеренная':'Слабая'}
 function shr(){$('resName').textContent=res.arch.name;var b=$('validBadge');b.className='valid-badge '+res.valid.lvl;b.textContent=res.valid.icon+' '+res.valid.txt;var br=$('energyBars');br.innerHTML='';['Ф','ЗН','СМ','ЗВ','Э'].forEach(e=>{var p=res.pct[e];br.innerHTML+='<div class="bar-row"><span class="bar-lbl">'+e+'</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-pct">'+p.toFixed(1)+'%</span></div>'});setTimeout(()=>document.querySelectorAll('.bar-fill').forEach((f,i)=>f.style.width=res.pct[['Ф','ЗН','СМ','ЗВ','Э'][i]].toFixed(1)+'%'),100);var t=$('top3List');t.innerHTML='';res.top3.forEach((e,i)=>t.innerHTML+='<div class="top-row"><span class="top-name">'+(i+1)+'. '+EN[e]+'</span><span class="top-lvl">'+glv(res.pct[e])+'</span></div>');var sw=0;if(res.valid.warn){$('validWarn').style.display='block';$('validWarnTxt').textContent=res.valid.lvl==='med'?'Обнаружены некоторые противоречия в ответах.':'Обнаружены значительные противоречия. Рекомендуем повторить';sw=1}else $('validWarn').style.display='none';if(res.fast){$('speedWarn').style.display='block';sw=1}else $('speedWarn').style.display='none';$('warningsCard').style.display=sw?'block':'none';scr('resultsScreen')}
 if($('shareBtn'))$('shareBtn').onclick=function(){if(!res)return;if(typeof tg!=='undefined'&&tg.HapticFeedback)tg.HapticFeedback.notificationOccurred('success');const text='Я прошёл проект MARU и узнал свой архетип! Пройди и ты, чтобы узнать больше о себе';const url=window.location.href.split('?')[0];const fullText=text+'\n\n'+url;const copyText=()=>{const ta=document.createElement('textarea');ta.value=fullText;ta.style.position='fixed';ta.style.left='-999999px';ta.style.top='-999999px';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');ta.remove();const hint=$('shareHint');if(hint){hint.style.display='block';hint.textContent='✓ Текст скопирован! Отправьте его партнеру в Telegram';setTimeout(()=>{hint.style.display='none'},3000)}return true}catch(err){ta.remove();return false}};if(!copyText()){alert('Скопируйте текст:\n\n'+fullText)}};$('restartBtn').onclick=()=>{if(tg)tg.HapticFeedback.impactOccurred('medium');cq=ans=msg=res=0;ans={};msg={};st=Date.now();$('agreeChk').classList.remove('checked');$('acceptBtn').style.opacity='0.5';$('acceptBtn').style.pointerEvents='none';selectedGender=null;isAgreed=false;document.querySelectorAll('.gender-btn').forEach(b=>b.classList.remove('selected'));document.documentElement.style.setProperty('--bg','#e8e8e8');document.documentElement.style.setProperty('--sd','#b8b8b8');document.documentElement.style.setProperty('--sl','#ffffff');if(tg){tg.setHeaderColor('#e8e8e8');tg.setBackgroundColor('#e8e8e8')}scr('offerScreen')};
-$('startBtn').onclick=()=>{if(tg)tg.HapticFeedback.impactOccurred('medium');st=Date.now();scr('questionScreen');ren()};
+$('startBtn').onclick=()=>{if(tg)tg.HapticFeedback.impactOccurred('medium');st=Date.now();var savedAns=null,savedCq=0;try{savedAns=JSON.parse(localStorage.getItem('maru_answers'));savedCq=parseInt(localStorage.getItem('maru_cq'))||0}catch(ex){}if(savedAns&&savedCq>0){var answered=Object.keys(savedAns).length;$('continueSubtitle').innerHTML='Вы прошли '+answered+' из 96 вопросов.<br>Прогресс сохранён.';scr('questionScreen');$('continueOverlay').classList.add('active');$('continueBtn').onclick=()=>{ans=savedAns;cq=savedCq;$('continueOverlay').classList.remove('active');ren()};$('restartBtn').onclick=()=>{try{localStorage.removeItem('maru_answers');localStorage.removeItem('maru_cq')}catch(ex){}ans={};cq=0;$('continueOverlay').classList.remove('active');ren()}}else{scr('questionScreen');ren()}};
 let selectedGender = null;
 let isAgreed = false;
 let modalTimer = null;
