@@ -45,14 +45,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 .btn-sec:hover{box-shadow:3px 3px 5px var(--sd),-3px -3px 5px var(--sl)}
 .btn-sec:active{box-shadow:inset 1px 1px 2px var(--sd),inset -1px -1px 2px var(--sl)}
 #offerScreen.active{display:flex;flex-direction:column;min-height:100vh;padding:calc(8px + env(safe-area-inset-top)) 16px calc(32px + env(safe-area-inset-bottom));overflow-y:auto;max-width:420px;margin:0 auto}
-#privacyScreen{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);padding:calc(48px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));overflow-y:auto;z-index:300;max-width:420px;margin:0 auto}
+#privacyScreen{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);padding:calc(48px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));overflow-y:auto;z-index:300;max-width:420px;margin:0 auto;scrollbar-width:none;-ms-overflow-style:none}
+#privacyScreen::-webkit-scrollbar{display:none}
 #privacyScreen.active{display:block}
 .privacy-back{position:fixed;top:calc(16px + env(safe-area-inset-top));right:16px;width:44px;height:44px;border-radius:12px;border:none;background:var(--bg);box-shadow:inset 1px 1px 2px var(--sd),inset -1px -1px 2px var(--sl);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:301;transition:all .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 @media (hover: hover){.privacy-back:hover{transform:translateY(-2px);box-shadow:2px 2px 4px var(--sd),-2px -2px 4px var(--sl)}}
 .privacy-back:active{box-shadow:inset 1px 1px 2px var(--sd),inset -1px -1px 2px var(--sl);transform:scale(.98)}
 .privacy-back svg{width:18px;height:18px;stroke:var(--t3);stroke-width:2;fill:none}
 .privacy-link{color:var(--acc);text-decoration:underline;cursor:pointer;font-weight:500}
-.offer-box{background:var(--bg);border-radius:20px;box-shadow:inset 1px 1px 2px var(--sd),inset -1px -1px 2px var(--sl);padding:20px;margin-bottom:16px;max-height:50vh;overflow-y:scroll;overflow-x:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+.offer-box{background:var(--bg);border-radius:20px;box-shadow:inset 1px 1px 2px var(--sd),inset -1px -1px 2px var(--sl);padding:20px;margin-bottom:16px;overflow:visible;-webkit-overflow-scrolling:touch}
 .offer-box::-webkit-scrollbar{width:6px}
 .offer-box::-webkit-scrollbar-track{background:transparent}
 .offer-box::-webkit-scrollbar-thumb{background:var(--sd);border-radius:3px}
@@ -559,7 +560,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 <div class="res-name" id="resName"></div>
 <div class="res-combo" id="resCombo"></div>
 </div>
-<div class="valid-badge" id="validBadge"></div></div>
+<div class="valid-badge" id="validBadge"></div>
 <div class="card"><div class="sec-ttl">Распределение энергий</div><div id="energyBars"></div></div>
 <div class="card"><div class="sec-ttl">Топ-3 энергии</div><div id="top3List"></div></div>
 <div class="card" id="warningsCard" style="display:none">
