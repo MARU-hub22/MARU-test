@@ -45,9 +45,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 .btn-sec:hover{box-shadow:3px 3px 5px var(--sd),-3px -3px 5px var(--sl)}
 .btn-sec:active{box-shadow:inset 1px 1px 2px var(--sd),inset -1px -1px 2px var(--sl)}
 #offerScreen.active{display:flex;flex-direction:column;min-height:100vh;padding:calc(8px + env(safe-area-inset-top)) 16px calc(32px + env(safe-area-inset-bottom));overflow-y:auto;max-width:420px;margin:0 auto}
-#privacyScreen{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);padding:calc(48px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));overflow-y:auto;z-index:300;max-width:420px;margin:0 auto;scrollbar-width:none;-ms-overflow-style:none}
+#privacyScreen{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);padding:calc(48px + env(safe-area-inset-top)) 16px 0;z-index:300;max-width:420px;margin:0 auto;scrollbar-width:none;-ms-overflow-style:none;flex-direction:column;overflow:hidden}
 #privacyScreen::-webkit-scrollbar{display:none}
-#privacyScreen.active{display:block}
+#privacyScreen.active{display:flex}
+.privacy-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:8px}
+.privacy-scroll::-webkit-scrollbar{display:none}
+.privacy-footer{padding:12px 0 calc(16px + env(safe-area-inset-bottom));flex-shrink:0}
 .privacy-back{position:fixed;top:calc(16px + env(safe-area-inset-top));right:16px;width:44px;height:44px;border-radius:12px;border:none;background:var(--bg);box-shadow:3px 3px 6px var(--sd),-3px -3px 6px var(--sl);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:301;transition:all .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 @media (hover: hover){.privacy-back:hover{transform:translateY(-2px);box-shadow:2px 2px 4px var(--sd),-2px -2px 4px var(--sl)}}
 .privacy-back:active{box-shadow:inset 1px 1px 2px var(--sd),inset -1px -1px 2px var(--sl);transform:scale(.98)}
@@ -1065,6 +1068,7 @@ console.log('Gender buttons initialized. Total buttons:', document.querySelector
 <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 </button>
 
+<div class="privacy-scroll">
 <div class="card offer-box">
 <div class="offer-ttl">Политика конфиденциальности</div>
 
@@ -1201,6 +1205,10 @@ console.log('Gender buttons initialized. Total buttons:', document.querySelector
 <div class="offer-txt">18.2. Если отдельные положения Политики признаны недействительными, это не влечет недействительности остальных положений.</div>
 <div class="offer-txt">18.3. Оператор обязуется соблюдать конфиденциальность информации и принимать все необходимые меры для ее защиты.</div>
 <div class="offer-txt">18.4. Учитывая архитектуру Сервиса (локальная обработка без передачи данных), риски нарушения конфиденциальности минимизированы.</div>
+</div>
+</div>
+<div class="privacy-footer">
+<button class="btn" onclick="$('privacyScreen').classList.remove('active');$('privacyScreen').style.display='none'">Принять и продолжить</button>
 </div>
 </div>
 
