@@ -9,7 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
-:root{--bg:#e8e8e8;--sd:#b8b8b8;--sl:#ffffff;--t1:#2c2c2c;--t2:#666666;--t3:#999999;--acc:#E8705A}
+:root{--bg:#e8e8e8;--sd:#b8b8b8;--sl:#ffffff;--t1:#2c2c2c;--t2:#666666;--t3:#999999;--acc:#FF6B6B}
 body,*{transition:background-color 1.5s ease,color 1.5s ease,box-shadow 1.5s ease,border-color 1.5s ease,fill 1.5s ease}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;padding:0;margin:0}
 .wrap{max-width:100%;margin:0 auto;padding:16px;padding-bottom:calc(32px + env(safe-area-inset-bottom))}
@@ -209,7 +209,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-hei
 .prompt-btn-ok:active{box-shadow:inset 3px 3px 6px rgba(0,0,0,0.3)}
 .gender-title{font-size:13px;font-weight:500;color:var(--t1);text-align:center;margin-top:32px;margin-bottom:16px}
 .gender-block{background:var(--bg);border-radius:16px;box-shadow:inset 4px 4px 8px var(--sd),inset -6px -6px 12px var(--sl);padding:6px 8px;margin-bottom:20px;display:flex;gap:8px;position:relative;z-index:1000}
-.gender-btn{flex:1;padding:10px 14px;background:var(--bg);border:none;border-radius:10px;font-size:13px;font-weight:500;color:var(--t2);box-shadow:3px 3px 6px var(--sd),-5px -5px 10px var(--sl);cursor:pointer;transition:color .2s;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;position:relative;z-index:10000;touch-action:manipulation;-webkit-tap-highlight-color:rgba(232,112,90,0.2);user-select:none;-webkit-user-select:none}
+.gender-btn{flex:1;padding:10px 14px;background:var(--bg);border:none;border-radius:10px;font-size:13px;font-weight:500;color:var(--t2);box-shadow:3px 3px 6px var(--sd),-5px -5px 10px var(--sl);cursor:pointer;transition:color .2s;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;position:relative;z-index:10000;touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,107,107,0.2);user-select:none;-webkit-user-select:none}
 .gender-btn:active{box-shadow:3px 3px 6px var(--sd),-4px -4px 8px var(--sl)}
 .gender-btn.selected{color:var(--acc);box-shadow:none!important;background:var(--bg)!important;border:none!important}
 .gender-btn svg{width:14px;height:14px;stroke:var(--t3);stroke-width:2.5;fill:none;transition:stroke .2s;pointer-events:none}
@@ -684,7 +684,7 @@ function selectGender(gender) {
   if (gender === 'male') {
     // Мужчина: Ashley Blue фон + коралловый для основных кнопок
     document.documentElement.style.setProperty('--bg', '#9DB1BC'); // Pantone 14-4112 TCX
-    document.documentElement.style.setProperty('--acc', '#E8705A'); // Твой коралловый
+    document.documentElement.style.setProperty('--acc', '#FF6B6B'); // Твой коралловый
     document.documentElement.style.setProperty('--sd', 'rgba(0,0,0,0.2)'); // Темная тень
     document.documentElement.style.setProperty('--sl', 'rgba(255,255,255,0.4)'); // Светлая тень
     document.documentElement.style.setProperty('--t1', '#2c2c2c'); // Темный текст
@@ -695,7 +695,7 @@ function selectGender(gender) {
   } else {
     // Женщина: Peachskin фон + коралловый для основных кнопок
     document.documentElement.style.setProperty('--bg', '#FFCBA4'); // Pantone 13-1906 TCX
-    document.documentElement.style.setProperty('--acc', '#E8705A'); // Твой коралловый
+    document.documentElement.style.setProperty('--acc', '#FF6B6B'); // Твой коралловый
     document.documentElement.style.setProperty('--sd', 'rgba(0,0,0,0.2)'); // Темная тень
     document.documentElement.style.setProperty('--sl', 'rgba(255,255,255,0.4)'); // Светлая тень
     document.documentElement.style.setProperty('--t1', '#2c2c2c'); // Темный текст
