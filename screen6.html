@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>MARU · Оплата</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  height:100%;background:#e8e8e8;overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  user-select:none;-webkit-user-select:none;
+  font-family:'Inter',-apple-system,sans-serif;
+}
+:root{
+  --bg:#e8e8e8;
+  --acc:#FF6B6B;
+  --green:#70892E;
+  --t1:#2c2c2c;
+  --t2:#666;
+  --t3:#999;
+  --bt:1px solid rgba(0,0,0,0.08);
+  --bl:1px solid rgba(0,0,0,0.06);
+  --bb:1px solid rgba(255,255,255,0.55);
+  --br:1px solid rgba(255,255,255,0.45);
+  --r:16px;
+  --sp1:8px;--sp2:16px;--sp3:24px;--sp4:32px;
+}
+.page{
+  position:fixed;inset:0;max-width:390px;margin:0 auto;
+  display:flex;flex-direction:column;
+  opacity:0;transform:translateY(8px);transition:opacity .45s,transform .45s;
+}
+.page.show{opacity:1;transform:none}
+.hdr{
+  flex-shrink:0;
+  height:calc(env(safe-area-inset-top,0px) + 48px);
+  display:flex;align-items:flex-end;justify-content:center;
+  padding:0 var(--sp3) var(--sp2);
+}
+.m-logo{
+  font-size:22px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--bg);
+  text-shadow:-1px -1px 1px rgba(0,0,0,0.12),1px 1px 2px rgba(255,255,255,0.6);
+}
+.scroll{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  padding:0 var(--sp3) calc(env(safe-area-inset-bottom,0px) + 136px);
+  -webkit-overflow-scrolling:touch;
+}
+.scroll::-webkit-scrollbar{display:none}
+
+/* HERO */
+.pay-hero{
+  padding:24px 0 16px;text-align:center;
+  opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;
+}
+.pay-hero.vis{opacity:1;transform:none}
+.pay-title{font-size:16px;font-weight:400;color:var(--t2);letter-spacing:0;line-height:1.4;margin-bottom:16px;}
+.pay-sub{font-size:13px;color:var(--t3);line-height:1.55;padding:0 var(--sp2);}
+
+/* PRICE CARD */
+.price-card{
+  width:100%;border-radius:var(--r);background:transparent;
+  border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);
+  padding:8px 24px 4px;margin-bottom:24px;position:relative;
+  height:140px;overflow:hidden;
+  opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+.price-card.vis{opacity:1;transform:none}
+.price-lbl{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--t3);margin-top:12px;margin-bottom:12px;line-height:1;text-align:center;}
+/* i — DS: border-circle */
+.price-info-btn{
+  position:absolute;top:var(--sp2);right:var(--sp3);
+  width:16px;height:16px;border-radius:50%;
+  border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:400;color:var(--t3);font-style:italic;
+  background:transparent;cursor:pointer;padding:0;line-height:1;
+  -webkit-tap-highlight-color:transparent;
+}
+.price-info-btn:active{opacity:.5}
+.price-row{display:flex;align-items:baseline;gap:4px;justify-content:center;}
+.price-amount{font-size:32px;font-weight:700;color:var(--acc);letter-spacing:-.03em;line-height:1;animation:priceBreathe 4s ease-in-out infinite;}
+@keyframes priceBreathe{0%,100%{opacity:1}50%{opacity:.55}}
+.price-cur{font-size:14px;font-weight:300;color:var(--acc);}
+.price-desc{font-size:11px;color:var(--t3);margin-top:var(--sp1);letter-spacing:.02em;text-align:center;}
+.price-tooltip{
+  font-size:11px;color:var(--acc);text-align:center;
+  margin-top:-8px;max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .28s ease,opacity .28s ease;
+}
+.price-tooltip.show{max-height:24px;opacity:1}
+
+/* BENEFITS */
+.ben-card{
+  width:100%;border-radius:var(--r);background:transparent;
+  border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);
+  overflow:hidden;margin-bottom:16px;margin-top:16px;
+  opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;
+}
+.ben-card.vis{opacity:1;transform:none}
+.ben-item{padding:14px 16px;}
+/* divider-inner между пунктами — только между, не по краям карточки */
+.ben-item+.ben-item{border-top:none;}
+.ben-row{display:flex;align-items:center;gap:var(--sp1);margin-bottom:var(--sp1);}
+.ben-dot-wrap{flex-shrink:0;width:16px;height:16px;display:flex;align-items:center;justify-content:center;}
+.ben-dot-wrap::after{content:'';display:block;width:5px;height:5px;border-radius:50%;background:var(--acc);}
+.ben-main{font-size:13px;font-weight:500;color:var(--t1);line-height:1.3;}
+.ben-hint{font-size:11px;color:var(--t3);padding-left:var(--sp3);line-height:1.45;}
+
+/* GUARANTEE */
+.guarantee{
+  text-align:center;font-size:11px;color:var(--t2);
+  line-height:1.6;padding:24px 24px 0;
+  opacity:0;transition:opacity .4s;
+}
+.guarantee.vis{opacity:1}
+
+/* CTA — fixed bottom, safe-area */
+.cta-wrap{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:390px;
+  padding:var(--sp3) var(--sp3) calc(env(safe-area-inset-bottom,0px) + var(--sp2));
+  background:linear-gradient(to bottom,rgba(232,232,232,0) 0%,rgba(232,232,232,1) 32%);
+  z-index:20;pointer-events:none;
+  opacity:0;transition:opacity .4s;
+}
+.cta-wrap.vis{opacity:1}
+/* DS: transparent, engraved border, --acc text */
+.cta-btn{
+  pointer-events:auto;position:relative;
+  width:100%;height:56px;border-radius:var(--r);
+  background:transparent;
+  border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);
+  color:var(--acc);font-family:'Inter',sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:.26em;text-transform:uppercase;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:transform .12s,opacity .12s;
+}
+.cta-btn:active{transform:scale(0.98);opacity:.7}
+/* spark — своя обёртка с clip */
+.spark-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;}
+.spark-svg path{fill:none;stroke:rgba(255,107,107,0.7);stroke-width:1.5;stroke-linecap:round;stroke-dasharray:0 9999;opacity:0;}
+@keyframes sparkAnim{
+  0%{stroke-dasharray:0 9999;opacity:0}
+  6%{opacity:1}
+  75%{stroke-dasharray:9999 0;opacity:.6}
+  100%{stroke-dasharray:9999 0;opacity:0}
+}
+.spark-svg.run path{animation:sparkAnim 1.6s cubic-bezier(.3,0,.2,1) forwards}
+
+
+.cta-note{pointer-events:none;text-align:center;font-size:10px;color:var(--t3);margin-top:var(--sp1);letter-spacing:.02em;}
+.timer-note{pointer-events:none;text-align:center;font-size:11px;color:var(--t2);margin-top:8px;letter-spacing:.02em;}
+.timer-note span{color:var(--acc);font-variant-numeric:tabular-nums;font-weight:600;}
+.boosty-note{pointer-events:none;text-align:center;font-size:10px;color:var(--t3);opacity:.45;margin-top:var(--sp1);letter-spacing:.02em;}
+@keyframes sparkPulse{0%{stroke-dasharray:0 9999;opacity:0}10%{opacity:.8}68%{stroke-dasharray:9999 0;opacity:.65}100%{stroke-dasharray:9999 0;opacity:0}}
+.spark-svg.pulse path{animation:sparkPulse 3.5s cubic-bezier(.25,0,.2,1) infinite}
+@keyframes btnPulse{
+  0%{border-bottom-color:rgba(255,255,255,0.55);border-right-color:rgba(255,255,255,0.45)}
+  40%{border-bottom-color:rgba(255,107,107,0.9);border-right-color:rgba(255,107,107,0.7)}
+  100%{border-bottom-color:rgba(255,255,255,0.55);border-right-color:rgba(255,255,255,0.45)}
+}
+.cta-btn.pulse{animation:btnPulse 2.0s ease 0s 1}
+</style>
+</head>
+<body>
+
+<div class="page" id="page">
+
+  <div class="hdr"><div class="m-logo">MARU</div></div>
+
+  <div class="scroll">
+
+    <div class="pay-hero" id="payHero">
+      <div class="pay-title">Ты видел только начало.<br>Вот что внутри</div>
+    </div>
+
+    <div class="price-card" id="priceCard" onclick="toggleTooltip()">
+      <div class="price-lbl">Единоразовый платёж</div>
+      <button class="price-info-btn" onclick="event.stopPropagation();toggleTooltip()">i</button>
+      <div class="price-row">
+        <div class="price-amount">999</div>
+        <div class="price-cur">₽</div>
+      </div>
+      <div class="price-desc">Навсегда · доступ не истекает</div>
+      <div class="price-tooltip" id="priceTooltip">у психолога 9 000 ₽</div>
+    </div>
+    <div id="counterNote" style="margin-top:8px;font-size:11px;color:var(--t3);text-align:center;min-height:16px;"></div>
+
+    <div class="ben-card" id="benCard">
+      <div class="ben-item" style="background:rgba(255,107,107,0.03)">
+        <div class="ben-row"><div class="ben-dot-wrap"></div><div class="ben-main" style="color:var(--acc)">Что тебя разрушает</div></div>
+        <div class="ben-hint">триггеры и ловушки — ты можешь не осознавать</div>
+      </div>
+      <div class="ben-item">
+        <div class="ben-row"><div class="ben-dot-wrap"></div><div class="ben-main">Твоя природа</div></div>
+        <div class="ben-hint">что движет решениями под давлением</div>
+      </div>
+      <div class="ben-item">
+        <div class="ben-row"><div class="ben-dot-wrap"></div><div class="ben-main">Твой код в отношениях</div></div>
+        <div class="ben-hint">почему выбираешь определённых людей</div>
+      </div>
+      <div class="ben-item">
+        <div class="ben-row"><div class="ben-dot-wrap"></div><div class="ben-main">Твой финансовый профиль</div></div>
+        <div class="ben-hint">почему деньги приходят именно так</div>
+      </div>
+      <div class="ben-item">
+        <div class="ben-row"><div class="ben-dot-wrap"></div><div class="ben-main">Твоя сексуальная природа</div></div>
+        <div class="ben-hint">что включает и выключает твою энергию</div>
+      </div>
+    </div>
+
+    <div class="guarantee" id="guarantee">
+      Доступ к результату предоставляется навсегда.<br>
+      Перечитывай и изучай в любое время.
+    </div>
+    <div class="timer-note" id="timerNote" style="text-align:center;padding:8px 0 0;">Результат актуален ещё <span id="timerVal">23:59:42</span></div>
+
+  </div>
+
+  <div class="cta-wrap" id="ctaWrap">
+    <button class="cta-btn" id="ctaBtn" onclick="hap('m');goPay();">
+      <span id="ctaText">ДЕЙСТВУЙ</span>
+      <svg class="spark-svg" id="sparkSvg"><path id="sparkPath"/></svg>
+    </button>
+    <div class="cta-note">999₽ · Безопасная оплата · Доступ сразу</div>
+    <div class="boosty-note">Банковская карта · РФ · РБ · международные · защищено</div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
+if(tg){tg.ready();tg.expand();}
+function hap(t){
+  try{if(tg)tg.HapticFeedback.impactOccurred(t==='m'?'medium':'light');}catch(e){}
+  try{if(navigator.vibrate)navigator.vibrate(t==='m'?14:7);}catch(e){}
+}
+/* stagger reveal */
+setTimeout(function(){document.getElementById('page').classList.add('show');},60);
+setTimeout(function(){document.getElementById('payHero').classList.add('vis');},160);
+setTimeout(function(){document.getElementById('priceCard').classList.add('vis');},280);
+setTimeout(function(){document.getElementById('benCard').classList.add('vis');},400);
+setTimeout(function(){document.getElementById('guarantee').classList.add('vis');document.getElementById('timerNote').style.opacity='1';},520);
+setTimeout(function(){document.getElementById('ctaWrap').classList.add('vis');setTimeout(function(){runSpark();},200);setTimeout(function(){var btn=document.getElementById('ctaBtn');btn.classList.remove('pulse');btn.offsetHeight;btn.classList.add('pulse');btn.addEventListener('animationend',function(){btn.classList.remove('pulse');},{once:true});},400);},580);
+/* tooltip */
+var tooltipOpen=false;
+window.toggleTooltip=function(){
+  hap('l');
+  tooltipOpen=!tooltipOpen;
+  document.getElementById('priceTooltip').classList.toggle('show',tooltipOpen);
+};
+/* spark border trace */
+function runSpark(){
+  var btn=document.getElementById('ctaBtn');
+  var svg=document.getElementById('sparkSvg');
+  var path=document.getElementById('sparkPath');
+  var w=btn.offsetWidth,h=btn.offsetHeight,r=16;
+  var d='M'+r+','+(h-1)+' L'+(w-r)+','+(h-1)+' Q'+(w-1)+','+(h-1)+' '+(w-1)+','+(h-r)+' L'+(w-1)+','+r+';'
+  path.setAttribute('d',d);
+  svg.classList.remove('run','pulse');
+  void svg.offsetWidth;
+  svg.classList.add('run');
+  svg.addEventListener('animationend',function(){svg.classList.remove('run');},{once:true});
+}
+window.goPay=function(){
+  hap('m');
+  runSpark();
+  setTimeout(function(){goTo('screen7.html');},600);
+};
+
+var ctaTextEl=document.getElementById('ctaText');
+ctaTextEl.style.transition='opacity .3s';
+setTimeout(function(){
+  ctaTextEl.style.opacity='0';
+  setTimeout(function(){
+    ctaTextEl.textContent='УЗНАЙ СЕБЯ';
+    ctaTextEl.style.opacity='1';
+  },300);
+},11000);
+
+/* таймер 24ч */
+var TIMER_DURATION=24*3600;
+var timerKey='maru_timer_start';
+var _now=Math.floor(Date.now()/1000);
+var _startTs=parseInt(sessionStorage.getItem(timerKey)||'0',10);
+if(!_startTs){_startTs=_now;sessionStorage.setItem(timerKey,_startTs);}
+var totalSec=Math.max(TIMER_DURATION-(_now-_startTs),0);
+function fmtTimer(s){
+  var h=Math.floor(s/3600),m=Math.floor((s%3600)/60),ss=s%60;
+  return (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;
+}
+var timerEl=document.getElementById('timerVal');
+timerEl.textContent=fmtTimer(totalSec);
+setInterval(function(){
+  if(totalSec>0){totalSec--;timerEl.textContent=fmtTimer(totalSec);}
+},1000);
+
+
+/* Firebase счётчик */
+(function(){
+  var COUNTER_MIN=22126;
+  fetch('https://maru-app-2071c-default-rtdb.firebaseio.com/results.json?shallow=true')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var real=d?Object.keys(d).length:0;
+      var n=real>=COUNTER_MIN?real:COUNTER_MIN;
+      var el=document.getElementById('counterNote');
+      if(el){el.innerHTML='<span style="color:var(--t3)">Уже разблокировали: </span><span style="color:var(--acc);font-weight:600">'+n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ')+'</span>';}
+    }).catch(function(){
+      var el=document.getElementById('counterNote');
+      if(el){el.innerHTML='<span style="color:var(--t3)">Уже разблокировали: </span><span style="color:var(--acc);font-weight:600">22 126</span>';}
+    });
+})();
+function goTo(url){document.body.style.transition='opacity .25s ease';document.body.style.opacity='0';setTimeout(function(){window.location.href=url;},250);}
+})();
+</script>
+</body>
+</html>
