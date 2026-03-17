@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>MARU Test</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
+:root{--bg:#e8e8e8;--sd:#b8b8b8;--sl:#ffffff;--t1:#2c2c2c;--t2:#666666;--t3:#999999;--acc:#E8705A}
+body,*{transition:background-color 1.5s ease,color 1.5s ease,box-shadow 1.5s ease,border-color 1.5s ease,fill 1.5s ease}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;padding:0;margin:0 auto;max-width:430px}
+.wrap{max-width:100%;margin:0 auto;padding:16px;padding-bottom:calc(32px + env(safe-area-inset-bottom))}
+.card{background:transparent;border-radius:16px;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);padding:16px;margin-bottom:8px}
+.screen{display:none}
+.screen.active{display:block}
+#splash{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:100;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.spl-logo{font-size:22px;font-weight:700;color:var(--bg);letter-spacing:8px;pointer-events:none;text-shadow:-1px -1px 1px rgba(0,0,0,0.15),1px 1px 2px rgba(255,255,255,0.7);filter:brightness(0.96) contrast(1.06)}
+.spl-over{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:15px;color:var(--t2);letter-spacing:2px;opacity:0;animation:fadeIn 2s ease .5s forwards;pointer-events:none}
+.spl-foot{position:absolute;bottom:calc(30px + env(safe-area-inset-bottom));left:0;right:0;text-align:center;color:var(--t3);font-size:11px;opacity:0;animation:fadeIn 2s ease 1.5s forwards;pointer-events:none}
+@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+#startScreen.active{display:flex;flex-direction:column;justify-content:center;min-height:100vh;padding:16px;padding-bottom:calc(32px + env(safe-area-inset-bottom));overflow-y:auto}
+.logo-sm{font-size:22px;font-weight:700;letter-spacing:.18em;color:var(--bg);text-align:center;margin-bottom:4px;text-transform:uppercase;text-shadow:-1px -1px 1px rgba(0,0,0,0.12),1px 1px 2px rgba(255,255,255,0.6);padding:calc(8px + env(safe-area-inset-top)) 0 8px 0}
+.hero{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.hero-img{width:60px;height:60px;border-radius:50%;object-fit:cover;filter:grayscale(1);box-shadow:inset -3px -3px 8px rgba(0,0,0,0.4),inset 3px 3px 8px rgba(255,255,255,0.3),4px 4px 8px var(--sd),-5px -5px 10px var(--sl);transform:scale(1.08);position:relative}
+.hero-lbl{font-size:10px;color:var(--t3);letter-spacing:1px;text-transform:uppercase}
+.hero-ttl{font-size:20px;font-weight:700;color:#4a4a4a!important;filter:none!important;text-shadow:none!important;-webkit-text-fill-color:#4a4a4a!important}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--sd),transparent);margin:14px 0}
+.sub-txt{text-align:center;font-size:13px;color:var(--t2)}
+.energy-icons{display:flex;justify-content:space-between;flex-wrap:nowrap;gap:4px;padding:0 4px}
+.energy-icon{text-align:center;flex:1;min-width:0}
+.energy-ico-circle{width:38px;height:38px;border-radius:50%;background:var(--bg);box-shadow:inset 3px 3px 6px var(--sd),inset -4px -4px 8px var(--sl);display:flex;align-items:center;justify-content:center;margin:0 auto 4px}
+.energy-ico-circle svg{width:16px;height:16px;stroke:var(--t3);stroke-width:1.5;fill:none}
+.energy-lbl{font-size:9px;color:var(--t3)}
+.info-row{display:flex;align-items:center;gap:10px;padding:10px 0;font-size:13px;color:var(--t2);border-bottom:1px solid rgba(0,0,0,.03)}
+.info-row:last-child{border:none}
+.info-ico{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 6px var(--sd),-5px -5px 10px var(--sl)}
+.info-ico svg{width:13px;height:13px;stroke:var(--acc);stroke-width:2;fill:none}
+.btn{width:100%;padding:0;height:54px;background:transparent;color:var(--acc);border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);border-radius:16px;font-size:11px;font-weight:600;letter-spacing:0.26em;text-transform:uppercase;cursor:pointer;margin-top:8px;transition:opacity .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.btn:hover{opacity:0.8}
+.btn:active{transform:scale(.98)}
+.btn-sec{background:transparent;color:var(--acc)}
+.btn-sec:hover{opacity:0.8}
+.btn-sec:active{transform:scale(.98)}
+/* offerScreen styles moved to unified section below */
+#privacyScreen{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);padding:calc(48px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));overflow-y:auto;z-index:300}
+#privacyScreen.active{display:block}
+.privacy-back{position:fixed;top:calc(16px + env(safe-area-inset-top));right:16px;width:44px;height:44px;border-radius:12px;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:301;transition:opacity .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+@media (hover: hover){.privacy-back:hover{opacity:0.8}}
+.privacy-back:active{transform:scale(.98)}
+.privacy-back svg{width:18px;height:18px;stroke:var(--t3);stroke-width:2;fill:none}
+.privacy-link{color:var(--acc);text-decoration:underline;cursor:pointer;font-weight:500}
+.offer-box{background:transparent;border-radius:16px;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);padding:20px;margin-bottom:16px;max-height:50vh;overflow-y:scroll;overflow-x:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+.offer-box::-webkit-scrollbar{width:6px}
+.offer-box::-webkit-scrollbar-track{background:transparent}
+.offer-box::-webkit-scrollbar-thumb{background:var(--sd);border-radius:3px}
+.offer-box{scrollbar-width:thin;scrollbar-color:var(--sd) transparent}
+.offer-ttl{font-size:18px;font-weight:700;margin-bottom:12px;text-align:center;margin-top:16px}
+.offer-txt{font-size:12px;line-height:1.6;color:var(--t2);margin-bottom:10px}
+.offer-txt strong{color:var(--t1);font-weight:600}
+.chk-row{display:flex;align-items:center;gap:12px;padding:16px;background:transparent;border-radius:16px;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);margin-bottom:16px;cursor:pointer;transition:all .2s;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;position:relative;z-index:1000}
+.chk-row:active{opacity:0.7}
+.chk-box{width:24px;height:24px;min-width:24px;border-radius:6px;border-top:1px solid rgba(0,0,0,0.1);border-left:1px solid rgba(0,0,0,0.08);border-bottom:1px solid rgba(255,255,255,0.5);border-right:1px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.chk-row.checked .chk-box{background:var(--acc);border-color:var(--acc)}
+.chk-box svg{width:14px;height:14px;stroke:#fff;stroke-width:3;fill:none;opacity:0;transition:opacity .2s}
+.chk-row.checked .chk-box svg{opacity:1}
+.chk-lbl{font-size:13px;line-height:1.4;color:var(--t2);flex:1}
+.chk-row.checked .chk-lbl{color:var(--t1)}
+#questionScreen.active{display:flex;flex-direction:column;justify-content:center;min-height:calc(100vh - 32px)}
+.q-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.q-prog{display:flex;align-items:center;gap:12px}
+.progress-ring{width:50px;height:50px;position:relative;border-radius:50%;background:var(--bg);box-shadow:4px 4px 8px var(--sd),-5px -5px 10px var(--sl);display:flex;align-items:center;justify-content:center}
+.progress-ring svg{transform:rotate(-90deg);width:42px;height:42px}
+.progress-ring-bg{fill:none;stroke:var(--sd);stroke-width:2}
+.progress-ring-fill{fill:none;stroke:var(--acc);stroke-width:2;stroke-linecap:round;transition:stroke-dashoffset .3s}
+.progress-text{position:absolute;font-size:10px;font-weight:700;color:var(--acc)}
+.q-cnt{font-size:12px;color:var(--t3)}
+.btn-back{width:44px;height:44px;border-radius:12px;border:none;background:var(--bg);box-shadow:5px 5px 10px var(--sd),-6px -6px 12px var(--sl);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.btn-back:hover{transform:translateY(-2px);box-shadow:6px 6px 12px var(--sd),-4px -4px 8px var(--sl)}
+.btn-back:active{box-shadow:inset 4px 4px 8px var(--sd)}
+.btn-back svg{width:14px;height:14px;stroke:var(--t2);stroke-width:2;fill:none}
+.btn-back.hide{visibility:hidden}
+.q-txt{font-size:17px;font-weight:600;line-height:1.5;background:var(--bg);border-radius:20px;box-shadow:8px 8px 16px var(--sd),-10px -10px 18px var(--sl);padding:20px;margin-bottom:16px}
+.ans-list{display:flex;flex-direction:column;gap:10px;padding-bottom:24px}
+.ans{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:14px;background:var(--bg);cursor:pointer;box-shadow:5px 5px 10px var(--sd),-7px -7px 14px var(--sl);transition:all .15s}
+.ans:hover{transform:translateY(-1px);box-shadow:6px 6px 12px var(--sd),-5px -5px 10px var(--sl)}
+.ans:active{box-shadow:inset 3px 3px 6px var(--sd)}
+.ans.sel{box-shadow:inset 4px 4px 8px var(--sd)}
+.ans-rad{width:20px;height:20px;min-width:20px;border-radius:50%;box-shadow:inset 2px 2px 4px var(--sd),inset -3px -3px 6px var(--sl);display:flex;align-items:center;justify-content:center;margin-top:2px}
+.ans.sel .ans-rad{background:var(--acc);box-shadow:2px 2px 4px var(--sd),-3px -3px 5px var(--sl)}
+.ans.sel .ans-rad::after{content:'';width:6px;height:6px;background:#fff;border-radius:50%}
+.ans-txt{font-size:13px;line-height:1.5;color:var(--t2)}
+.ans.sel .ans-txt{color:var(--t1)}
+.res-photo{width:120px;height:120px;border-radius:50%;object-fit:cover;filter:grayscale(1);box-shadow:5px 5px 10px var(--sd),-6px -6px 12px var(--sl);display:block;margin:20px auto 16px}
+.res-head{text-align:center;margin-bottom:16px}
+.res-lbl{font-size:10px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;margin-top:0}
+.res-name{font-size:26px;font-weight:700;margin-bottom:4px}
+.res-combo{font-size:13px;color:var(--t3);letter-spacing:1px}
+.valid-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:10px;font-size:12px;font-weight:500;margin-bottom:8px;box-shadow:inset 2px 2px 4px var(--sd),inset -3px -3px 5px var(--sl)}
+.valid-badge.high{color:#27ae60}
+.valid-badge.med{color:#f39c12}
+.valid-badge.low{color:#e74c3c}
+.sec-ttl{font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bar-lbl{width:26px;font-size:11px;font-weight:600;color:var(--t2)}
+.bar-track{flex:1;height:10px;border-radius:5px;background:var(--bg);box-shadow:inset 2px 2px 4px var(--sd),inset -3px -3px 5px var(--sl);padding:2px}
+.bar-fill{height:100%;background:var(--acc);border-radius:3px;transition:width 1s ease}
+.bar-pct{width:42px;font-size:12px;font-weight:600;text-align:right}
+.top-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.03)}
+.top-row:last-child{border:none}
+.top-name{font-size:13px}
+.top-lvl{font-size:11px;color:var(--t3);padding:5px 10px;border-radius:8px;box-shadow:inset 2px 2px 4px var(--sd),inset -3px -3px 5px var(--sl)}
+.warn-box{padding:12px;border-radius:12px;margin-bottom:12px;box-shadow:inset 3px 3px 6px var(--sd),inset -4px -4px 8px var(--sl)}
+.warn-txt{font-size:12px;color:var(--t2);line-height:1.5}
+.share-hint{display:none;text-align:center;font-size:14px;color:var(--acc);margin-top:12px;padding:12px 20px;background:rgba(76,175,80,0.1);border-radius:12px;font-weight:500}
+#archScreen{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);padding:calc(48px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));overflow-y:auto;z-index:200}
+#archScreen.active{display:block}
+.arch-photo-cont{display:flex;justify-content:center;margin-bottom:40px;margin-top:32px}
+.arch-logo{font-size:22px;font-weight:800;letter-spacing:6px;color:var(--bg);text-shadow:1px 1px 2px var(--sl),-1px -1px 2px var(--sd);background:linear-gradient(135deg,#b0b0b0 0%,#d0d0d0 100%);-webkit-background-clip:text;background-clip:text;text-align:center;margin-top:20px;margin-bottom:20px}
+.arch-photo{width:35%;aspect-ratio:3/4;border-radius:16px;object-fit:cover;filter:grayscale(100%);box-shadow:4px 4px 8px var(--sd),-2px -2px 4px var(--sl);position:relative}
+.arch-photo::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;border-radius:16px;background:radial-gradient(ellipse at center,transparent 0%,rgba(0,0,0,0.05) 100%);pointer-events:none}
+.arch-header{margin-bottom:20px;margin-top:16px}
+.arch-label{text-align:center;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:2px}
+.arch-title{text-align:center;font-size:28px;font-weight:700;color:var(--t1);margin-bottom:32px}
+.acc-btn{width:100%;background:var(--bg);border:none;border-radius:16px;padding:16px 18px;margin-bottom:12px;font-size:15px;font-weight:500;color:var(--t2);cursor:pointer;box-shadow:4px 4px 8px var(--sd),-5px -5px 10px var(--sl);display:flex;justify-content:space-between;align-items:center;font-family:'Inter',sans-serif;gap:12px;transition:all .2s}
+@media (hover: hover){.acc-btn:hover{transform:translateY(-1px);box-shadow:6px 6px 12px var(--sd),-4px -4px 8px var(--sl)}}
+.acc-btn:active{transform:scale(.98)}
+.acc-btn.active{box-shadow:inset 3px 3px 6px var(--sd),inset -4px -4px 8px var(--sl)}
+.acc-circle{width:18px;height:18px;min-width:18px;border-radius:50%;background:var(--bg);box-shadow:inset 2px 2px 4px var(--sd),inset -3px -3px 5px var(--sl);transition:all .3s;position:relative}
+.acc-btn.active .acc-circle{background:var(--acc);box-shadow:2px 2px 4px var(--sd),-3px -3px 5px var(--sl)}
+.acc-btn.active .acc-circle::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:var(--bg);border-radius:50%;box-shadow:inset 1px 1px 2px var(--sd),inset -1px -1px 2px var(--sl)}
+.acc-btn-text{flex:1;text-align:left}
+.acc-arrow{width:16px;height:16px;transition:transform .3s;color:var(--t3)}
+.acc-btn.active .acc-arrow{transform:rotate(180deg)}
+.acc-content{max-height:0;overflow:hidden;background:var(--bg);border-radius:16px;margin-top:-8px;margin-bottom:12px;box-shadow:inset 2px 2px 4px var(--sd),inset -3px -3px 5px var(--sl);transition:max-height .4s ease}
+.acc-content.active{max-height:3000px}
+.acc-inner{padding:16px 20px 20px;color:var(--t2);font-size:15px;line-height:1.6}
+#introScreen.active{display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:calc(24px + env(safe-area-inset-top)) 16px calc(32px + env(safe-area-inset-bottom));overflow-y:auto;overflow-x:hidden}
+.intro-logo{font-size:22px;font-weight:800;letter-spacing:6px;color:var(--bg);text-shadow:-1px -1px 1px rgba(0,0,0,0.15),1px 1px 2px rgba(255,255,255,0.7);filter:brightness(0.96) contrast(1.06);text-align:center;margin-top:0;margin-bottom:4px}
+.intro-subtitle{font-size:11px;color:var(--t3);text-align:center;letter-spacing:2px;text-transform:uppercase;margin-top:0;margin-bottom:16px}
+.intro-greeting{font-size:14px;color:var(--t3);text-align:left;margin-bottom:16px;font-weight:400}
+.intro-content-block{width:100%;max-width:340px;background:var(--bg);border-radius:20px;padding:20px 20px;box-shadow:inset 6px 6px 12px var(--sd),inset -8px -8px 16px var(--sl);margin-bottom:16px}
+.intro-text-content{font-size:14px;color:var(--t1);line-height:1.7}
+.intro-text-content p{margin-bottom:16px}
+.intro-text-content p:last-child{margin-bottom:0}
+.intro-highlight{color:var(--acc);font-weight:600}
+.intro-authors{font-size:13px;color:var(--t2);font-style:italic;margin-top:20px;padding-top:16px;border-top:1px solid rgba(0,0,0,0.05)}
+.intro-stat{font-size:15px;font-weight:600;color:var(--acc)}
+.intro-more-text{max-height:0;overflow:hidden;transition:max-height 0.4s ease}
+.intro-more-text.expanded{max-height:2000px}
+.intro-read-more-wrapper{text-align:center;margin:24px 0 20px 0}
+.intro-read-more-btn{display:inline-block;padding:8px 16px;font-size:13px;font-weight:600;color:var(--acc);background:var(--bg);border:none;border-radius:8px;cursor:pointer;box-shadow:2px 2px 4px var(--sd),-3px -3px 5px var(--sl);transition:all 0.2s ease;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.intro-read-more-btn:hover{transform:translateY(-1px);box-shadow:3px 3px 6px var(--sd),-3px -3px 5px var(--sl)}
+.intro-read-more-btn:active{transform:translateY(0);box-shadow:inset 2px 2px 4px var(--sd),inset -3px -3px 5px var(--sl)}
+.payment-back{position:fixed;top:calc(16px + env(safe-area-inset-top));right:16px;width:44px;height:44px;border-radius:12px;border:none;background:var(--bg);box-shadow:4px 4px 8px var(--sd),-5px -5px 10px var(--sl);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:301;transition:all .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+@media (hover: hover){.payment-back:hover{transform:translateY(-2px);box-shadow:6px 6px 12px var(--sd),-4px -4px 8px var(--sl)}}
+.payment-back:active{box-shadow:inset 2px 2px 4px var(--sd),inset -3px -3px 5px var(--sl);transform:scale(.98)}
+.payment-back svg{width:18px;height:18px;stroke:var(--t3);stroke-width:2;fill:none}
+.arch-back{position:fixed;top:calc(16px + env(safe-area-inset-top));right:16px;width:44px;height:44px;border-radius:12px;border:none;background:var(--bg);box-shadow:4px 4px 8px var(--sd),-5px -5px 10px var(--sl);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:201;transition:all .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+@media (hover: hover){.arch-back:hover{transform:translateY(-2px);box-shadow:6px 6px 12px var(--sd),-4px -4px 8px var(--sl)}}
+.arch-back:active{box-shadow:inset 2px 2px 4px var(--sd),inset -3px -3px 5px var(--sl);transform:scale(.98)}
+.arch-back svg{width:18px;height:18px;stroke:var(--t3);stroke-width:2;fill:none}
+.intro-back{position:fixed;top:calc(16px + env(safe-area-inset-top));right:16px;width:44px;height:44px;border-radius:12px;border:none;background:var(--bg);box-shadow:4px 4px 8px var(--sd),-5px -5px 10px var(--sl);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:201;transition:all .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+@media (hover: hover){.intro-back:hover{transform:translateY(-2px);box-shadow:6px 6px 12px var(--sd),-4px -4px 8px var(--sl)}}
+.intro-back:active{box-shadow:inset 2px 2px 4px var(--sd),inset -3px -3px 5px var(--sl);transform:scale(.98)}
+.intro-back svg{width:18px;height:18px;stroke:var(--t3);stroke-width:2;fill:none}
+#paymentScreen.active{display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:0 20px calc(40px + env(safe-area-inset-bottom));overflow-y:auto;position:relative}
+.payment-logo{font-size:22px;font-weight:800;letter-spacing:6px;color:var(--bg);text-shadow:1px 1px 2px var(--sl),-1px -1px 2px var(--sd);background:linear-gradient(135deg,#b0b0b0 0%,#d0d0d0 100%);-webkit-background-clip:text;background-clip:text;margin-bottom:40px;text-align:center}
+.payment-title{font-size:20px;font-weight:600;margin-bottom:4px;color:var(--t2);text-align:center}
+.payment-subtitle{font-size:13px;color:var(--t2);margin-bottom:28px;line-height:1.5;text-align:center;max-width:340px}
+.region-switch{display:flex;gap:8px;margin-bottom:24px;background:var(--bg);padding:4px;border-radius:12px;box-shadow:inset 2px 2px 4px var(--sd),inset -3px -3px 5px var(--sl);width:100%;max-width:340px;position:relative;z-index:10}
+.region-btn{flex:1;padding:10px 16px;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--t3);transition:all 0.2s ease;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.region-btn.active{background:var(--bg);color:var(--acc);box-shadow:2px 2px 4px var(--sd),-3px -3px 5px var(--sl)}
+.price-block{background:var(--bg);padding:20px 24px 18px;border-radius:16px;margin-bottom:24px;box-shadow:6px 6px 12px var(--sd),-4px -4px 8px var(--sl);width:100%;max-width:340px;text-align:center;position:relative;cursor:pointer;transition:all 0.2s ease;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;z-index:5;min-height:120px}
+.price-block:hover{transform:translateY(-2px);box-shadow:8px 8px 16px var(--sd),-10px -10px 18px var(--sl)}
+.price-block:active{transform:scale(0.98);box-shadow:inset 3px 3px 6px var(--sd),inset -4px -4px 8px var(--sl)}
+.info-icon{position:absolute;top:12px;right:16px;width:18px;height:18px;border-radius:50%;background:var(--bg);box-shadow:2px 2px 4px var(--sd),-3px -3px 5px var(--sl);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--t3);font-family:serif;pointer-events:none}
+.price-label{font-size:10px;color:var(--t3);margin-bottom:16px;letter-spacing:0.5px;text-transform:uppercase;font-weight:500;pointer-events:none}
+.old-price{font-size:13px;color:var(--t3);text-decoration:line-through;opacity:0;transform:translateY(-5px);transition:opacity 0.3s ease,transform 0.3s ease;margin-bottom:6px;font-family:'Roboto Mono',monospace;height:18px;pointer-events:none}
+.price-block:active .old-price{opacity:1;transform:translateY(0)}
+.price-amount{font-size:32px;font-weight:400;color:var(--acc);letter-spacing:0;font-family:'Roboto Mono',monospace;line-height:1.1;display:inline-flex;align-items:baseline;gap:2px;pointer-events:none}
+.price-amount .currency{font-size:18px;font-weight:300;opacity:0.85;pointer-events:none}
+.benefits-block{width:100%;max-width:340px;margin-bottom:24px;background:var(--bg);border-radius:16px;padding:16px;box-shadow:4px 4px 8px var(--sd),-5px -5px 10px var(--sl)}
+.benefit-item{display:flex;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.03)}
+.benefit-item:last-child{border-bottom:none;padding-bottom:0}
+.benefit-icon{width:16px;height:16px;min-width:16px;margin-right:12px;margin-left:4px;position:relative}
+.benefit-icon::after{content:'';position:absolute;left:5px;top:2px;width:4px;height:8px;border:solid var(--t3);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.benefit-text{font-size:13px;color:var(--t2);line-height:1.4;flex:1}
+.btn-payment-primary{width:100%;max-width:340px;padding:14px 20px;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:12px;transition:all 0.2s;background:var(--bg);color:var(--acc);box-shadow:4px 4px 8px var(--sd),-5px -5px 10px var(--sl);font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.btn-payment-primary:hover{transform:translateY(-2px);box-shadow:6px 6px 12px var(--sd),-4px -4px 8px var(--sl)}
+.btn-payment-primary:active{transform:translateY(0);box-shadow:inset 3px 3px 6px var(--sd),inset -4px -4px 8px var(--sl)}
+.btn-payment-secondary{width:100%;max-width:340px;padding:14px 20px;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:12px;transition:all 0.2s;background:var(--bg);color:var(--t2);box-shadow:3px 3px 6px var(--sd),-3px -3px 5px var(--sl);font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.btn-payment-secondary:hover{transform:translateY(-2px);box-shadow:5px 5px 10px var(--sd),-3px -3px 5px var(--sl)}
+.btn-payment-secondary:active{transform:translateY(0);box-shadow:inset 2px 2px 4px var(--sd),inset -3px -3px 5px var(--sl)}
+.payment-footer{font-size:10px;color:var(--t3);text-align:center;margin-top:16px;line-height:1.5}
+#customPrompt{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(232,232,232,0.7);z-index:500;align-items:center;justify-content:center}
+#customPrompt.active{display:flex}
+.prompt-box{background:var(--bg);border-radius:20px;padding:24px;width:90%;max-width:320px;box-shadow:6px 6px 12px var(--sd),-8px -8px 16px var(--sl)}
+.prompt-title{font-size:16px;font-weight:600;color:var(--t2);margin-bottom:16px;text-align:center}
+.prompt-input{width:100%;padding:12px 16px;border:none;border-radius:12px;font-size:15px;background:var(--bg);box-shadow:inset 3px 3px 6px var(--sd),inset -4px -4px 8px var(--sl);margin-bottom:16px;font-family:'Inter',sans-serif;color:var(--t2)}
+.prompt-input:focus{outline:none;box-shadow:inset 4px 4px 8px var(--sd),inset -5px -5px 10px var(--sl)}
+.prompt-buttons{display:flex;gap:12px}
+.prompt-btn{flex:1;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.prompt-btn-cancel{background:var(--bg);color:var(--t3);box-shadow:3px 3px 6px var(--sd),-3px -3px 5px var(--sl)}
+.prompt-btn-cancel:active{box-shadow:inset 2px 2px 4px var(--sd),inset -3px -3px 5px var(--sl)}
+.prompt-btn-ok{background:var(--acc);color:#fff;box-shadow:4px 4px 8px var(--sd),-5px -5px 10px var(--sl)}
+.prompt-btn-ok:active{box-shadow:inset 3px 3px 6px rgba(0,0,0,0.3)}
+.gender-title{font-size:13px;font-weight:500;color:var(--t1);text-align:center;margin-top:32px;margin-bottom:16px}
+.gender-block{background:transparent;border-radius:16px;border:none;padding:6px 0;margin-bottom:20px;display:flex;gap:8px;position:relative;z-index:1000}
+.gender-btn{flex:1;padding:10px 14px;background:transparent;border:none;border-radius:10px;font-size:13px;font-weight:500;color:var(--t2);border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.04);border-bottom:1px solid rgba(255,255,255,0.45);border-right:1px solid rgba(255,255,255,0.35);cursor:pointer;transition:color .2s,border-color .2s;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;position:relative;z-index:10000;touch-action:manipulation;-webkit-tap-highlight-color:rgba(232,112,90,0.2);user-select:none;-webkit-user-select:none}
+.gender-btn:active{opacity:0.7}
+.gender-btn.selected-male{color:#4A9EFF;border-color:#4A9EFF !important;background:transparent !important}
+.gender-btn.selected-female{color:#FF6B6B;border-color:#FF6B6B !important;background:transparent !important}
+.gender-btn svg{width:18px;height:18px;stroke:var(--t3);stroke-width:1.8;fill:none;transition:stroke .2s;pointer-events:none;flex-shrink:0;vertical-align:middle;display:block}
+.gender-btn.selected-male svg{stroke:#4A9EFF}
+.gender-btn.selected-female svg{stroke:#FF6B6B}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;z-index:999;opacity:0;transition:opacity .6s ease;pointer-events:none}
+.modal-overlay.active{display:block;opacity:1}
+.instructions-modal{position:fixed;left:16px;right:16px;top:50%;transform:translate(0,-50%) scale(0.90) translateY(30px);background:var(--bg);border-radius:24px;padding:0;z-index:1001;max-height:85vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3),8px 8px 20px var(--sd),-8px -8px 20px var(--sl);opacity:0;transition:all .7s cubic-bezier(.22,1,.36,1);pointer-events:none}
+.instructions-modal.active{transform:translate(0,-50%) scale(1) translateY(0);opacity:1;pointer-events:auto}
+.instr-header{background:var(--bg);padding:0;position:relative;border-bottom:none}
+.instr-header::after{display:none}
+.instr-title{font-size:20px;font-weight:700;text-align:center;margin-bottom:4px;color:var(--bg);letter-spacing:2px;text-shadow:-1px -1px 2px rgba(0,0,0,0.15),1px 1px 2px rgba(255,255,255,0.7);filter:brightness(0.96) contrast(1.05);padding:40px 24px 0;text-transform:uppercase}
+.instr-subtitle{font-size:16px;font-weight:400;text-align:center;color:var(--t1);letter-spacing:0.5px;padding:0 24px 16px}
+.instr-body{padding:24px;max-height:calc(85vh - 180px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.instr-body::-webkit-scrollbar{width:4px}
+.instr-body::-webkit-scrollbar-track{background:transparent}
+.instr-body::-webkit-scrollbar-thumb{background:var(--sd);border-radius:2px}
+.instr-pain-promise{background:var(--bg);border-radius:16px;padding:18px 20px;margin-bottom:16px;box-shadow:inset 4px 4px 10px var(--sd),inset -4px -4px 10px var(--sl)}
+.instr-pain-promise p{font-size:13px;line-height:1.7;color:var(--t2);margin-bottom:12px}
+.instr-pain-promise p:last-child{margin-bottom:0;color:var(--t1);font-weight:500}
+.instr-stats{display:flex;justify-content:center;align-items:center;gap:0;margin:12px auto;padding:16px;background:transparent;border-radius:14px;max-width:400px}
+.instr-stat-item{text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.instr-stat-item:not(:last-child)::after{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);width:1px;height:40px;background:linear-gradient(180deg,transparent,var(--sd),transparent)}
+.instr-stat-number{font-size:24px;font-weight:400;color:var(--acc);display:inline-block;margin-bottom:0;line-height:1}
+.instr-stat-label{font-size:11px;color:var(--t3);letter-spacing:0.5px;margin-top:4px}
+.instr-stat-label{font-size:10px;color:var(--t3);letter-spacing:0.5px;line-height:1.2;margin-top:6px}
+.instr-principles{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.instr-principle{display:flex;gap:14px;align-items:center;padding:16px;background:var(--bg);border-radius:14px;box-shadow:4px 4px 10px var(--sd),-4px -4px 10px var(--sl);transition:all .2s}
+.instr-principle:active{box-shadow:inset 3px 3px 6px var(--sd),inset -3px -3px 6px var(--sl)}
+.instr-icon-wrap{width:36px;height:36px;min-width:36px;border-radius:0;background:transparent;box-shadow:none;display:flex;align-items:center;justify-content:center;padding:0}
+.instr-icon-wrap svg{width:18px;height:18px;stroke:var(--t3);stroke-width:1.2;fill:none;margin:auto;display:block}
+.instr-principle-content{flex:1}
+.instr-principle-title{font-size:14px;font-weight:500;color:var(--t1);margin-bottom:5px;line-height:1.3}
+.instr-principle-text{font-size:12px;color:var(--t2);line-height:1.6}
+.instr-footer{padding:0 24px 28px;text-align:center}
+.instr-time{font-size:12px;color:var(--t3);margin-bottom:16px;font-weight:500;letter-spacing:0.5px}
+.instr-btn{width:100%;padding:17px;font-size:16px;font-weight:600;color:#fff;background:var(--acc);border:none;border-radius:16px;cursor:pointer;box-shadow:6px 6px 14px var(--sd),-6px -6px 14px var(--sl);transition:all .25s;position:relative;overflow:hidden}
+.instr-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transition:left .5s}
+.instr-btn:hover::before{left:100%}
+.instr-btn:hover{transform:translateY(-2px);box-shadow:8px 8px 18px var(--sd),-8px -8px 18px var(--sl)}
+.instr-btn:active{transform:scale(0.98);box-shadow:inset 4px 4px 8px rgba(0,0,0,.25)}
+@keyframes modalSlideUp{0%{transform:translate(0,-50%) scale(0.85);opacity:0}100%{transform:translate(0,-50%) scale(1);opacity:1}}
+.offer-tabs{display:flex;justify-content:center;gap:0;margin:12px 0 16px;position:relative}
+.offer-tab{background:none;border:none;font-family:'Inter',sans-serif;font-size:11px;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);padding:10px 16px;cursor:pointer;position:relative;transition:color .3s,opacity .3s;opacity:0.5}
+.offer-tab.active{color:var(--t1);opacity:1;font-weight:500}
+.offer-tab-sep{width:1px;height:16px;background:var(--sd);align-self:center;opacity:0.5}
+.offer-scroll-wrap{flex:1;overflow-y:auto;position:relative;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;background:transparent;border-radius:20px;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45)}
+.offer-scroll-wrap::-webkit-scrollbar{display:none}
+.offer-scroll-wrap::after{content:'';position:sticky;bottom:0;left:0;right:0;display:block;height:48px;background:linear-gradient(to bottom,transparent,var(--bg));pointer-events:none;z-index:2;margin-top:-48px}
+.offer-tab-content{display:none;padding:20px 20px 48px}
+.offer-tab-content.active{display:block}
+.offer-bottom{flex-shrink:0;padding:8px 0 0}
+@keyframes btnPulse{0%{border-bottom-color:rgba(255,255,255,0.14);border-right-color:rgba(255,255,255,0.12)}40%{border-bottom-color:rgba(255,255,255,0.9);border-right-color:rgba(255,255,255,0.7)}100%{border-bottom-color:rgba(255,255,255,0.14);border-right-color:rgba(255,255,255,0.12)}}
+#acceptBtn.pulse{animation:btnPulse 2.0s ease 0s 1}
+#instructionsScreen.active{display:flex;flex-direction:column;min-height:100vh;padding:calc(16px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom))}
+.isc-title{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--t3);text-align:center;margin-bottom:24px}
+.isc-stats{display:flex;justify-content:center;gap:0;margin:0 auto 24px;padding:16px 0}
+.isc-stat{text-align:center;flex:1;position:relative}
+.isc-stat:not(:last-child)::after{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);width:1px;height:32px;background:linear-gradient(180deg,transparent,var(--sd),transparent)}
+.isc-stat-num{font-size:24px;font-weight:400;color:var(--acc);display:block;line-height:1}
+.isc-stat-lbl{font-size:10px;color:var(--t3);letter-spacing:.5px;margin-top:6px;display:block}
+.isc-list{flex:1;overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:16px}
+.isc-list::-webkit-scrollbar{display:none}
+.isc-item{display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--bg);border-radius:14px;box-shadow:4px 4px 10px var(--sd),-4px -4px 10px var(--sl);margin-bottom:12px}
+.isc-item:active{box-shadow:inset 3px 3px 6px var(--sd),inset -3px -3px 6px var(--sl)}
+.isc-ico{width:36px;min-width:36px;height:36px;display:flex;align-items:center;justify-content:center}
+.isc-ico svg{width:18px;height:18px;stroke:var(--t3);stroke-width:1.2;fill:none}
+.isc-item-title{font-size:14px;font-weight:500;color:var(--t1);margin-bottom:4px;line-height:1.3}
+.isc-item-text{font-size:12px;color:var(--t2);line-height:1.6}
+#offerScreen.active{height:100dvh;max-height:100dvh;overflow:hidden;display:flex;flex-direction:column;padding:0}
+#offerScreen>.logo-sm{padding:calc(8px + env(safe-area-inset-top)) 0 0;margin-left:20px;margin-right:20px}
+#offerScreen>.offer-tabs{margin-left:20px;margin-right:20px}
+#offerScreen>.offer-scroll-wrap{margin:0 20px 16px;flex:1;min-height:0}
+.offer-bottom{flex-shrink:0;padding:16px 20px max(env(safe-area-inset-bottom),20px);background:var(--bg)}@keyframes checkPop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.25)}100%{transform:scale(1);opacity:1}}
+.chk-row.checked .chk-box svg{animation:checkPop 0.22s ease forwards}
+.offer-hook{font-size:20px;font-weight:700;color:var(--t1);line-height:1.3;margin-bottom:20px;letter-spacing:-0.01em}
+.offer-counter{display:inline-flex;align-items:baseline;gap:4px;margin-bottom:20px}
+.offer-counter-num{font-size:13px;font-weight:600;color:var(--acc)}
+.offer-counter-txt{font-size:12px;color:var(--t3);letter-spacing:0.01em}
+
+/* === AGREE CARDS === */
+.agree-card{background:transparent;border-radius:14px;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);overflow:hidden;cursor:pointer;transition:opacity .15s;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.agree-card:active{opacity:.7}
+.agree-card-top{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.agree-card-icon{width:32px;height:32px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--t3)}
+.agree-card-icon svg{width:18px;height:18px}
+.agree-card-title{flex:1;font-size:14px;font-weight:600;color:var(--t1)}
+.agree-card-check{width:22px;height:22px;min-width:22px;border-radius:6px;border-top:1px solid rgba(0,0,0,0.1);border-left:1px solid rgba(0,0,0,0.08);border-bottom:1px solid rgba(255,255,255,0.5);border-right:1px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
+.agree-card-check svg{width:12px;height:12px;opacity:0;transition:opacity .2s}
+.agree-card.confirmed .agree-card-check{background:var(--acc);border-color:var(--acc)}
+.agree-card.confirmed .agree-card-check svg{opacity:1}
+.agree-card.confirmed .agree-card-icon{color:var(--acc)}
+.agree-card-body{font-size:12px;line-height:1.6;color:var(--t2);padding:0 16px 14px;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease}
+.agree-card.open .agree-card-body{max-height:200px;padding:0 16px 14px}
+.agree-full-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;background:transparent;border:none;border-top:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.4);border-left:1px solid rgba(0,0,0,0.04);border-right:1px solid rgba(255,255,255,0.3);border-radius:12px;font-size:11px;color:var(--t3);letter-spacing:0.04em;cursor:pointer;font-family:'Inter',sans-serif;text-align:left;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.agree-full-btn.open #agreeFullArrow{transform:rotate(180deg)}
+/* === ENERGY PULSE on gender select === */
+@keyframes energyPulse{0%{transform:scale(1)}35%{transform:scale(1.25)}65%{transform:scale(1.1)}100%{transform:scale(1)}}
+.energy-ico-circle.pulse-anim{animation:energyPulse 0.4s ease forwards}
+
+/* acceptBtn spark */
+@keyframes acceptSparkOnce{0%{stroke-dasharray:0 9999;opacity:0}8%{opacity:1}75%{stroke-dasharray:9999 0;opacity:.75}100%{stroke-dasharray:9999 0;opacity:0}}
+@keyframes acceptSparkLoop{0%{stroke-dasharray:0 9999;opacity:0}10%{opacity:.85}68%{stroke-dasharray:9999 0;opacity:.7}100%{stroke-dasharray:9999 0;opacity:0}}
+.accept-spark.pulse path{animation:acceptSparkLoop 2.8s cubic-bezier(.25,0,.2,1) infinite}
+</style>
+</head>
+<body>
+<div id="splash" style="display:none!important" onclick="this.style.display='none';scr('offerScreen')">
+<div style="position:relative;width:90%;text-align:center">
+<div class="spl-logo">MARU</div>
+<div class="spl-over"></div>
+</div>
+<div class="spl-foot">> следуй за мной...</div>
+</div>
+
+<div class="wrap">
+<div id="offerScreen" class="screen active">
+<div class="logo-sm">MARU</div>
+
+<div class="offer-tabs">
+<button class="offer-tab active" data-tab="intro" onclick="switchTab('intro')">Знакомство</button>
+<div class="offer-tab-sep"></div>
+<button class="offer-tab" data-tab="agreement" onclick="switchTab('agreement')">Соглашение</button>
+</div>
+
+<div class="offer-scroll-wrap">
+
+<!-- ТАБ: ЗНАКОМСТВО -->
+<div class="offer-tab-content active" id="tabIntro">
+
+
+
+<div class="intro-text-content" style="font-size:14px;color:var(--t2);line-height:1.7">
+
+<!-- Дефолтный текст (до выбора гендера) -->
+<div id="offerNarrDefault">
+
+<p class="offer-hook">Твои энергии не меняются с рождения.<br>Всё остальное — следствие.</p>
+
+<p style="margin-bottom:24px;font-size:14px;line-height:1.7;color:var(--t2)">Ты можешь менять работу, город, окружение. Но способ думать, реагировать, любить — остаётся. Это не характер. Это твои врождённые энергии — они определяют всё: как ты в семье, как принимаешь решения, как смотришь на мир и даже мелкие привычки которых сам не замечаешь.</p>
+
+<p style="margin-bottom:24px;font-size:14px;line-height:1.7;color:var(--t2)">Незнание своих энергий — источник фрустраций. Знание — фундамент успеха. Таких инструментов в мире не существует.</p>
+
+<div style="margin-bottom:0;border-top:1px solid rgba(0,0,0,0.08);padding-top:20px;display:flex;flex-direction:column;gap:16px">
+  <div>
+    <p style="margin-bottom:3px;font-size:13px;font-weight:600;color:var(--t1)">Игорь Макаров</p>
+    <p style="margin-bottom:6px;font-size:10px;color:var(--t3);letter-spacing:0.06em;text-transform:uppercase">Философ · магистр психологии</p>
+    <p style="margin-bottom:0;font-size:13px;line-height:1.6;color:var(--t2);font-style:italic">«12 лет я не мог найти систему, которая объяснила бы мою природу. В итоге создал её сам.»</p>
+  </div>
+  <div>
+    <p style="margin-bottom:3px;font-size:13px;font-weight:600;color:var(--t1)">Евгений Мельников</p>
+    <p style="margin-bottom:6px;font-size:10px;color:var(--t3);letter-spacing:0.06em;text-transform:uppercase">Спортивный психолог</p>
+    <p style="margin-bottom:0;font-size:13px;line-height:1.6;color:var(--t2);font-style:italic">«Под давлением человек показывает свою природу. Два года я наблюдал — и понял: всё предсказуемо.»</p>
+  </div>
+</div>
+
+</div>
+
+<!-- Женский текст -->
+<div id="offerNarrFemale" style="display:none">
+<p style="margin-bottom:16px">Просыпаешься и снова оно — ощущение что живешь не своей жизнью. Играешь роль, а настоящая ты спряталась где-то глубоко.</p>
+<p style="margin-bottom:16px">Почему он не слышит? Почему дети не слушаются? Читаешь книги, ходишь к психологам, проходишь тесты. Получаешь диагнозы: тревожная, созависимая, эмпат. Но ничего не меняется.</p>
+<p style="margin-bottom:16px">Потому что это не про тебя. Это про "среднюю женщину" из учебника.</p>
+<p style="margin-bottom:16px"><span style="color:var(--acc);font-weight:600">MARU</span> — не психологический тест. Это система распознавания природы. Два года создавали философ Игорь Макаров и психолог Евгений Мельников. То, чего не было раньше.</p>
+<p style="margin-bottom:16px">В основе — пять врожденных энергий. Родилась с конкретным набором сил. Они формируют всё: как любишь, как принимаешь решения, что триггерит, как воспитываешь детей, как зарабатываешь.</p>
+<p style="margin-bottom:16px">Обычная психология работает с симптомами. Мы с природой. <span style="color:var(--acc);font-weight:600">60 архетипов</span> — не категории, а детальные профили с точностью до мелких нюансов.</p>
+<p style="color:var(--acc);font-size:13px;margin-bottom:16px">Возьми сейчас. Ответы перед тобой.</p>
+</div>
+
+<!-- Мужской текст -->
+<div id="offerNarrMale" style="display:none">
+<p style="margin-bottom:16px">Просыпаешься. Ощущение что идешь не своим путем. Внутри есть сила, но не знаешь как направить. Делаешь всё "правильно", но удовлетворения нет.</p>
+<p style="margin-bottom:16px">Почему она ушла? Почему выбираю не тех партнеров? Почему успех не приносит счастья? Работаешь над собой, читаешь, проходишь тесты. Получаешь ярлыки: лидер, интроверт, перфекционист. Но контроля нет.</p>
+<p style="margin-bottom:16px">Потому что это не про тебя. Это про "среднего мужчину" из книжки.</p>
+<p style="margin-bottom:16px"><span style="color:var(--acc);font-weight:600">MARU</span> — не тест личности. Это диагностика природы. Два года создавали философ Игорь Макаров и психолог Евгений Мельников.</p>
+<p style="margin-bottom:16px">В основе — пять врожденных энергий. Родился с конкретным набором сил. Они определяют: как принимаешь решения, как любишь женщину, как зарабатываешь, что триггерит, где настоящая мощь.</p>
+<p style="margin-bottom:16px">Обычная психология лечит симптомы. Мы работаем с природой. <span style="color:var(--acc);font-weight:600">60 архетипов</span> — не упрощения, а детальные профили с точностью до микро-паттернов.</p>
+<p style="color:var(--acc);font-size:13px;margin-bottom:16px">Возьми сейчас. Ответы перед тобой.</p>
+</div>
+
+</div>
+</div>
+
+<!-- ТАБ: СОГЛАШЕНИЕ -->
+<div class="offer-tab-content" id="tabAgreement">
+<div class="offer-txt"><strong>1. О ПРОЕКТЕ MARU</strong></div>
+<div class="offer-txt">1.1. MARU — это масштабный исследовательский проект, направленный на изучение врожденных психологических особенностей человека через призму пяти базовых энергий личности.</div>
+<div class="offer-txt">1.2. Концепция проекта: каждый человек рождается с уникальной комбинацией пяти врожденных энергий, которые на протяжении всей жизни определяют способы реагирования, принятия решений и поведения, особенно в критических ситуациях.</div>
+<div class="offer-txt">1.3. Системный подход MARU признает фундаментальную истину: не существует одинаковых людей, и каждая личность номинально отличается соотношением этих пяти базовых энергий.</div>
+<div class="offer-txt">1.4. Данный психологический тест является лишь входной точкой в систему MARU — инструментом первичного знакомства с концепцией врожденных энергий, но не исчерпывающим описанием проекта.</div>
+<div class="offer-txt">1.5. MARU представляет собой базовый уровень понимания личности, без которого помощь психологических специалистов может играть лишь опосредованную роль, так как стандартизированные подходы не учитывают уникальность энергетической матрицы каждого человека.</div>
+
+<div class="offer-txt"><strong>2. ОБЩИЕ ПОЛОЖЕНИЯ И ЮРИСДИКЦИЯ</strong></div>
+<div class="offer-txt">2.1. Настоящее Пользовательское соглашение (далее — Соглашение) регулирует отношения между Пользователем и Разработчиком психологического теста в рамках проекта MARU (далее — Тест, Сервис, Инструмент).</div>
+<div class="offer-txt">2.2. Используя Тест, Пользователь подтверждает, что полностью ознакомился с условиями настоящего Соглашения, понял их содержание, философию проекта, правовые последствия и безоговорочно принимает все условия.</div>
+<div class="offer-txt">2.3. Если Пользователь не согласен с каким-либо положением Соглашения, использование Теста категорически запрещено.</div>
+<div class="offer-txt">2.4. Начало использования Теста приравнивается к подписанию настоящего Соглашения и означает полное и безоговорочное принятие всех условий.</div>
+<div class="offer-txt">2.5. К правоотношениям сторон применяется законодательство Российской Федерации.</div>
+
+<div class="offer-txt"><strong>3. ОПРЕДЕЛЕНИЯ КЛЮЧЕВЫХ ТЕРМИНОВ</strong></div>
+<div class="offer-txt">3.1. Пять базовых энергий — врожденные психологические особенности личности, формирующие уникальную энергетическую матрицу человека и определяющие паттерны его реагирования.</div>
+<div class="offer-txt">3.2. Системный подход MARU — авторская методология анализа личности через призму пяти врожденных энергий.</div>
+<div class="offer-txt">3.3. Архетип — результат тестирования, представляющий собой описание наиболее вероятной комбинации энергий Пользователя.</div>
+<div class="offer-txt">3.4. Пользователь — дееспособное физическое лицо, достигшее 16 лет, использующее Тест добровольно.</div>
+<div class="offer-txt">3.5. Разработчик — автор/правообладатель проекта MARU и данного Теста.</div>
+
+<div class="offer-txt"><strong>4. ПРАВОВАЯ ПРИРОДА И ХАРАКТЕР ТЕСТА</strong></div>
+<div class="offer-txt">4.1. Данный Тест является информационно-образовательным инструментом для самопознания, основанным на авторской концепции пяти базовых энергий.</div>
+<div class="offer-txt">4.2. <strong>Тест КАТЕГОРИЧЕСКИ НЕ является и НЕ может рассматриваться как:</strong> медицинская услуга любого рода или вида; медицинское диагностическое исследование, обследование или скрининг; клиническое психологическое тестирование; психиатрическое освидетельствование любой формы; профессиональная психологическая консультация или психотерапия; психологическая помощь в понимании законодательства РФ; средство диагностики, лечения, профилактики любых заболеваний или расстройств; медицинское или психологическое заключение специалиста; научно валидированный психодиагностический инструмент; стандартизированная методика с доказанной надежностью.</div>
+<div class="offer-txt">4.3. Тест не создает отношений "специалист-клиент", "врач-пациент", "психолог-клиент" или любых иных профессиональных отношений.</div>
+<div class="offer-txt">4.4. Результаты Теста носят обобщенный, вероятностный, статистический характер и отражают типологические особенности, но не индивидуальную клиническую картину конкретного Пользователя.</div>
+<div class="offer-txt">4.5. Методология системного подхода MARU является авторской разработкой, не признана и не одобрена официальными медицинскими, психологическими или психиатрическими организациями, не входит в реестр стандартизированных методик.</div>
+
+<div class="offer-txt"><strong>5. ЦЕЛЬ, НАЗНАЧЕНИЕ И ОГРАНИЧЕНИЯ ИСПОЛЬЗОВАНИЯ</strong></div>
+<div class="offer-txt">5.1. Единственная цель Теста: предоставить Пользователю отправную точку для самопознания и понимания концепции врожденных энергий в рамках проекта MARU.</div>
+<div class="offer-txt">5.2. Результаты могут использоваться исключительно в личных, некоммерческих, информационных, образовательных целях для саморефлексии.</div>
+<div class="offer-txt">5.3. <strong>КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО</strong> использовать результаты для: постановки любых диагнозов (медицинских, психологических, психиатрических); назначения, изменения, отмены медикаментозного лечения; принятия решений о необходимости или отказе от медицинской/психологической помощи; замены консультации, лечения, наблюдения специалиста; принятия важных жизненных решений (карьера, брак, развод, смена профессии, переезд, финансовые решения, образование, здоровье); профессионального или личностного отбора (прием на работу, увольнение, повышение, отбор в учебные заведения); кадровых решений любого рода; судебных разбирательств или экспертиз; оценки дееспособности или вменяемости; оценки профессиональной пригодности; оценки третьих лиц без их явного письменного согласия; дискриминации по любым признакам; создания общественной опасности.</div>
+
+<div class="offer-txt"><strong>6. КРИТИЧЕСКИ ВАЖНОЕ ПРЕДУПРЕЖДЕНИЕ О МЕНТАЛЬНОМ ЗДОРОВЬЕ</strong></div>
+<div class="offer-txt">6.1. <strong>ВНИМАНИЕ:</strong> Если Пользователь переживает острый психологический кризис, испытывает суицидальные мысли, намерения или планы, находится в состоянии тяжелой депрессии, выраженной тревожности, панических атак, психоза или любого другого острого психического состояния — использование данного Теста может быть небезопасным и противопоказано.</div>
+<div class="offer-txt">6.2. <strong>В ТАКИХ СЛУЧАЯХ НЕОБХОДИМО НЕМЕДЛЕННО:</strong> обратиться за экстренной психологической или психиатрической помощью; позвонить на горячую линию психологической помощи; обратиться к своему лечащему врачу или психологу; вызвать скорую помощь при остром состоянии.</div>
+<div class="offer-txt">6.3. <strong>ЮРИДИЧЕСКАЯ ПОЗИЦИЯ:</strong> Тест по своей природе, содержанию и методологии НЕ содержит триггерных материалов, не провоцирует суицидальные мысли, не усугубляет психические расстройства и не может выступать причиной ухудшения ментального состояния. Тест состоит из нейтральных вопросов о поведенческих предпочтениях и не затрагивает травматичные темы.</div>
+<div class="offer-txt">6.4. Если после прохождения Теста у Пользователя возникли или усилились негативные эмоции, суицидальные мысли, депрессия, тревога — это свидетельствует о наличии ранее существовавшего психологического состояния, требующего профессиональной помощи, а не о влиянии Теста.</div>
+<div class="offer-txt">6.5. Разработчик настоятельно рекомендует лицам с диагностированными психическими расстройствами (депрессия, биполярное расстройство, тревожные расстройства, шизофрения, любые другие психические заболевания) проконсультироваться с лечащим врачом перед прохождением любых психологических тестов.</div>
+<div class="offer-txt">6.6. Пользователь подтверждает, что понимает: результаты Теста не являются оценкой его личности, характера или ценности как человека; любой архетип является нейтральным описанием без оценочного компонента; нет "плохих" или "хороших" результатов.</div>
+
+<div class="offer-txt"><strong>7. ПОЛНОЕ ОГРАНИЧЕНИЕ ОТВЕТСТВЕННОСТИ</strong></div>
+<div class="offer-txt">7.1. Разработчик НЕ несет абсолютно никакой ответственности (гражданско-правовой, административной, уголовной, моральной) за: любые решения, действия, бездействие Пользователя, принятые до, во время или после прохождения Теста; любые последствия использования или неиспользования результатов; эмоциональные, психологические реакции на результаты; неправильную, ошибочную, субъективную интерпретацию результатов; последствия разглашения результатов третьим лицам; использование результатов третьими лицами; конфликты, споры, разногласия с третьими лицами; упущенную выгоду любого рода; прямой, косвенный, случайный, специальный, штрафной, репутационный ущерб; моральный вред; физический вред; имущественный ущерб; ухудшение психологического, эмоционального состояния; невозможность использования Теста по техническим причинам; любые иные последствия, прямо или косвенно связанные с Тестом.</div>
+<div class="offer-txt">7.2. <strong>МАКСИМАЛЬНАЯ ОТВЕТСТВЕННОСТЬ Разработчика ограничена суммой 0 (ноль) рублей 00 копеек.</strong></div>
+<div class="offer-txt">7.3. Пользователь полностью, безоговорочно и добровольно принимает на себя все риски, связанные с использованием Теста, и ответственность за любые последствия.</div>
+<div class="offer-txt">7.4. Пользователь обязуется не предъявлять Разработчику претензий, исков, требований любого рода, связанных с использованием Теста.</div>
+<div class="offer-txt">7.5. В случае предъявления претензий Пользователь обязуется возместить Разработчику все судебные расходы, расходы на юридическую защиту и упущенную выгоду.</div>
+
+<div class="offer-txt"><strong>8. ОТКАЗ ОТ ГАРАНТИЙ И ТОЧНОСТИ</strong></div>
+<div class="offer-txt">8.1. Разработчик НЕ гарантирует и не заявляет о: точности, полноте, актуальности, достоверности результатов; соответствии результатов реальным психологическим особенностям Пользователя; применимости результатов к конкретной жизненной ситуации; получении какой-либо пользы, положительного эффекта от использования; валидности и надежности методологии; научной обоснованности подхода.</div>
+<div class="offer-txt">8.2. <strong>ПРИНЦИП "AS IS":</strong> Тест предоставляется в том виде, в каком он есть, со всеми возможными недостатками, ошибками, неточностями, без каких-либо гарантий явных или подразумеваемых.</div>
+<div class="offer-txt">8.3. Точность результатов зависит от множества неконтролируемых факторов: честность и осознанность ответов; психологическое состояние в момент прохождения; уровень самопонимания; внешние обстоятельства и отвлекающие факторы; субъективное понимание формулировок вопросов.</div>
+<div class="offer-txt">8.4. Результаты могут быть неточными, неполными, не отражающими реальность, субъективными, спорными.</div>
+
+<div class="offer-txt"><strong>9. КОНФИДЕНЦИАЛЬНОСТЬ И ЗАЩИТА ДАННЫХ</strong></div>
+<div class="offer-txt">9.1. Все ответы и результаты Теста обрабатываются и хранятся исключительно локально на устройстве Пользователя средствами браузера.</div>
+<div class="offer-txt">9.2. Разработчик технически НЕ имеет возможности и НЕ собирает, НЕ обрабатывает, НЕ хранит, НЕ анализирует, НЕ передает персональные данные, ответы или результаты тестирования.</div>
+<div class="offer-txt">9.3. Разработчик не знает и не может узнать результаты конкретного Пользователя.</div>
+<div class="offer-txt">9.4. Пользователь самостоятельно несет полную ответственность за: безопасность устройства и данных; сохранность и конфиденциальность результатов; решения о разглашении результатов; последствия доступа третьих лиц к устройству.</div>
+<div class="offer-txt">9.5. Разработчик НЕ несет ответственности за утечку, кражу, взлом, несанкционированный доступ к данным на устройстве Пользователя.</div>
+<div class="offer-txt">9.6. Подробная информация об обработке данных изложена в <span class="privacy-link" onclick="$('privacyScreen').classList.add('active')">Политике конфиденциальности</span>.</div>
+
+<div class="offer-txt"><strong>10. ДОБРОВОЛЬНОСТЬ И ИНФОРМИРОВАННОЕ СОГЛАСИЕ</strong></div>
+<div class="offer-txt">10.1. Прохождение Теста является полностью добровольным и не может быть принудительным.</div>
+<div class="offer-txt">10.2. Никто не вправе требовать от Пользователя прохождения Теста или разглашения результатов.</div>
+<div class="offer-txt">10.3. Пользователь имеет право в любой момент: прекратить тестирование; не отвечать на вопросы; удалить результаты; не использовать полученную информацию.</div>
+<div class="offer-txt">10.4. Пользователь подтверждает, что действует добровольно, в здравом уме, не под давлением третьих лиц.</div>
+
+<div class="offer-txt"><strong>11. ВОЗРАСТНЫЕ ОГРАНИЧЕНИЯ И ДЕЕСПОСОБНОСТЬ</strong></div>
+<div class="offer-txt">11.1. Тест предназначен исключительно для лиц, достигших возраста 16 (шестнадцати) лет.</div>
+<div class="offer-txt">11.2. Лица от 16 до 18 лет могут использовать Тест только с письменного согласия родителя или законного представителя.</div>
+<div class="offer-txt">11.3. Лица младше 16 лет НЕ имеют права использовать Тест ни при каких обстоятельствах.</div>
+<div class="offer-txt">11.4. Разработчик не несет ответственности за использование Теста несовершеннолетними или недееспособными лицами.</div>
+<div class="offer-txt">11.5. Тест не предназначен для лиц, признанных недееспособными или ограниченно дееспособными.</div>
+
+<div class="offer-txt"><strong>12. ИНТЕЛЛЕКТУАЛЬНАЯ СОБСТВЕННОСТЬ И АВТОРСКИЕ ПРАВА</strong></div>
+<div class="offer-txt">12.1. Исключительные права на Тест, методологию системного подхода MARU, концепцию пяти базовых энергий, вопросы, алгоритмы обработки, базу архетипов, интерпретации, дизайн, код принадлежат Разработчику.</div>
+<div class="offer-txt">12.2. <strong>КАТЕГОРИЧЕСКИ ЗАПРЕЩАЕТСЯ:</strong> копирование Теста полностью или частично; воспроизведение методологии; реверс-инжиниринг (обратная разработка); декомпиляция кода; создание производных работ; коммерческое использование; публикация вопросов или алгоритмов; распространение без письменного согласия Разработчика.</div>
+<div class="offer-txt">12.3. Нарушение прав интеллектуальной собственности влечет гражданско-правовую, административную и уголовную ответственность в соответствии с законодательством РФ.</div>
+<div class="offer-txt">12.4. Пользователь получает только ограниченное право личного некоммерческого использования Теста.</div>
+
+<div class="offer-txt"><strong>13. ЗАПРЕЩЕННЫЕ ДЕЙСТВИЯ</strong></div>
+<div class="offer-txt">13.1. Пользователю запрещается: использовать Тест в коммерческих целях; использовать результаты для дискриминации; выдавать результаты за профессиональное заключение; тестировать третьих лиц без их согласия; использовать автоматизированные средства прохождения; создавать ложные результаты; модифицировать, взламывать Тест; причинять вред на основе результатов.</div>
+
+<div class="offer-txt"><strong>14. ТЕХНИЧЕСКИЕ АСПЕКТЫ И ДОСТУПНОСТЬ</strong></div>
+<div class="offer-txt">14.1. Разработчик НЕ гарантирует бесперебойную, безошибочную работу Теста.</div>
+<div class="offer-txt">14.2. Тест может содержать ошибки, неточности, технические сбои.</div>
+<div class="offer-txt">14.3. Разработчик вправе в любое время прекратить, приостановить, изменить Тест без уведомления и объяснения причин.</div>
+<div class="offer-txt">14.4. Разработчик не обязан поддерживать, обновлять, исправлять Тест.</div>
+
+<div class="offer-txt"><strong>15. ИЗМЕНЕНИЕ УСЛОВИЙ</strong></div>
+<div class="offer-txt">15.1. Разработчик вправе в любое время в одностороннем порядке без уведомления изменять условия Соглашения.</div>
+<div class="offer-txt">15.2. Продолжение использования после изменений означает согласие с новыми условиями.</div>
+<div class="offer-txt">15.3. Обязанность отслеживать изменения лежит на Пользователе.</div>
+
+<div class="offer-txt"><strong>16. РАЗРЕШЕНИЕ СПОРОВ</strong></div>
+<div class="offer-txt">16.1. Споры решаются путем переговоров в течение 30 дней.</div>
+<div class="offer-txt">16.2. При недостижении согласия споры рассматриваются в суде по месту нахождения Разработчика.</div>
+<div class="offer-txt">16.3. Применяется законодательство Российской Федерации.</div>
+
+<div class="offer-txt"><strong>17. ФИЛОСОФИЯ И РЕКОМЕНДАЦИИ</strong></div>
+<div class="offer-txt">17.1. Проект MARU основан на убеждении, что понимание своих врожденных энергий является фундаментом для осознанной жизни и эффективной работы с психологом.</div>
+<div class="offer-txt">17.2. Результаты Теста могут стать отправной точкой для глубокой работы с квалифицированным специалистом, знакомым с концепцией системного подхода MARU.</div>
+<div class="offer-txt">17.3. Для максимальной пользы: отвечайте честно; проходите в спокойной обстановке; воспринимайте результаты как гипотезу, а не истину; обсудите результаты со специалистом.</div>
+
+<div class="offer-txt"><strong>18. ОТСУТСТВИЕ ПАРТНЕРСКИХ ОТНОШЕНИЙ</strong></div>
+<div class="offer-txt">18.1. Соглашение не создает партнерских, агентских, трудовых или иных отношений между Пользователем и Разработчиком.</div>
+<div class="offer-txt">18.2. Стороны являются независимыми.</div>
+
+<div class="offer-txt"><strong>19. ДЕЛИМОСТЬ ПОЛОЖЕНИЙ</strong></div>
+<div class="offer-txt">19.1. Если какое-либо положение Соглашения признано недействительным, остальные положения сохраняют силу.</div>
+<div class="offer-txt">19.2. Недействительное положение заменяется действительным, наиболее близким по смыслу.</div>
+
+<div class="offer-txt"><strong>20. ЗАКЛЮЧИТЕЛЬНЫЕ ПОЛОЖЕНИЯ И ПОДТВЕРЖДЕНИЕ</strong></div>
+<div class="offer-txt">20.1. Нажимая кнопку "Принять и продолжить", Пользователь под собственную ответственность подтверждает и гарантирует, что: достиг возраста 16 лет или имеет письменное согласие законных представителей; является дееспособным лицом; полностью, внимательно прочитал все 20 разделов Соглашения и Политику конфиденциальности; понял содержание, философию проекта MARU, правовую природу Теста; понимает, что Тест НЕ является медицинской услугой, диагностикой, консультацией, лечением; понимает информационно-образовательный характер Теста; осознает все ограничения, риски и отсутствие гарантий; согласен с полным отказом Разработчика от ответственности; принимает на себя все риски использования Теста; обязуется не предъявлять претензий; не находится в остром психологическом кризисе или суицидальном состоянии; действует добровольно, в здравом уме, без принуждения; обязуется использовать результаты только в личных целях; не будет использовать результаты во вред себе или другим; понимает, что нарушение условий влечет ответственность; согласен с обработкой данных в соответствии с Политикой конфиденциальности.</div>
+<div class="offer-txt">20.2. Если Пользователь НЕ согласен хотя бы с одним словом, положением, условием — использование Теста строго запрещено.</div>
+<div class="offer-txt">20.3. Настоящее Соглашение является полным соглашением сторон и заменяет все предыдущие договоренности.</div>
+<div class="offer-txt">20.4. Политика конфиденциальности является неотъемлемой частью настоящего Соглашения.</div>
+</div>
+
+</div><!-- /offer-scroll-wrap -->
+
+<div class="offer-bottom">
+<div class="gender-title" style="margin-top:4px;margin-bottom:10px">Кто проходит проект?</div>
+<div class="gender-block">
+<button class="gender-btn" data-gender="male">
+<svg viewBox="0 0 24 24">
+<circle cx="10" cy="14" r="6"/>
+<path d="M14.5 9.5L20 4"/>
+<path d="M16 4h4v4"/>
+</svg>
+Мужчина
+</button>
+<button class="gender-btn" data-gender="female">
+<svg viewBox="0 0 24 24">
+<circle cx="12" cy="10" r="6"/>
+<path d="M12 16v6"/>
+<path d="M9 19h6"/>
+</svg>
+Женщина
+</button>
+</div>
+
+<div class="chk-row" id="agreeChk">
+<div class="chk-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+<div class="chk-lbl">Я прочитал Соглашение и Политику конфиденциальности, понимаю, что тест не является медицинской услугой и диагнозом, принимаю все риски и согласен на тестирование</div>
+</div>
+
+<button class="btn" id="acceptBtn" style="opacity:0.5;pointer-events:none;position:relative;overflow:visible;">Принять и продолжить</button>
+</div>
+</div>
+
+
+
+<script>
+var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
+if(tg){tg.ready();tg.expand();}
+function hap(t){try{if(tg)tg.HapticFeedback.impactOccurred(t==='m'?'medium':'light');}catch(e){}try{if(navigator.vibrate)navigator.vibrate(t==='m'?14:7);}catch(e){}}
+function $(id){return document.getElementById(id);}
+
+var selectedGender=null, isAgreed=false, modalTimer=null;
+
+function switchTab(tab){
+  document.querySelectorAll('.offer-tab').forEach(function(t){t.classList.toggle('active',t.dataset.tab===tab);});
+  document.querySelectorAll('.offer-tab-content').forEach(function(c){c.classList.remove('active');});
+  $(tab==='intro'?'tabIntro':'tabAgreement').classList.add('active');
+  var sw=document.querySelector('.offer-scroll-wrap');if(sw)sw.scrollTop=0;
+  if(tg)tg.HapticFeedback.impactOccurred('light');
+}
+
+function selectGender(gender){
+  selectedGender=gender;
+  if(modalTimer)clearTimeout(modalTimer);
+  if(gender==='male'){
+    try{if(tg)tg.HapticFeedback.impactOccurred('medium');}catch(e){}
+    if(!tg&&navigator.vibrate)navigator.vibrate(22);
+  } else {
+    try{if(tg){setTimeout(function(){tg.HapticFeedback.impactOccurred('light');},0);setTimeout(function(){tg.HapticFeedback.impactOccurred('light');},120);}}catch(e){}
+    if(!tg&&navigator.vibrate)navigator.vibrate([10,80,10]);
+  }
+  document.querySelectorAll('.gender-btn').forEach(function(b){
+    b.classList.remove('selected','selected-male','selected-female');
+  });
+  var sel=document.querySelector('[data-gender="'+gender+'"]');
+  if(sel)sel.classList.add('selected','selected-'+(gender==='male'?'male':'female'));
+  var nd=$('offerNarrDefault'),nf=$('offerNarrFemale'),nm=$('offerNarrMale');
+  if(nd)nd.style.display='none';
+  if(nf)nf.style.display=gender==='female'?'block':'none';
+  if(nm)nm.style.display=gender==='male'?'block':'none';
+  // Пульс энергий с stagger
+  var circles=document.querySelectorAll('.energy-ico-circle');
+  circles.forEach(function(c,i){
+    setTimeout(function(){
+      c.classList.remove('pulse-anim');
+      void c.offsetWidth;
+      c.classList.add('pulse-anim');
+    },i*90);
+  });
+  updateAcceptButton();
+}
+
+function updateAcceptButton(){
+  var btn=$('acceptBtn');
+  if(selectedGender&&isAgreed){
+    btn.style.opacity='1';btn.style.pointerEvents='auto';btn.style.cursor='pointer';
+    btn.classList.remove('pulse');
+    btn.offsetHeight;
+    btn.classList.add('pulse');
+    btn.addEventListener('animationend',function(){btn.classList.remove('pulse');},{once:true});
+  } else {
+    btn.style.opacity='0.5';btn.style.pointerEvents='none';btn.style.cursor='not-allowed';
+    btn.classList.remove('pulse');
+  }
+}
+
+document.addEventListener('click',function(e){
+  var gb=e.target.closest('.gender-btn');
+  if(gb&&gb.dataset.gender){e.preventDefault();e.stopPropagation();selectGender(gb.dataset.gender);return;}
+  var ck=e.target.closest('#agreeChk');
+  if(ck){isAgreed=!isAgreed;ck.classList.toggle('checked',isAgreed);if(tg)tg.HapticFeedback.impactOccurred('light');updateAcceptButton();return;}
+},{passive:false});
+
+document.addEventListener('touchend',function(e){
+  var gb=e.target.closest('.gender-btn');
+  if(gb&&gb.dataset.gender){e.preventDefault();e.stopPropagation();selectGender(gb.dataset.gender);return;}
+  var ck=e.target.closest('#agreeChk');
+  if(ck){e.preventDefault();isAgreed=!isAgreed;ck.classList.toggle('checked',isAgreed);if(tg)tg.HapticFeedback.impactOccurred('light');updateAcceptButton();return;}
+},{passive:false});
+
+document.addEventListener('touchstart',function(e){
+  var gb=e.target.closest('.gender-btn');if(gb)gb.style.opacity='0.8';
+},{passive:true});
+document.addEventListener('touchcancel',function(e){
+  var gb=e.target.closest('.gender-btn');if(gb)gb.style.opacity='1';
+},{passive:true});
+
+$('acceptBtn').onclick=function(){
+  if(!selectedGender||!isAgreed)return;
+  if(tg)tg.HapticFeedback.impactOccurred('medium');
+  try{sessionStorage.setItem('maru_gender',selectedGender==='male'?'М':'Ж');}catch(e){}
+  document.body.style.transition='opacity .25s ease';
+  document.body.style.opacity='0';
+  setTimeout(function(){window.location.href='screen2.html';},250);
+};
+
+
+
+var privBack=document.querySelector('.privacy-back');
+if(privBack)privBack.addEventListener('click',function(){
+    hap('m');$('privacyScreen').classList.remove('active');});
+</script>
+
+</body>
+</html>
