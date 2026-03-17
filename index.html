@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>MARU</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
+:root{
+  --bg:#e8e8e8;
+  --sd:#b8b8b8;
+  --sl:#ffffff;
+  --acc:#FF6B6B;
+}
+html,body{width:100%;height:100%;overflow:hidden;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter',sans-serif;background:var(--bg);margin:0 auto;max-width:390px;position:relative}
+
+#splash{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  z-index:100;
+  overflow:hidden;
+}
+
+/* п.5: зернистость поверх фона */
+#noise{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  pointer-events:none;
+  z-index:1;
+  opacity:0.045;
+}
+
+/* всё содержимое поверх шума */
+.spl-logo, .spl-btn-wrap, #pulse-wrap{position:relative;z-index:2}
+
+/* ЛОГО */
+.spl-logo{
+  display:flex;
+  align-items:center;
+  margin-bottom:64px;
+}
+
+.spl-letter{
+  font-size:clamp(32px, 10vw, 39px);
+  font-weight:700;
+  letter-spacing:0.06em;
+  color:var(--bg);
+  text-shadow:
+     1px  1px 1px rgba(255,255,255,0.9),
+    -1px -1px 2px rgba(0,0,0,0.22);
+  display:inline-block;
+  cursor:pointer;
+  opacity:0;
+  transform:scale(1.18);
+  transition:opacity 1.6s cubic-bezier(0.4,0,0.2,1),
+             transform 1.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+
+
+/* CTA */
+.spl-btn-wrap{
+  position:absolute;
+  bottom:calc(40px + env(safe-area-inset-bottom));
+  left:0;right:0;
+  display:flex;
+  justify-content:center;
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity 0.9s cubic-bezier(0.22,1,0.36,1),
+             transform 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+
+.spl-btn{
+  background:none;
+  border:none;
+  font-family:'Inter',sans-serif;
+  font-size:11px;
+  font-weight:300;
+  letter-spacing:0.26em;
+  text-transform:uppercase;
+  color:var(--bg);
+  text-shadow:
+    -1px -1px 1px rgba(0,0,0,0.35),
+     1px  1px 1px rgba(255,255,255,0.9);
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  padding:8px 0;
+  position:relative;
+}
+
+/* п.4: две фразы с crossfade */
+.btn-text{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  white-space:nowrap;
+  transition:opacity 0.6s ease;
+}
+.btn-text.hidden{opacity:0}
+.btn-text.visible{opacity:1}
+</style>
+</head>
+<body>
+
+<div id="splash">
+
+  <!-- п.5: SVG noise фильтр -->
+  <svg id="noise" xmlns="http://www.w3.org/2000/svg">
+    <filter id="noiseFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+  </svg>
+
+  <div class="spl-logo">
+    <span class="spl-letter" id="l0">M</span>
+    <span class="spl-letter" id="l1">A</span>
+    <span class="spl-letter" id="l2">R</span>
+    <span class="spl-letter" id="l3">U</span>
+  </div>
+
+  <div class="spl-btn-wrap" id="btnWrap">
+    <!-- п.4: две фразы -->
+    <button class="spl-btn" id="splBtn" style="width:200px;height:32px;">
+      <span class="btn-text visible" id="txt1">&gt; следуй за мной</span>
+      <span class="btn-text hidden"  id="txt2">&gt; узнай его</span>
+    </button>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var tg = null;
+  if(window.Telegram && window.Telegram.WebApp){
+    tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+  }
+
+  var splash  = document.getElementById('splash');
+  var btnWrap = document.getElementById('btnWrap');
+  var btn     = document.getElementById('splBtn');
+  var els     = [
+    document.getElementById('l0'),
+    document.getElementById('l1'),
+    document.getElementById('l2'),
+    document.getElementById('l3')
+  ];
+
+  /* ── ПОЯВЛЕНИЕ БУКВ — чистый JS transition ── */
+  [300, 650, 1000, 1350].forEach(function(delay, i){
+    setTimeout(function(){
+      els[i].style.opacity   = '1';
+      els[i].style.transform = 'scale(1)';
+    }, delay);
+  });
+
+  /* ── КНОПКА 3.1s ── */
+  setTimeout(function(){
+    btnWrap.style.opacity   = '1';
+    btnWrap.style.transform = 'translateY(0)';
+  }, 3100);
+
+  /* ── П.4: CROSSFADE ФРАЗ CTA ── */
+  (function(){
+    var txt1 = document.getElementById('txt1');
+    var txt2 = document.getElementById('txt2');
+    var showing1 = true;
+
+    function togglePhrase(){
+      if(showing1){
+        txt1.classList.remove('visible'); txt1.classList.add('hidden');
+        setTimeout(function(){
+          txt2.classList.remove('hidden'); txt2.classList.add('visible');
+        }, 300);
+      } else {
+        txt2.classList.remove('visible'); txt2.classList.add('hidden');
+        setTimeout(function(){
+          txt1.classList.remove('hidden'); txt1.classList.add('visible');
+        }, 300);
+      }
+      showing1 = !showing1;
+    }
+
+    /* первое переключение через 4s после появления кнопки (3.1 + 4 = 7.1s) */
+    setTimeout(function(){
+      setInterval(togglePhrase, 4000);
+    }, 7100);
+  })();
+
+  /* ── TAP НА БУКВЫ ── */
+  els.forEach(function(el){
+    function doTap(e){
+      e.preventDefault();
+      if(tg) tg.HapticFeedback.impactOccurred('light');
+      if(navigator.vibrate) navigator.vibrate(8);
+      el.style.transition = 'opacity 0.08s ease, transform 0.08s ease';
+      el.style.transform  = 'scale(0.88)';
+      el.style.opacity    = '0.7';
+      setTimeout(function(){
+        el.style.transition = 'opacity 0.3s cubic-bezier(0.34,1.56,0.64,1), transform 0.3s cubic-bezier(0.34,1.56,0.64,1)';
+        el.style.transform  = 'scale(1)';
+        el.style.opacity    = '1';
+      }, 120);
+    }
+    el.addEventListener('touchstart', doTap, {passive:false});
+    el.addEventListener('click', doTap);
+  });
+
+  /* ── П.7: СВАЙП ВНИЗ — разлёт пропорционально pull ── */
+  (function(){
+    var fly = [
+      {tx:-60, ty:-80, rot:-20},
+      {tx:-20, ty: 90, rot: 14},
+      {tx: 24, ty:-90, rot:-13},
+      {tx: 68, ty: 72, rot: 22}
+    ];
+
+    var startY = 0, pulling = false, pullDist = 0;
+    var THRESHOLD = 80; /* px до срабатывания */
+
+    splash.addEventListener('touchstart', function(e){
+      /* игнорируем тапы на кнопку */
+      if(e.target === btn || btn.contains(e.target)) return;
+      startY   = e.touches[0].clientY;
+      pulling  = true;
+      pullDist = 0;
+    }, {passive:true});
+
+    splash.addEventListener('touchmove', function(e){
+      if(!pulling || exited) return;
+      var dy = e.touches[0].clientY - startY;
+      if(dy < 0){ pulling = false; return; } /* только вниз */
+      pullDist = Math.min(dy, THRESHOLD * 1.5);
+      var progress = Math.min(pullDist / THRESHOLD, 1);
+
+      els.forEach(function(el, i){
+        var f = fly[i];
+        var tx = f.tx * progress;
+        var ty = f.ty * progress;
+        var rot = f.rot * progress;
+        var sc  = 1 - 0.65 * progress;
+        var op  = 1 - progress;
+        /* быстрый transition для live-feedback */
+        el.style.transition = 'none';
+        el.style.transform  = 'translate('+tx+'px,'+ty+'px) scale('+sc+') rotate('+rot+'deg)';
+        el.style.opacity    = op;
+      });
+
+      btnWrap.style.transition = 'none';
+      btnWrap.style.opacity    = Math.max(0, 1 - progress * 2);
+    }, {passive:true});
+
+    splash.addEventListener('touchend', function(){
+      if(!pulling || exited) return;
+      pulling = false;
+      var progress = pullDist / THRESHOLD;
+
+      if(progress >= 1){
+        /* порог достигнут — уходим */
+        goToScreen2(true); /* true = уже анимированы */
+      } else {
+        /* возврат с пружиной */
+        els.forEach(function(el){
+          el.style.transition = 'opacity 0.4s cubic-bezier(0.34,1.56,0.64,1), transform 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+          el.style.transform  = 'scale(1)';
+          el.style.opacity    = '1';
+        });
+        btnWrap.style.transition = 'opacity 0.4s ease';
+        btnWrap.style.opacity    = '1';
+      }
+    }, {passive:true});
+  })();
+
+  /* ── РАЗЛЁТ + EXIT ── */
+  var fly = [
+    {tx:'-60px', ty:'-80px', rot:'-20deg'},
+    {tx:'-20px', ty:' 90px', rot:' 14deg'},
+    {tx:' 24px', ty:'-90px', rot:'-13deg'},
+    {tx:' 68px', ty:' 72px', rot:' 22deg'}
+  ];
+
+  var exited = false;
+  /* если есть сохранённый прогресс — сразу на экран 4 */
+  try{
+    var prog=JSON.parse(localStorage.getItem('maru_progress')||'null');
+    if(prog&&prog.current>0){
+      document.body.style.opacity='0';
+      setTimeout(function(){window.location.href='screen4.html';},100);
+    }
+  }catch(e){}
+
+  function goToScreen2(alreadyFlying){
+    if(exited) return;
+    exited = true;
+    if(tg) tg.HapticFeedback.impactOccurred('medium');
+    if(navigator.vibrate) navigator.vibrate(18);
+
+    if(!alreadyFlying){
+      els.forEach(function(el, i){
+        setTimeout(function(){
+          el.style.transition = 'opacity 0.22s ease, transform 0.28s cubic-bezier(0.55,0,1,0.45)';
+          el.style.opacity    = '0';
+          el.style.transform  = 'translate('+fly[i].tx+','+fly[i].ty+') scale(0.35) rotate('+fly[i].rot+')';
+        }, i * 45);
+      });
+      btnWrap.style.transition = 'opacity 0.18s ease';
+      btnWrap.style.opacity    = '0';
+    }
+
+    setTimeout(function(){
+      splash.style.display = 'none';
+      document.body.style.transition='opacity .3s';document.body.style.opacity='0';setTimeout(function(){window.location.href='screen1.html';},300);
+    }, 340);
+  }
+
+  btn.addEventListener('click',    function(e){ e.preventDefault(); goToScreen2(false); });
+  btn.addEventListener('touchend', function(e){ e.preventDefault(); goToScreen2(false); }, {passive:false});
+
+})();
+</script>
+
+</body>
+</html>
