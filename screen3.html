@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>MARU</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;-webkit-font-smoothing:antialiased;font-family:'Inter','Helvetica Neue',-apple-system,sans-serif}
+:root{--bg:#e8e8e8;--t1:#2c2c2c;--t2:#666666;--t3:#999999;--acc:#FF6B6B}
+body{background:var(--bg)}
+
+.screen{
+  width:100%;max-width:390px;height:100dvh;margin:0 auto;
+  display:flex;flex-direction:column;
+  padding:calc(env(safe-area-inset-top,0px) + 24px) 20px 0;
+}
+
+/* ЛОГОТИП — 24px сверху, 16px снизу */
+.logo{
+  flex-shrink:0;
+  font-size:22px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--bg);text-shadow:-1px -1px 1px rgba(0,0,0,0.12),1px 1px 2px rgba(255,255,255,0.6);
+  user-select:none;text-align:center;
+  padding:16px 0 24px;
+}
+
+/* СКРОЛЛ */
+.scroll-wrap{flex:1;min-height:0}
+.scroll-inner{
+  height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  display:flex;flex-direction:column;gap:12px;
+  padding-top:8px;padding-bottom:100px;
+}
+.scroll-inner::-webkit-scrollbar{display:none}
+
+/* КАРТОЧКИ */
+.card{
+  border-radius:16px;background:transparent;
+  border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);
+  border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);
+  padding:16px;
+  opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease;
+}
+.card.visible{opacity:1;transform:translateY(0)}
+
+/* ПРОФИЛЬ */
+.profile-row{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.card-profile{perspective:600px}
+.card-profile-inner{transition:transform .15s ease-out;will-change:transform}
+.avatar-wrap{flex-shrink:0;width:66px;height:66px;border-radius:50%;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);display:flex;align-items:center;justify-content:center;}
+.avatar{
+  flex-shrink:0;width:64px;height:64px;border-radius:50%;overflow:hidden;background:#d0d0d0;
+  border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);
+  border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);
+}
+/* дыхание заглушки */
+@keyframes avatarBreathe{0%,100%{opacity:.7}50%{opacity:1}}
+.avatar--placeholder svg{animation:avatarBreathe 3s ease-in-out infinite}
+/* акцент первой карточки */
+.card-first{border-bottom-color:rgba(255,107,107,0.15)}
+/* пульс цифры 30 */
+@keyframes stat30Pulse{0%,100%{color:var(--t1);transform:scale(1)}50%{color:var(--acc);transform:scale(1.08)}}
+.stat-30.pulse-num{animation:stat30Pulse .5s ease}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar svg{width:100%;height:100%}
+.profile-name{font-size:24px;font-weight:700;letter-spacing:-0.01em;color:var(--t1);line-height:1.1}
+.greeting-label{font-size:12px;color:var(--t2);font-weight:500;letter-spacing:0.02em;margin-bottom:4px}
+
+.divider{width:100%;height:1px;background:transparent;box-shadow:0 1px 0 rgba(255,255,255,0.55),0 -1px 0 rgba(0,0,0,0.08);margin:16px 0}
+
+/* ТЕКСТ */
+.main-text{font-size:13px;color:var(--t2);line-height:1.7;letter-spacing:0.01em}
+.main-text strong{color:var(--t1);font-weight:600}
+
+/* ПОДПИСЬ АВТОРА */
+.author-sig{margin-top:16px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.05)}
+.author-name{font-size:13px;font-weight:600;color:var(--t1)}
+.author-role{font-size:11px;color:var(--t2);margin-top:2px;letter-spacing:0.02em}
+
+/* ЭНЕРГИИ */
+.energies{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
+.energy-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 0;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;
+  border-radius:12px;transition:transform .12s ease;
+}
+.energy-item:active{transform:scale(0.88)}
+.energy-label{font-size:10px;color:var(--t3);text-align:center;transition:color .2s ease}
+.energy-item svg{width:22px;height:22px;stroke:var(--t2);stroke-width:1.8;fill:none;transition:stroke .2s ease}
+.energy-item.active svg{stroke:var(--acc)}
+.energy-item.active .energy-label{color:var(--acc)}
+.energy-sep{width:1px;height:24px;flex-shrink:0;background:transparent;box-shadow:1px 0 0 rgba(255,255,255,0.55),-1px 0 0 rgba(0,0,0,0.08)}
+
+/* СТАТЫ */
+.stat-row{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid rgba(0,0,0,0.04)}
+.stat-row:last-child{border-bottom:none}
+.stat-row svg{flex-shrink:0;width:18px;height:18px;stroke:var(--acc);stroke-width:2;fill:none}
+.stat-main{font-size:15px;font-weight:600;color:var(--t1);line-height:1.2}
+.stat-hint{font-size:11px;color:var(--t3);margin-top:2px;letter-spacing:0.02em}
+
+/* КНОПКА — overflow:visible чтобы spark не обрезался */
+.btn-wrap{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(16px);
+  width:100%;max-width:390px;
+  padding:12px 20px calc(env(safe-area-inset-bottom,0px) + 16px);
+  background:linear-gradient(to bottom,rgba(232,232,232,0),rgba(232,232,232,1) 30%);
+  z-index:10;opacity:0;transition:opacity .4s ease,transform .4s ease;
+}
+.btn-wrap.visible{opacity:1;transform:translateX(-50%) translateY(0)}
+.btn-start{
+  width:100%;height:54px;
+  border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);
+  border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);
+  border-radius:16px;cursor:pointer;font-family:inherit;background:transparent;
+  color:var(--acc);font-size:11px;font-weight:600;letter-spacing:0.26em;text-transform:uppercase;
+  transition:transform .12s ease,border-color .3s ease;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:visible; /* НЕ hidden — spark должен быть виден */
+}
+.btn-start:active{transform:scale(0.98)}
+
+/* SPARK — только низ и правый бок, coral, медленно */
+.btn-spark-svg{
+  position:absolute;inset:0;width:100%;height:100%;
+  pointer-events:none;overflow:visible;
+}
+.btn-spark-svg path{
+  fill:none;
+  stroke:rgba(255,107,107,0.65);
+  stroke-width:1.5;
+  stroke-linecap:round;
+  stroke-dasharray:0 9999;
+  opacity:0;
+}
+@keyframes sparkRun{
+  0%{stroke-dasharray:0 9999;opacity:0}
+  5%{opacity:1}
+  85%{stroke-dasharray:9999 0;opacity:0.55}
+  100%{stroke-dasharray:9999 0;opacity:0}
+}
+.btn-spark-svg.run path{animation:sparkRun 2.6s cubic-bezier(0.4,0,0.15,1) forwards}
+
+/* пульс бордера кнопки */
+@keyframes btnPulse{
+  0%{border-bottom-color:rgba(255,255,255,0.55);border-right-color:rgba(255,255,255,0.45)}
+  40%{border-bottom-color:rgba(255,107,107,0.9);border-right-color:rgba(255,107,107,0.7)}
+  100%{border-bottom-color:rgba(255,255,255,0.55);border-right-color:rgba(255,255,255,0.45)}
+}
+.btn-start.pulse{animation:btnPulse 2.0s ease 0s 1}
+
+.btn-sub{text-align:center;font-size:11px;color:var(--t3);margin-top:10px;letter-spacing:0.03em}
+
+/* ТУЛТИП */
+#tip{
+  position:fixed;background:var(--bg);
+  border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);
+  border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);
+  border-radius:10px;padding:8px 14px;font-size:12px;color:var(--t1);
+  white-space:nowrap;pointer-events:none;
+  opacity:0;transform:translateY(4px);transition:opacity .18s ease,transform .18s ease;z-index:100;
+}
+#tip.show{opacity:1;transform:translateY(0)}
+#tip::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:rgba(255,255,255,0.45);
+}
+
+/* OVERLAY переход */
+.go-overlay{position:fixed;inset:0;background:var(--bg);opacity:0;pointer-events:none;z-index:999;transition:opacity .5s ease}
+.go-overlay.flash{opacity:1}
+
+/* ripple карточки энергий */
+@keyframes cardRipple{
+  0%{box-shadow:0 0 0 0 rgba(255,107,107,0)}
+  50%{box-shadow:0 0 0 3px rgba(255,107,107,0.10)}
+  100%{box-shadow:0 0 0 0 rgba(255,107,107,0)}
+}
+.card-energies{animation:cardRipple .9s ease-out 1.2s 2}
+
+@keyframes screenIn{0%{opacity:0;transform:scale(1.03)}100%{opacity:1;transform:scale(1)}}
+.screen-in{opacity:0;animation:screenIn .4s cubic-bezier(0.22,1,0.36,1) .06s forwards}
+</style>
+</head>
+<body>
+<div class="go-overlay" id="goOverlay"></div>
+<div class="screen">
+
+  <div class="logo">MARU</div>
+
+  <div class="scroll-wrap">
+    <div class="scroll-inner">
+
+      <!-- КАРТОЧКА 1: текст + подпись -->
+      <div class="card card-profile card-first">
+        <div class="card-profile-inner">
+        <div class="profile-row">
+          <div class="avatar-wrap"><div class="avatar avatar--placeholder" id="avatarWrap">
+            <svg viewBox="0 0 200 200"><rect width="200" height="200" fill="#d0d0d0"/><circle cx="100" cy="80" r="30" fill="#b8b8b8"/><ellipse cx="100" cy="160" rx="50" ry="35" fill="#b8b8b8"/></svg>
+          </div></div>
+          <div>
+            <div class="greeting-label">Мы приветствуем тебя</div>
+            <div class="profile-name" id="userName">Саша</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="main-text">
+          «Да, выглядит как тест.<br><br>
+          Но это не тест. Это то, что я собирал годами — про себя, про людей вокруг, про то, почему одни живут легко, а другие постоянно в борьбе с самими собой. Почему с деньгами всё понятно, но что-то всегда тормозит. Почему иногда всё идёт на взлёте, но чаще даже не знаешь что делать — и всё разваливается. Почему вдруг начинаешь сомневаться — и так по кругу.<br><br>
+          <strong>Я нашёл ответ. И зашил его сюда.</strong><br><br>
+          30 минут — и ты поймёшь про себя то, что большинство людей не поймут никогда.»
+        </div>
+        <div class="author-sig">
+          <div class="author-name">Игорь Макаров</div>
+          <div class="author-role">философ · магистр психологии</div>
+        </div>
+        </div><!-- /card-profile-inner -->
+      </div>
+
+      <!-- КАРТОЧКА 2: энергии -->
+      <div class="card card-energies">
+        <div class="energies">
+          <div class="energy-item" data-tip="глубина. качество. память">
+            <svg viewBox="0 0 24 24"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
+            <div class="energy-label">Знания</div>
+          </div>
+          <div class="energy-sep"></div>
+          <div class="energy-item" data-tip="скорость. структура. результат">
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
+            <div class="energy-label">Формула</div>
+          </div>
+          <div class="energy-sep"></div>
+          <div class="energy-item" data-tip="идеи. целостность. смысл за словами">
+            <svg viewBox="0 0 24 24"><path d="M12 12c-2-2.5-4-4-6-4a4 4 0 0 0 0 8c2 0 4-1.5 6-4zm0 0c2 2.5 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.5-6 4z"/></svg>
+            <div class="energy-label">Смысл</div>
+          </div>
+          <div class="energy-sep"></div>
+          <div class="energy-item" data-tip="влияние. голос. связь">
+            <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7v10M4 10v4M16 7v10M20 10v4"/></svg>
+            <div class="energy-label">Звук</div>
+          </div>
+          <div class="energy-sep"></div>
+          <div class="energy-item" data-tip="чувство. интуиция. близость">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <div class="energy-label">Эмоция</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- КАРТОЧКА 3: статы -->
+      <div class="card">
+        <div class="stat-row">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <div>
+            <div class="stat-main stat-30" id="stat30">30 минут</div>
+            <div class="stat-hint">и ты узнаешь свою природу</div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <div>
+            <div class="stat-main" style="font-size:13px">96 вопросов</div>
+            <div class="stat-hint">которые ты так не анализировал</div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <svg viewBox="0 0 24 24" style="opacity:0.4"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div>
+            <div class="stat-main" style="font-size:13px;color:var(--t2)">Один из 60 — это ты</div>
+            <div class="stat-hint">5 энергий. 60 комбинаций. Твой архетип уже внутри.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="btn-wrap" id="btnWrap">
+    <button class="btn-start" id="btnStart" onclick="go()">
+      ПОГНАЛИ
+      <svg class="btn-spark-svg" id="btnSpark"><path id="sparkPath"/></svg>
+    </button>
+    <div class="btn-sub">Результат получите вы оба</div>
+  </div>
+
+</div>
+<div id="tip"></div>
+
+<script>
+(function(){
+  var s=document.querySelector('.screen');
+  s.classList.add('screen-in');
+  s.addEventListener('animationend',function(){s.classList.remove('screen-in')},{once:true});
+})();
+
+// Telegram
+var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
+if(tg){
+  tg.ready();tg.expand();
+  if(tg.safeAreaInsets&&tg.safeAreaInsets.top)
+    document.querySelector('.screen').style.paddingTop=(tg.safeAreaInsets.top+24)+'px';
+}
+// Аватар и имя — работает и внутри Telegram, и без
+(function(){
+  var user=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;
+  if(user&&user.first_name)document.getElementById('userName').textContent=user.first_name;
+  var photoUrl=user&&user.photo_url?user.photo_url:'';
+  var aw=document.getElementById('avatarWrap');
+  function tryLoad(src,fallback){
+    if(!src)return;
+    var img=new Image();
+    img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;border-radius:50%';
+    img.onload=function(){aw.classList.remove('avatar--placeholder');aw.innerHTML='';aw.appendChild(img);};
+    img.onerror=function(){if(fallback)tryLoad(fallback,null);/* иначе SVG-заглушка остаётся */};
+    img.src=src;
+  }
+  if(photoUrl)tryLoad(photoUrl,'avatar.jpg');
+  else tryLoad('avatar.jpg',null);
+})();
+
+function hap(t){
+  try{if(navigator.vibrate)navigator.vibrate(t==='h'?[14,50,8]:8);}catch(e){}
+  try{if(tg)tg.HapticFeedback.impactOccurred(t==='h'?'medium':'light');}catch(e){}
+}
+
+// Карточки каскадом
+var cards=Array.from(document.querySelectorAll('.card'));
+cards.forEach(function(el,i){
+  setTimeout(function(){
+    el.classList.add('visible');
+    // каскад энергий при появлении карточки 2 — по очереди 120ms
+    if(el.classList.contains('card-energies')){
+      setTimeout(function(){
+        var items=el.querySelectorAll('.energy-item');
+        items.forEach(function(it,j){
+          setTimeout(function(){
+            it.classList.add('active');
+            hap('l');
+            setTimeout(function(){it.classList.remove('active')},400);
+          },j*120);
+        });
+        // подсказка: первая энергия мигает 2 раза после каскада
+        var firstE=items[0];
+        var blinkDelay=items.length*120+500;
+        setTimeout(function(){
+          firstE.classList.add('active');
+          setTimeout(function(){firstE.classList.remove('active');
+            setTimeout(function(){firstE.classList.add('active');
+              setTimeout(function(){firstE.classList.remove('active')},300);
+            },200);
+          },300);
+        },blinkDelay);
+      },300);
+    }
+  },80+i*100);
+});
+var lastDelay=80+cards.length*100;
+
+// Энергии мигают по очереди — живая система
+(function(){
+  var items=Array.from(document.querySelectorAll('.energy-item'));
+  var idx=0;
+  function pulse(){
+    items[idx].classList.add('active');
+    hap('l');
+    setTimeout(function(){items[idx].classList.remove('active');idx=(idx+1)%items.length;},450);
+  }
+  setTimeout(function(){pulse();setInterval(pulse,2600);},1600);
+})();
+
+// Кнопка + spark — задержка 400ms после последней карточки
+setTimeout(function(){
+  var bw=document.getElementById('btnWrap');
+  bw.classList.add('visible');
+  setTimeout(function(){
+    var btn=document.getElementById('btnStart');
+    var svg=document.getElementById('btnSpark');
+    var sp=document.getElementById('sparkPath');
+    var w=btn.offsetWidth,h=btn.offsetHeight,r=16;
+    var d='M'+r+','+(h-1)+
+         ' L'+(w-r)+','+(h-1)+
+         ' Q'+(w-1)+','+(h-1)+' '+(w-1)+','+(h-r)+
+         ' L'+(w-1)+','+r;
+    sp.setAttribute('d',d);
+    svg.classList.add('run');
+    sp.addEventListener('animationend',function(){svg.classList.remove('run');},{once:true});
+    btn.classList.remove('pulse');btn.offsetHeight;btn.classList.add('pulse');
+    btn.addEventListener('animationend',function(){btn.classList.remove('pulse');},{once:true});
+  },200);
+},lastDelay+400);
+
+// Гироскоп — 3D tilt карточки профиля
+(function(){
+  var card=document.querySelector('.card-profile-inner');
+  if(!card)return;
+  var maxTilt=6;
+  function applyTilt(x,y){
+    card.style.transform='rotateY('+x+'deg) rotateX('+y+'deg)';
+  }
+  if(window.DeviceOrientationEvent){
+    var base=null;
+    window.addEventListener('deviceorientation',function(e){
+      if(e.gamma===null)return;
+      if(!base)base={g:e.gamma,b:e.beta};
+      var dx=Math.max(-maxTilt,Math.min(maxTilt,(e.gamma-base.g)*0.3));
+      var dy=Math.max(-maxTilt,Math.min(maxTilt,(e.beta-base.b)*-0.3));
+      applyTilt(dx,dy);
+    });
+  }
+  // fallback: мышь на десктопе
+  document.addEventListener('mousemove',function(e){
+    var cx=window.innerWidth/2,cy=window.innerHeight/2;
+    var dx=((e.clientX-cx)/cx)*maxTilt;
+    var dy=((e.clientY-cy)/cy)*-maxTilt;
+    applyTilt(dx,dy);
+  });
+})();
+
+// Пульс «30 минут» каждые 4 секунды
+(function(){
+  var el=document.getElementById('stat30');
+  if(!el)return;
+  setInterval(function(){
+    el.classList.remove('pulse-num');void el.offsetWidth;el.classList.add('pulse-num');
+    el.addEventListener('animationend',function(){el.classList.remove('pulse-num');},{once:true});
+  },4000);
+})();
+
+// Убираем дыхание аватара если TG фото загрузилось
+(function(){
+  var aw=document.getElementById('avatarWrap');
+  if(aw&&aw.querySelector('img'))aw.classList.remove('avatar--placeholder');
+})();
+
+// Тултипы
+var tip=document.getElementById('tip'),activeE=null,ht=null;
+function showTip(el){
+  if(ht)clearTimeout(ht);
+  if(activeE&&activeE!==el)activeE.classList.remove('active');
+  activeE=el;el.classList.add('active');
+  tip.textContent=el.dataset.tip;
+  var r=el.getBoundingClientRect();
+  var l=r.left+r.width/2,t=r.top-12;
+  var mxW=tip.offsetWidth||140;
+  l=Math.max(mxW/2+8,Math.min(window.innerWidth-mxW/2-8,l));
+  tip.style.left=l+'px';tip.style.top=t+'px';
+  tip.style.transform='translate(-50%,-100%) translateY(-4px)';
+  tip.classList.add('show');
+  hap('l');
+  ht=setTimeout(function(){tip.classList.remove('show');el.classList.remove('active');activeE=null;},2500);
+}
+document.querySelectorAll('.energy-item').forEach(function(el){
+  el.addEventListener('touchstart',function(e){e.preventDefault();showTip(el);},{passive:false});
+  el.addEventListener('click',function(){showTip(el);});
+});
+document.addEventListener('touchstart',function(e){
+  if(activeE&&!activeE.contains(e.target)){
+    if(ht)clearTimeout(ht);
+    tip.classList.remove('show');activeE.classList.remove('active');activeE=null;
+  }
+},{passive:true});
+
+// Переход
+function go(){
+  hap('h');
+  var ov=document.getElementById('goOverlay');
+  var sc=document.querySelector('.screen');
+  ov.classList.add('flash');
+  sc.style.transition='opacity .4s ease,transform .4s ease';
+  sc.style.opacity='0';sc.style.transform='scale(0.97)';
+  setTimeout(function(){window.location.href='screen4.html';},480);
+}
+</script>
+</body>
+</html>
