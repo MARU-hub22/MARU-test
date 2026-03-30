@@ -386,7 +386,7 @@ function hap(t){
 }
 
 /* данные */
-try{if(!localStorage.getItem('maru_block1')){window.location.replace('screen1.html');}}catch(e){}
+try{if(!sessionStorage.getItem('maru_pass')){window.location.replace('screen1.html');}}catch(e){}
 var D={archetype:'Стратег',scores:{ЗН:32,Ф:28,СМ:18,Э:12,ЗВ:10},gender:'М'};
 try{
   var b=JSON.parse(localStorage.getItem('maru_block1')||'{}');

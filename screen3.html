@@ -472,9 +472,6 @@
       QUESTIONS = data.questions;
       SCORING = data.scoring;
       ARCHETYPES_MAP = data.archetypes_map;
-      try{localStorage.removeItem('maru_progress');}catch(e){}
-      window.location.href='screen1.html';
-      return;
       overlayActive = true;
       setTimeout(() => showOverlay('ov1'), 300);
     } catch(e) {
@@ -701,6 +698,7 @@
     });
 
     // переход на результат
+    try{sessionStorage.setItem('maru_pass','1');}catch(e){}
     document.body.style.transition = 'opacity .25s ease';
     document.body.style.opacity = '0';
     setTimeout(() => { window.location.href = 'screen4.html'; }, 260);
