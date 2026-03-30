@@ -472,17 +472,9 @@
       QUESTIONS = data.questions;
       SCORING = data.scoring;
       ARCHETYPES_MAP = data.archetypes_map;
-      /* восстановление прогресса */
-      try{
-        var saved=JSON.parse(localStorage.getItem('maru_progress')||'null');
-        if(saved&&saved.current>0){
-          userAnswers=saved.userAnswers||{};
-          current=saved.current;
-          renderQ(current);
-          return;
-        }
-      }catch(e){}
-      renderQ(0);
+      try{localStorage.removeItem('maru_progress');}catch(e){}
+      window.location.href='screen1.html';
+      return;
       overlayActive = true;
       setTimeout(() => showOverlay('ov1'), 300);
     } catch(e) {
