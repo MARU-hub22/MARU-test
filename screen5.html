@@ -462,7 +462,7 @@ html,body{
 <script>
 (function(){
 var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
-if(tg){tg.ready();tg.expand();}
+if(tg){tg.ready();tg.expand();try{tg.setBackgroundColor('#efefef');tg.setHeaderColor('#efefef');}catch(e){}}
 
 function hap(t){
   try{if(tg)tg.HapticFeedback.impactOccurred(t==='m'?'medium':'light');}catch(e){}

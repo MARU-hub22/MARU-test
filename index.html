@@ -162,11 +162,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);margin:0 auto;max-width
     tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
+    try{tg.setBackgroundColor('#efefef');tg.setHeaderColor('#efefef');}catch(e){}
   }
 
   /* ── РЕДИРЕКТ: если открыто по ссылке с результатом ── */
   if(tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param){
-    window.location.replace('screen7.html');
+    window.location.replace('screen6.html');
     return;
   }
 
@@ -329,14 +330,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);margin:0 auto;max-width
   ];
 
   var exited = false;
-  /* если есть сохранённый прогресс — сразу на экран 4 */
-  try{
-    var prog=JSON.parse(localStorage.getItem('maru_progress')||'null');
-    if(prog&&prog.current>0){
-      document.body.style.opacity='0';
-      setTimeout(function(){window.location.href='screen4.html';},100);
-    }
-  }catch(e){}
 
   function goToScreen2(alreadyFlying){
     if(exited) return;

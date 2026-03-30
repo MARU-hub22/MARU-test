@@ -436,7 +436,7 @@
 
 <script>
   const tg = window.Telegram?.WebApp;
-  if (tg) { tg.ready(); tg.expand(); }
+  if (tg) { tg.ready(); tg.expand(); try{tg.setBackgroundColor('#efefef');tg.setHeaderColor('#efefef');}catch(e){} }
 
   function hap(t) {
     try { tg?.HapticFeedback?.impactOccurred(t === 'm' ? 'medium' : 'light'); } catch(e) {}
@@ -698,7 +698,6 @@
     });
 
     // переход на результат
-    try{sessionStorage.setItem('maru_pass','1');}catch(e){}
     document.body.style.transition = 'opacity .25s ease';
     document.body.style.opacity = '0';
     setTimeout(() => { window.location.href = 'screen4.html'; }, 260);
