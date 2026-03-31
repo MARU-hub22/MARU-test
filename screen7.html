@@ -17,28 +17,26 @@ html, body {
   font-family: 'Inter', -apple-system, sans-serif;
 }
 
-/* ═══════ INTRO BRIDGE ═══════ */
+/* ═══ INTRO ═══ */
 .intro {
   position: fixed; inset: 0; z-index: 50;
   max-width: 390px; margin: 0 auto;
   background: var(--bg);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   padding: 0 40px;
   transition: opacity .6s ease, transform .6s ease;
 }
-.intro.fade { opacity: 0; transform: scale(0.98); pointer-events: none }
+.intro.fade { opacity: 0; transform: scale(0.97); pointer-events: none }
 .intro-text {
-  font-size: 20px; font-weight: 600;
-  color: var(--t1); text-align: center;
+  font-size: 20px; font-weight: 500;
+  color: var(--t2); text-align: center;
   line-height: 1.5; letter-spacing: -0.02em;
   opacity: 0; transform: translateY(12px);
   animation: introIn .8s .3s ease forwards;
 }
-.intro-text span { color: var(--acc) }
 @keyframes introIn { to { opacity: 1; transform: none } }
 
-/* ═══════ VIEWS ═══════ */
+/* ═══ VIEWS ═══ */
 .view {
   position: fixed; inset: 0;
   max-width: 390px; margin: 0 auto;
@@ -47,67 +45,104 @@ html, body {
 }
 .view.hidden { opacity: 0; pointer-events: none; transform: translateX(30px) }
 
-/* ═══════ HEADER ═══════ */
+/* ═══ HEADER — как screen3 ═══ */
 .hdr {
   flex-shrink: 0;
-  padding: max(calc(env(safe-area-inset-top, 0px) + 6px), 20px) 24px 0;
   display: flex; align-items: center;
+  padding: calc(env(safe-area-inset-top, 0px) + 20px) 24px 0;
+  gap: 12px;
+}
+
+/* ring — точная копия screen3 */
+.ring-wrap {
   position: relative;
+  width: 44px; height: 44px;
+  flex-shrink: 0;
 }
-.back-btn {
-  position: absolute; left: 16px;
-  width: 36px; height: 36px; border: none;
-  background: rgba(0,0,0,0.04); border-radius: 50%;
+.ring-wrap svg { transform: rotate(-90deg); display: block }
+.ring-track { fill: none; stroke: rgba(0,0,0,0.1); stroke-width: 3 }
+.ring-fill {
+  fill: none; stroke: var(--acc);
+  stroke-width: 3; stroke-linecap: round;
+  transition: stroke-dashoffset 0.4s ease;
+}
+.ring-num {
+  position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  font-size: 12px; font-weight: 600; color: var(--acc);
 }
-.back-btn:active { background: rgba(0,0,0,0.08) }
-.back-btn svg { width: 18px; height: 18px; color: var(--t2) }
-.hdr-center { flex: 1; text-align: center }
+
+.hdr-center {
+  flex: 1; text-align: center;
+}
 .m-logo {
-  font-size: 22px; font-weight: 700;
+  font-size: 24px; font-weight: 700;
   letter-spacing: .18em; text-transform: uppercase;
   color: var(--bg);
   text-shadow: -1px -1px 1px rgba(0,0,0,0.2),
                1px 1px 1px rgba(255,255,255,0.75),
                0 0 3px rgba(0,0,0,0.04);
 }
-.subtitle {
-  font-size: 9px; letter-spacing: .15em;
-  text-transform: uppercase; color: var(--t3);
-  margin-top: 2px;
+
+/* btn-back — 44×44 гравюрный как screen3 */
+.btn-back {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  border-left: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.55);
+  border-right: 1px solid rgba(255,255,255,0.45);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-back:active { transform: scale(0.9); opacity: 0.6 }
+.btn-back svg {
+  width: 14px; height: 14px;
+  stroke: var(--t2); stroke-width: 2;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
 }
 
-/* ═══════ SWIPER ZONE ═══════ */
+/* ═══ SUBTITLE ═══ */
+.subtitle {
+  text-align: center;
+  font-size: 9px; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--t3);
+  padding: 8px 24px 0;
+  flex-shrink: 0;
+}
+
+/* ═══ SWIPER ═══ */
 .swiper-zone {
-  flex: 1;
-  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
   overflow: hidden;
-  padding: 8px 0 0;
+  margin-top: 64px;
 }
 .swiper { width: 100%; overflow: visible }
 
-/* ═══════ CARD ═══════ */
+/* ═══ CARD — без бордеров ═══ */
 .swiper-slide {
   width: 210px !important;
   border-radius: 20px;
-  border-top: var(--bt); border-left: var(--bl);
-  border-bottom: var(--bb); border-right: var(--br);
   background: var(--bg);
   overflow: hidden;
   transition: transform .35s ease, opacity .35s, filter .5s;
   opacity: 0.25; filter: grayscale(1) brightness(1.05);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
 }
 .swiper-slide-active {
-  opacity: 1; filter: grayscale(0) brightness(1);
+  opacity: 1; filter: grayscale(0) sepia(0.15) brightness(1.02);
   transform: scale(1.06);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.1);
 }
 .swiper-slide-prev,
 .swiper-slide-next { opacity: 0.45; filter: grayscale(0.85) brightness(1.02) }
+.swiper-slide .card-body { opacity: 0; transition: opacity .3s }
+.swiper-slide-active .card-body { opacity: 1 }
 
-/* his archetype marker */
 .swiper-slide.is-his {
-  box-shadow: 0 0 0 2px rgba(255,77,79,0.25);
+  box-shadow: 0 0 0 2px rgba(255,77,79,0.25), 0 6px 24px rgba(0,0,0,0.08);
 }
 .his-badge {
   position: absolute; top: 10px; left: 10px; z-index: 5;
@@ -157,52 +192,27 @@ html, body {
   color: var(--t2); line-height: 1.5;
   text-align: center; min-height: 32px;
 }
-.card-whisper {
-  font-size: 9px; font-style: italic;
-  color: var(--t3); text-align: center;
-  margin-top: 6px;
-  opacity: 0; transform: translateY(4px);
-  transition: opacity .4s .15s, transform .4s .15s;
-}
-.swiper-slide-active .card-whisper {
-  opacity: 1; transform: none;
-}
 
-/* ═══════ PROGRESS BAR (replaces dots) ═══════ */
-.progress-wrap {
+/* ═══ SPACER ═══ */
+.spacer { flex: 1 }
+
+/* ═══ WHISPER — под карточкой ═══ */
+.whisper {
+  text-align: center;
+  font-size: 11px; font-style: italic;
+  color: var(--t3); letter-spacing: .01em;
+  padding: 24px 40px 0;
+  min-height: 18px;
   flex-shrink: 0;
-  padding: 6px 32px 2px;
-  display: flex; align-items: center; gap: 10px;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity .45s .2s ease, transform .45s .2s ease;
 }
-.progress-bar {
-  flex: 1; height: 2px;
-  background: rgba(0,0,0,0.06);
-  border-radius: 1px;
-  position: relative;
-  overflow: hidden;
-}
-.progress-fill {
-  position: absolute; top: 0; left: 0;
-  height: 100%; width: 3.3%;
-  background: var(--acc);
-  border-radius: 1px;
-  transition: left .25s ease, width .25s ease;
-}
-.progress-num {
-  font-size: 10px; font-weight: 500;
-  color: var(--t3); letter-spacing: .02em;
-  white-space: nowrap; min-width: 32px; text-align: right;
-}
+.whisper.show { opacity: 1; transform: none }
 
-/* ═══════ FOOTER ═══════ */
+/* ═══ FOOTER ═══ */
 .footer {
   flex-shrink: 0;
-  padding: 6px 24px calc(env(safe-area-inset-bottom, 0px) + 12px);
-}
-.disclaimer {
-  text-align: center; font-size: 8.5px;
-  color: var(--t3); letter-spacing: .03em;
-  line-height: 1.5; margin-bottom: 8px;
+  padding: 0 24px calc(env(safe-area-inset-bottom, 0px) + 14px);
 }
 .cta-btn {
   width: 100%; height: 52px;
@@ -218,23 +228,59 @@ html, body {
 }
 .cta-btn:active { transform: scale(0.97) }
 .cta-btn:disabled { opacity: 0.3; pointer-events: none }
+.cta-btn.typing-state {
+  background: rgba(0,0,0,0.06); color: var(--t2);
+  border: none; font-style: italic;
+  letter-spacing: .06em; font-weight: 500;
+  pointer-events: none;
+}
+.cta-btn.typing-state .cta-dot {
+  display: inline-block; animation: ctaPulse 1s ease infinite;
+}
+@keyframes ctaPulse {
+  0%, 100% { opacity: .3 } 50% { opacity: 1 }
+}
+
+/* quick fact */
+.quick-fact {
+  text-align: center;
+  padding: 0 40px;
+  flex-shrink: 0;
+  opacity: 0; transform: translateY(4px);
+  transition: opacity .3s, transform .3s;
+}
+.quick-fact.show { opacity: 1; transform: none }
+.quick-fact span {
+  display: inline-block;
+  background: rgba(44,44,44,0.9); color: #fff;
+  font-size: 11px; line-height: 1.5;
+  padding: 8px 16px; border-radius: 10px;
+}
 
 /* ═══════ CHAT ═══════ */
 .chat-hdr {
   flex-shrink: 0;
   display: flex; align-items: center; gap: 12px;
-  padding: max(calc(env(safe-area-inset-top, 0px) + 6px), 20px) 20px 12px;
+  padding: calc(env(safe-area-inset-top, 0px) + 20px) 20px 12px;
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 .chat-back {
-  width: 36px; height: 36px;
-  border: none; background: rgba(0,0,0,0.04);
-  border-radius: 50%; cursor: pointer;
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  border-left: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.55);
+  border-right: 1px solid rgba(255,255,255,0.45);
+  background: transparent;
   display: flex; align-items: center; justify-content: center;
-  transition: background .15s;
+  cursor: pointer; flex-shrink: 0;
 }
-.chat-back:active { background: rgba(0,0,0,0.08) }
-.chat-back svg { width: 18px; height: 18px; color: var(--t1) }
+.chat-back:active { transform: scale(0.9); opacity: 0.6 }
+.chat-back svg {
+  width: 14px; height: 14px;
+  stroke: var(--t2); stroke-width: 2;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+}
 .chat-avatar {
   width: 38px; height: 38px; border-radius: 50%;
   object-fit: cover; background: #ddd;
@@ -311,7 +357,7 @@ html, body {
 .chat-send:disabled { opacity: 0.25; pointer-events: none }
 .chat-send svg { width: 18px; height: 18px }
 
-/* ═══════ PAYWALL ═══════ */
+/* ═══ PAYWALL ═══ */
 .pw {
   position: fixed; inset: 0; z-index: 100;
   background: rgba(239,239,238,0.97);
@@ -341,24 +387,35 @@ html, body {
 </head>
 <body>
 
-<!-- ═══ INTRO BRIDGE ═══ -->
+<!-- ═══ INTRO ═══ -->
 <div class="intro" id="intro">
   <div class="intro-text">
-    Ты узнала, кто он.<br>Теперь можешь спросить — <span>почему</span>.
+    Ты узнала, кто он.<br>Теперь можешь спросить — почему.
   </div>
 </div>
 
-<!-- ═══ CAROUSEL ═══ -->
+<!-- ═══ CAROUSEL VIEW ═══ -->
 <div class="view" id="carouselView">
+
+  <!-- header: ring | logo | back -->
   <div class="hdr">
-    <button class="back-btn" onclick="window.location.href='screen6.html'">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
+    <div class="ring-wrap">
+      <svg width="44" height="44" viewBox="0 0 44 44">
+        <circle class="ring-track" cx="22" cy="22" r="19"/>
+        <circle class="ring-fill" id="ringFill" cx="22" cy="22" r="19"
+          stroke-dasharray="119.38" stroke-dashoffset="119.38"/>
+      </svg>
+      <div class="ring-num" id="ringNum">1</div>
+    </div>
     <div class="hdr-center">
       <div class="m-logo">MARU</div>
-      <div class="subtitle">почему он так себя ведёт</div>
     </div>
+    <button class="btn-back" onclick="window.location.href='screen6.html'">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
   </div>
+
+  <div class="subtitle">почему он так себя ведёт</div>
 
   <div class="swiper-zone">
     <div class="swiper" id="archSwiper">
@@ -366,13 +423,11 @@ html, body {
     </div>
   </div>
 
-  <div class="progress-wrap">
-    <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
-    <div class="progress-num" id="progNum">1 / 30</div>
-  </div>
+  <div class="whisper" id="whisper"></div>
+  <div class="quick-fact" id="quickFact"></div>
+  <div class="spacer"></div>
 
   <div class="footer">
-    <div class="disclaimer">Это модель его поведения. Не он — но его логика.</div>
     <button class="cta-btn" id="talkBtn" disabled>Поговорить</button>
   </div>
 </div>
@@ -380,14 +435,14 @@ html, body {
 <!-- ═══ CHAT ═══ -->
 <div class="view hidden" id="chatView">
   <div class="chat-hdr">
-    <button class="chat-back" id="chatBack">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
     <img class="chat-avatar" id="chatAvatar" src="" alt="">
     <div class="chat-info">
       <div class="chat-title" id="chatName"></div>
       <div class="chat-sub">его механика</div>
     </div>
+    <button class="chat-back" id="chatBack">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
   </div>
   <div class="chat-messages" id="chatMessages"></div>
   <div class="chat-input-wrap">
@@ -418,6 +473,7 @@ try {
 /* ═══ Config ═══ */
 var CDN = 'https://cdn.jsdelivr.net/gh/MARU-hub22/maru-data@main/maru_archetypes.json';
 var PHOTO_BASE = 'https://raw.githubusercontent.com/MARU-hub22/MARU-test/main/photos/';
+var CIRC = 2 * Math.PI * 19; // 119.38
 
 var HOOKS = {
   geroy:         'Побеждает молча. Его сила — в расчёте, не в крике.',
@@ -487,10 +543,10 @@ var WHISPERS = {
 
 var GREETINGS = {
   geroy:         'Ты хотела поговорить? Быстро — у меня план.',
-  prodavets:     'О, новое лицо. Давай, расскажи, что тебе нужно.',
-  strateg:       'Интересно, что ты пришла. Я уже просчитал, что спросишь.',
+  prodavets:     'О, новое лицо. Расскажи, что тебе нужно.',
+  strateg:       'Интересно. Я уже просчитал, что ты спросишь.',
   istorik:       'Я помню всё. А ты?',
-  nastavnik:     'Садись. Я расскажу, как это работает.',
+  nastavnik:     'Садись. Расскажу, как это работает.',
   igrok:         'Новая партия. Твой ход.',
   komandir:      'Говори. По делу.',
   filosof:       'Присядь. Поговорим о важном.',
@@ -499,8 +555,8 @@ var GREETINGS = {
   strukturalist: 'Всё по порядку. Сначала — твой вопрос.',
   artist:        'Ты пришла в интересный момент. Я как раз горю.',
   zakonodatel:   'Есть правила. Даже в этом разговоре.',
-  shoumen:       'Аплодисменты? Нет? Ладно, продолжим без них.',
-  inzhener:      'Давай разберём это. По деталям.',
+  shoumen:       'Аплодисменты? Нет? Ладно, продолжим.',
+  inzhener:      'Давай разберём. По деталям.',
   rezhisser:     'Эта сцена — не по моему сценарию. Интересно.',
   generator:     'У меня сто идей. Какую хочешь первой?',
   konverter:     'Хаос — это данные. Задавай вопрос.',
@@ -513,11 +569,44 @@ var GREETINGS = {
   sistematik:    'Формулируй точно. Я ценю структуру.',
   dokumentalist: 'Записываю. Продолжай.',
   organizator:   'У нас три минуты. Начинай.',
-  instruktor:    'Объясню. Но только если ты готова слушать.',
+  instruktor:    'Объясню. Но только если готова слушать.',
   ucheny:        'Гипотеза? Или факт? С чего начнём?',
-  pedagog:       'Ошибки — это нормально. Спрашивай.'
+  pedagog:       'Ошибки — нормально. Спрашивай.'
 };
 var DEFAULT_GREETING = 'Ты пришла. Что хочешь узнать?';
+
+var QUICK_FACTS = {
+  geroy:         'Его главный страх — оказаться слабым в чужих глазах.',
+  prodavets:     'Он всегда знает, чего ты хочешь. Раньше тебя.',
+  strateg:       'Он молчит не от холода. Он просчитывает последствия слов.',
+  istorik:       'Он помнит дату вашего первого разговора.',
+  nastavnik:     'Он не умеет просить помощи. Только давать.',
+  igrok:         'Ему скучно, когда всё предсказуемо. Даже в любви.',
+  komandir:      'Он боится не провала — а потери контроля.',
+  filosof:       'Он ищет смысл во всём. Даже в твоём молчании.',
+  poet:          'Он чувствует за двоих. Но показывает за половину.',
+  atlant:        'Он никогда не скажет, что устал. Даже себе.',
+  strukturalist: 'Для него хаос в доме = хаос в голове.',
+  artist:        'Он не выгорает от работы. Он выгорает от скуки.',
+  zakonodatel:   'Исключение из правил — его личный кошмар.',
+  shoumen:       'На людях он звезда. Дома — тишина.',
+  inzhener:      'Он чинит вещи, чтобы не чинить отношения.',
+  rezhisser:     'Он уже знает, чем закончится этот разговор.',
+  generator:     'У него 10 начатых проектов. Ни одного завершённого.',
+  konverter:     'Он превращает твои эмоции в задачи.',
+  dizayner:      'Он замечает, когда ты меняешь причёску. Всегда.',
+  ideolog:       'Он скорее потеряет тебя, чем изменит убеждениям.',
+  arkhitektor:   'Он планирует отпуск на 3 года вперёд.',
+  lider:         'Он не понимает, почему кто-то не хочет быть первым.',
+  khranitel:     'Последний раз он плакал — и не помнит когда.',
+  mentor:        'Он знает твои слабые места. Но молчит о них.',
+  sistematik:    'Спонтанность для него — стресс, а не радость.',
+  dokumentalist: 'Он помнит, что ты сказала 14 марта в 19:20.',
+  organizator:   'Он контролирует не тебя — а свою тревогу.',
+  instruktor:    'Он объясняет мир, потому что боится его чувствовать.',
+  ucheny:        'Он анализирует ваши отношения как эксперимент.',
+  pedagog:       'Он прощает все ошибки. Кроме своих.'
+};
 
 /* ═══ State ═══ */
 var archetypes = {};
@@ -543,6 +632,7 @@ function loadArchetypes() {
       myArchKey = getMyArchKey();
       buildCards();
       initSwiper();
+      initSwipeHaptic();
     })
     .catch(function(e) {
       console.error('Load error:', e);
@@ -565,7 +655,6 @@ function buildCards() {
     var key = archKeys[i];
     var a = archetypes[key];
     var hook = HOOKS[key] || firstSentence(a.first_para);
-    var whisper = WHISPERS[key] || '';
     var isHis = key === myArchKey;
     html +=
       '<div class="swiper-slide' + (isHis ? ' is-his' : '') + '" data-key="' + key + '">' +
@@ -577,7 +666,6 @@ function buildCards() {
         '<div class="card-body">' +
           '<div class="card-name">' + a.name + '</div>' +
           '<div class="card-hook">' + hook + '</div>' +
-          (whisper ? '<div class="card-whisper">' + whisper + '</div>' : '') +
         '</div>' +
       '</div>';
   }
@@ -620,14 +708,22 @@ function updateActive(sw) {
     document.getElementById('talkBtn').disabled = false;
   }
 
-  /* progress bar */
+  /* ring progress */
   var real = sw.realIndex || 0;
   var total = archKeys.length;
-  var pct = ((real + 0.5) / total) * 100;
-  var fillW = Math.max(3.3, 100 / total);
-  document.getElementById('progFill').style.left = Math.min(pct - fillW / 2, 100 - fillW) + '%';
-  document.getElementById('progFill').style.width = fillW + '%';
-  document.getElementById('progNum').textContent = (real + 1) + ' / ' + total;
+  var pct = (real + 1) / total;
+  var offset = CIRC - (pct * CIRC);
+  document.getElementById('ringFill').setAttribute('stroke-dashoffset', offset);
+  document.getElementById('ringNum').textContent = (real + 1);
+
+  /* whisper */
+  var whisperEl = document.getElementById('whisper');
+  whisperEl.classList.remove('show');
+  document.getElementById('quickFact').classList.remove('show');
+  setTimeout(function() {
+    whisperEl.textContent = WHISPERS[key] || '';
+    whisperEl.classList.add('show');
+  }, 150);
 }
 
 /* ═══ Chat ═══ */
@@ -642,7 +738,6 @@ function openChat() {
 
   if (!msgCount[currentArch.key]) msgCount[currentArch.key] = 0;
 
-  /* пауза зависит от архетипа */
   var delay = currentArch.key === 'khranitel' ? 2500 : 600;
   setTimeout(function() {
     showTyping(function() {
@@ -719,12 +814,12 @@ function generateReply(text) {
                  'Я не говорю об этом. Если присмотришься — заметишь.',
                  'Определи «любовь» — и я скажу, попадаю ли.']);
   if (/вернёшь|вернеш|уходи/.test(q))
-    return pick(['Я не ухожу. Я отступаю, чтобы видеть картину целиком.',
+    return pick(['Я не ухожу. Отступаю, чтобы видеть картину целиком.',
                  'Вернусь ли? Зависит от того, есть ли куда.',
-                 'Я возвращаюсь. Но не тогда, когда ты ждёшь.']);
+                 'Я возвращаюсь. Но не тогда, когда ждёшь.']);
   if (/чувств|эмоц/.test(q))
-    return pick(['Мои чувства — не то, что я показываю. Это то, что контролирую.',
-                 'Ты хочешь знать, что я чувствую? Ты готова?',
+    return pick(['Мои чувства — не то, что показываю. Это то, что контролирую.',
+                 'Хочешь знать, что чувствую? Ты готова?',
                  'Эмоции — данные. Я их обрабатываю.']);
   if (/кто ты|расскаж/.test(q))
     return 'Я — ' + currentArch.name + '. Модель того, как он думает. Не он — но его логика.';
@@ -734,11 +829,11 @@ function generateReply(text) {
                  'Это не выбор. Это механика.']);
   if (/боишь|страх|слаб/.test(q))
     return pick(['Страх? Возможно. Но я называю это осторожностью.',
-                 'Слабость — это когда ты знаешь, но не делаешь. Я — делаю.',
-                 'Бояться — нормально. Показывать это — нет. Для меня.']);
-  return pick(['Интересный вопрос. Но уверена, что хочешь знать ответ?',
-               'Я слышу тебя. Но отвечу по-своему.',
-               'Ты спрашиваешь — я думаю. Не торопи.',
+                 'Слабость — когда знаешь, но не делаешь. Я — делаю.',
+                 'Бояться — нормально. Показывать — нет. Для меня.']);
+  return pick(['Интересный вопрос. Но уверена, что хочешь знать?',
+               'Слышу тебя. Но отвечу по-своему.',
+               'Спрашиваешь — думаю. Не торопи.',
                'Это сложнее, чем кажется.',
                'Ты задаёшь правильные вопросы.']);
 }
@@ -760,8 +855,45 @@ function haptic(type) {
   } catch(e) {}
 }
 
+/* ═══ 1. Haptic на свайпе ═══ */
+function initSwipeHaptic() {
+  if (!swiper) return;
+  swiper.on('slideChange', function() { haptic('light'); });
+}
+
+/* ═══ 3. Дабл-тап → quick fact ═══ */
+var factTimer = null;
+document.getElementById('archSwiper').addEventListener('dblclick', function(e) {
+  if (!currentArch) return;
+  var fact = QUICK_FACTS[currentArch.key];
+  if (!fact) return;
+
+  var el = document.getElementById('quickFact');
+  el.innerHTML = '<span>' + fact + '</span>';
+  el.classList.add('show');
+  haptic('medium');
+
+  clearTimeout(factTimer);
+  factTimer = setTimeout(function() { el.classList.remove('show'); }, 3000);
+});
+
+/* ═══ 4. «Он набирает...» ═══ */
+function openChatWithDelay() {
+  if (!currentArch) return;
+  var btn = document.getElementById('talkBtn');
+  btn.classList.add('typing-state');
+  btn.innerHTML = 'Он набирает<span class="cta-dot">...</span>';
+  haptic('light');
+
+  setTimeout(function() {
+    btn.classList.remove('typing-state');
+    btn.innerHTML = 'ПОГОВОРИТЬ';
+    openChat();
+  }, 1200);
+}
+
 /* ═══ Events ═══ */
-document.getElementById('talkBtn').addEventListener('click', openChat);
+document.getElementById('talkBtn').addEventListener('click', openChatWithDelay);
 document.getElementById('chatBack').addEventListener('click', closeChat);
 document.getElementById('chatSend').addEventListener('click', sendMessage);
 document.getElementById('chatInput').addEventListener('input', function() {
