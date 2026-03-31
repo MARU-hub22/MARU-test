@@ -389,11 +389,11 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
     <div style="text-align:center;margin-top:0"><span id="accBadge" style="font-size:10px;letter-spacing:.12em;color:var(--t3);transition:color .3s"></span></div>
     <div class="cta-scroll" id="ctaScroll">
       <button class="cta-btn" id="ctaBtn" onclick="openShare()">
-        <span id="ctaTxt">ПОДЕЛИТЬСЯ С ПОДРУГОЙ</span>
+        <span id="ctaTxt">ПОДЕЛИТЬСЯ</span>
         <svg class="spark-svg" id="sparkSvg"><path id="sparkPath"/></svg>
       </button>
       <div class="cta-note" id="ctaNote">Доступ к результату сохранён навсегда</div>
-      <button onclick="window.location.href='screen7.html'" style="width:100%;height:44px;margin-top:10px;background:none;border:1px solid rgba(0,0,0,0.1);border-radius:14px;font-family:inherit;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t2);cursor:pointer">Все архетипы</button>
+      <button onclick="window.location.href='screen7.html'" style="pointer-events:auto;width:100%;height:44px;margin-top:10px;background:none;border:1px solid rgba(0,0,0,0.1);border-radius:14px;font-family:inherit;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t2);cursor:pointer">Все архетипы</button>
     </div>
 
   </div>
@@ -410,9 +410,9 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
     <div class="share-row">
       <div class="share-row-head">
         <div class="share-row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-        <div class="share-row-title" style="color:var(--acc)">Покажи ей — пусть поймёт тебя</div>
+        <div class="share-row-title" style="color:var(--acc)">Отправить ему — пусть узнает себя</div>
       </div>
-      <div class="share-row-hint">Карточка от твоего лица · она узнает как с тобой на самом деле</div>
+      <div class="share-row-hint">Карточка с его архетипом · пусть увидит себя твоими глазами</div>
       <div class="share-messengers">
         <button class="share-msg-btn" onclick="openHerNameModal('tg')"><svg viewBox="0 0 24 24" fill="none"><path d="M22 3L2 11l7 2.5M22 3l-4 18-7-7.5M22 3L9 13.5m0 0V20l3.5-3" stroke-linecap="round" stroke-linejoin="round"/></svg>TG</button>
         <button class="share-msg-btn" onclick="openHerNameModal('wa')"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>WA</button>
@@ -423,9 +423,9 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
     <div class="share-row">
       <div class="share-row-head">
         <div class="share-row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
-        <div class="share-row-title">Отправить другу</div>
+        <div class="share-row-title">Отправить подруге</div>
       </div>
-      <div class="share-row-hint">Я уже прошёл. Давай ты</div>
+      <div class="share-row-hint">Я прошла тест — теперь понимаю его. Попробуй тоже</div>
       <div class="share-messengers">
         <button class="share-msg-btn" onclick="showFriendPreview('tg')"><svg viewBox="0 0 24 24" fill="none"><path d="M22 3L2 11l7 2.5M22 3l-4 18-7-7.5M22 3L9 13.5m0 0V20l3.5-3" stroke-linecap="round" stroke-linejoin="round"/></svg>TG</button>
         <button class="share-msg-btn" onclick="showFriendPreview('wa')"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>WA</button>
@@ -1085,7 +1085,7 @@ window.sharePartner=function(via){
   var appUrl=makeAppLink(rid||'');
   var myName=uN?uN:'';
   var intro=myName?myName+' — '+D.archetype+'.':'Я — '+D.archetype+'.';
-  var text=intro+'\n\nЭто мой психологический портрет — то, что заложено во мне природой.\nПосмотри. Мне важно чтобы ты поняла меня.\n\n'+appUrl+'\nКанал MARU \u2192 t.me/maru_woman';
+  var text=intro+'\n\nЯ прошла тест и наконец поняла, почему он так себя ведёт.\nПосмотри сам. Мне важна твоя реакция.\n\n'+appUrl+'\nКанал MARU \u2192 t.me/maru_love_maru';
   shareVia(via,text,appUrl);
 };
 
@@ -1103,7 +1103,7 @@ window.showFriendPreview=function(via){
     'margin-bottom:20px;font-family:Inter,sans-serif">MARU</div>'+
     (uN?'<div style="font-size:13px;color:#999;font-family:Inter,sans-serif;letter-spacing:.02em;margin-bottom:4px">'+uN+'</div>':'')+
     '<div style="font-size:22px;font-weight:700;color:#2c2c2c;font-family:Inter,sans-serif">'+D.archetype+'</div>'+
-    '<div style="font-size:13px;color:#666;margin-top:10px;line-height:1.65;font-family:Inter,sans-serif">Я прошёл этот тест и увидел себя совсем иначе</div>'+
+    '<div style="font-size:13px;color:#666;margin-top:10px;line-height:1.65;font-family:Inter,sans-serif">Я прошла тест — теперь понимаю его. Попробуй тоже</div>'+
     '<div style="margin-top:16px;font-size:11px;color:#999;font-family:Inter,sans-serif;letter-spacing:.02em">t.me/maru_22_bot</div>';
 
   document.getElementById('friendConfirmBtn').onclick=function(){confirmFriend();};
@@ -1119,8 +1119,8 @@ window.confirmFriend=function(){
   closeFriendPreview();
   var rid=localStorage.getItem('maru_result_id')||'';
   var appUrl=makeAppLink(rid||'');
-  var text='Привет. Я прошёл этот тест и увидел себя совсем иначе.\n\nПройди обязательно —\n\n'+appUrl+
-    '\n\nЗайди в канал — поймёшь, что ты в нужном месте\n\u25b8 https://t.me/maru_love_maru';
+  var text='Привет! Я прошла тест про мужчин — и наконец поняла, почему он так себя ведёт.\n\nПопробуй, серьёзно —\n\n'+appUrl+
+    '\n\nКанал MARU \u25b8 https://t.me/maru_love_maru';
   shareVia(_friendVia,text,appUrl);
 };
 
@@ -1454,10 +1454,10 @@ window.confirmHerName=function(){
   closeHerNameModal();
   var rid=localStorage.getItem('maru_result_id')||'';
   var appUrl=makeAppLink(rid||'');
-  var greeting=herName?'\u{1F90D} Привет, '+herName+'.':'\u{1F90D} Привет.';
-  var text=greeting+'Ты хотела узнать меня \u2014 держи.\nНо я хочу узнать и тебя \u2014 жду твою анкету.\nНам предстоит интересный и весёлый разговор)'+
+  var greeting=herName?'\u{1F90D} '+herName+', смотри.':'\u{1F90D} Смотри.';
+  var text=greeting+'\nЯ прошла тест и узнала твой тип. Вот что он говорит о тебе.\nНе спорь \u2014 просто прочитай)'+
     '\n\n\u25b8 '+appUrl+
-    '\n\nПодпишись \u2014 здесь про тебя и про нас\n\u25b8 https://t.me/maru_love_maru';
+    '\n\nКанал MARU \u25b8 https://t.me/maru_love_maru';
   setTimeout(function(){shareVia(_herVia,text,appUrl);},300);
 };
 function clampIns(){
@@ -1489,7 +1489,7 @@ window.toggleInsText=function(){
 </script>
 <div id="herNameModal" style="display:none;position:fixed;inset:0;z-index:300;align-items:center;justify-content:center;padding:24px;background:rgba(44,44,44,0.35);transition:opacity .25s">
   <div id="herNameCard" style="width:100%;max-width:320px;background:#e8e8e8;border-radius:20px;padding:24px;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);transform:scale(0.92) translateY(12px);transition:transform .3s cubic-bezier(.22,1,.36,1);font-family:Inter,sans-serif">
-    <div style="font-size:11px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:#666;text-align:center;margin-bottom:16px">Введи имя любимой</div>
+    <div style="font-size:11px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:#666;text-align:center;margin-bottom:16px">Как его зовут</div>
     <input id="herNameInput" type="text" placeholder="" maxlength="20" autocomplete="off"
       style="width:100%;background:transparent;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);border-radius:10px;outline:none;font-family:Inter,sans-serif;font-size:15px;color:#2c2c2c;padding:10px 12px;letter-spacing:.02em;-webkit-user-select:auto;user-select:auto;transition:border-color .2s;margin-bottom:16px;"
       oninput="this.style.borderColor=this.value?'rgba(255,107,107,0.45)':''">
