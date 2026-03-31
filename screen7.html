@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>MARU</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+html, body {
+  height: 100%; background: var(--bg); overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  user-select: none; -webkit-user-select: none;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+/* ═══════ INTRO BRIDGE ═══════ */
+.intro {
+  position: fixed; inset: 0; z-index: 50;
+  max-width: 390px; margin: 0 auto;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 0 40px;
+  transition: opacity .6s ease, transform .6s ease;
+}
+.intro.fade { opacity: 0; transform: scale(0.98); pointer-events: none }
+.intro-text {
+  font-size: 20px; font-weight: 600;
+  color: var(--t1); text-align: center;
+  line-height: 1.5; letter-spacing: -0.02em;
+  opacity: 0; transform: translateY(12px);
+  animation: introIn .8s .3s ease forwards;
+}
+.intro-text span { color: var(--acc) }
+@keyframes introIn { to { opacity: 1; transform: none } }
+
+/* ═══════ VIEWS ═══════ */
+.view {
+  position: fixed; inset: 0;
+  max-width: 390px; margin: 0 auto;
+  display: flex; flex-direction: column;
+  transition: opacity .4s, transform .4s;
+}
+.view.hidden { opacity: 0; pointer-events: none; transform: translateX(30px) }
+
+/* ═══════ HEADER ═══════ */
+.hdr {
+  flex-shrink: 0;
+  padding: max(calc(env(safe-area-inset-top, 0px) + 6px), 20px) 24px 0;
+  display: flex; align-items: center;
+  position: relative;
+}
+.back-btn {
+  position: absolute; left: 16px;
+  width: 36px; height: 36px; border: none;
+  background: rgba(0,0,0,0.04); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.back-btn:active { background: rgba(0,0,0,0.08) }
+.back-btn svg { width: 18px; height: 18px; color: var(--t2) }
+.hdr-center { flex: 1; text-align: center }
+.m-logo {
+  font-size: 22px; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--bg);
+  text-shadow: -1px -1px 1px rgba(0,0,0,0.2),
+               1px 1px 1px rgba(255,255,255,0.75),
+               0 0 3px rgba(0,0,0,0.04);
+}
+.subtitle {
+  font-size: 9px; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--t3);
+  margin-top: 2px;
+}
+
+/* ═══════ SWIPER ZONE ═══════ */
+.swiper-zone {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  padding: 8px 0 0;
+}
+.swiper { width: 100%; overflow: visible }
+
+/* ═══════ CARD ═══════ */
+.swiper-slide {
+  width: 210px !important;
+  border-radius: 20px;
+  border-top: var(--bt); border-left: var(--bl);
+  border-bottom: var(--bb); border-right: var(--br);
+  background: var(--bg);
+  overflow: hidden;
+  transition: transform .35s ease, opacity .35s, filter .5s;
+  opacity: 0.25; filter: grayscale(1) brightness(1.05);
+}
+.swiper-slide-active {
+  opacity: 1; filter: grayscale(0) brightness(1);
+  transform: scale(1.06);
+}
+.swiper-slide-prev,
+.swiper-slide-next { opacity: 0.45; filter: grayscale(0.85) brightness(1.02) }
+
+/* his archetype marker */
+.swiper-slide.is-his {
+  box-shadow: 0 0 0 2px rgba(255,77,79,0.25);
+}
+.his-badge {
+  position: absolute; top: 10px; left: 10px; z-index: 5;
+  background: var(--acc); color: #fff;
+  font-size: 8px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 6px;
+  display: none;
+}
+.swiper-slide.is-his .his-badge { display: block }
+
+.card-img {
+  width: 100%; height: 0;
+  padding-bottom: 120%;
+  position: relative;
+  background: linear-gradient(160deg, #e0e0de 0%, #d2d2d0 100%);
+  overflow: hidden;
+}
+.card-img img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: opacity .5s;
+}
+.card-img img.loading { opacity: 0 }
+.card-img::after {
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 55%;
+  background: linear-gradient(to bottom, transparent 0%, var(--bg) 100%);
+  pointer-events: none;
+}
+
+.card-body {
+  padding: 0 14px 14px;
+  margin-top: -22px;
+  position: relative; z-index: 2;
+}
+.card-name {
+  font-size: 17px; font-weight: 700;
+  letter-spacing: -0.02em; color: var(--t1);
+  line-height: 1.2; text-align: center;
+  margin-bottom: 4px;
+}
+.card-hook {
+  font-size: 10.5px; font-weight: 400;
+  color: var(--t2); line-height: 1.5;
+  text-align: center; min-height: 32px;
+}
+.card-whisper {
+  font-size: 9px; font-style: italic;
+  color: var(--t3); text-align: center;
+  margin-top: 6px;
+  opacity: 0; transform: translateY(4px);
+  transition: opacity .4s .15s, transform .4s .15s;
+}
+.swiper-slide-active .card-whisper {
+  opacity: 1; transform: none;
+}
+
+/* ═══════ PROGRESS BAR (replaces dots) ═══════ */
+.progress-wrap {
+  flex-shrink: 0;
+  padding: 6px 32px 2px;
+  display: flex; align-items: center; gap: 10px;
+}
+.progress-bar {
+  flex: 1; height: 2px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 1px;
+  position: relative;
+  overflow: hidden;
+}
+.progress-fill {
+  position: absolute; top: 0; left: 0;
+  height: 100%; width: 3.3%;
+  background: var(--acc);
+  border-radius: 1px;
+  transition: left .25s ease, width .25s ease;
+}
+.progress-num {
+  font-size: 10px; font-weight: 500;
+  color: var(--t3); letter-spacing: .02em;
+  white-space: nowrap; min-width: 32px; text-align: right;
+}
+
+/* ═══════ FOOTER ═══════ */
+.footer {
+  flex-shrink: 0;
+  padding: 6px 24px calc(env(safe-area-inset-bottom, 0px) + 12px);
+}
+.disclaimer {
+  text-align: center; font-size: 8.5px;
+  color: var(--t3); letter-spacing: .03em;
+  line-height: 1.5; margin-bottom: 8px;
+}
+.cta-btn {
+  width: 100%; height: 52px;
+  background: var(--acc); border: none; border-radius: 16px;
+  border-top: 1px solid rgba(255,255,255,0.25);
+  border-left: 1px solid rgba(255,255,255,0.15);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  border-right: 1px solid rgba(0,0,0,0.06);
+  font-family: inherit; font-size: 11px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase; color: #fff;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transition: transform .12s;
+}
+.cta-btn:active { transform: scale(0.97) }
+.cta-btn:disabled { opacity: 0.3; pointer-events: none }
+
+/* ═══════ CHAT ═══════ */
+.chat-hdr {
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 12px;
+  padding: max(calc(env(safe-area-inset-top, 0px) + 6px), 20px) 20px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.chat-back {
+  width: 36px; height: 36px;
+  border: none; background: rgba(0,0,0,0.04);
+  border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.chat-back:active { background: rgba(0,0,0,0.08) }
+.chat-back svg { width: 18px; height: 18px; color: var(--t1) }
+.chat-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  object-fit: cover; background: #ddd;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.chat-info { flex: 1 }
+.chat-title { font-size: 14px; font-weight: 600; color: var(--t1) }
+.chat-sub { font-size: 9px; color: var(--t3); letter-spacing: .06em; text-transform: uppercase }
+
+.chat-messages {
+  flex: 1; overflow-y: auto;
+  padding: 16px 20px;
+  display: flex; flex-direction: column; gap: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+.chat-messages::-webkit-scrollbar { display: none }
+
+.msg {
+  max-width: 82%; padding: 10px 14px;
+  font-size: 13px; line-height: 1.55;
+  border-radius: 16px;
+  animation: msgIn .25s ease both;
+}
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(5px) }
+  to   { opacity: 1; transform: none }
+}
+.msg.bot {
+  align-self: flex-start;
+  background: rgba(0,0,0,0.04); color: var(--t1);
+  border-bottom-left-radius: 4px;
+}
+.msg.user {
+  align-self: flex-end;
+  background: var(--acc); color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.msg.typing { padding: 10px 18px }
+.msg.typing .dots { display: flex; gap: 4px; align-items: center; height: 18px }
+.msg.typing .dots span {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--t3); animation: blink 1.2s ease infinite;
+}
+.msg.typing .dots span:nth-child(2) { animation-delay: .2s }
+.msg.typing .dots span:nth-child(3) { animation-delay: .4s }
+@keyframes blink {
+  0%, 100% { opacity: .25; transform: scale(1) }
+  50%      { opacity: .8;  transform: scale(1.4) }
+}
+
+.chat-input-wrap {
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px calc(env(safe-area-inset-bottom, 0px) + 12px);
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+.chat-input {
+  flex: 1; height: 42px; padding: 0 16px;
+  border: 1px solid rgba(0,0,0,0.08); border-radius: 21px;
+  background: rgba(255,255,255,0.5);
+  font-family: inherit; font-size: 13px; color: var(--t1);
+  outline: none; transition: border-color .2s;
+}
+.chat-input::placeholder { color: var(--t3) }
+.chat-input:focus { border-color: rgba(0,0,0,0.18) }
+.chat-send {
+  width: 42px; height: 42px; flex-shrink: 0;
+  border: none; border-radius: 50%;
+  background: var(--acc); color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .12s, opacity .2s;
+}
+.chat-send:active { transform: scale(0.92) }
+.chat-send:disabled { opacity: 0.25; pointer-events: none }
+.chat-send svg { width: 18px; height: 18px }
+
+/* ═══════ PAYWALL ═══════ */
+.pw {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(239,239,238,0.97);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px 32px; text-align: center;
+  opacity: 0; pointer-events: none; transition: opacity .3s;
+}
+.pw.show { opacity: 1; pointer-events: auto }
+.pw-icon { font-size: 36px; margin-bottom: 16px }
+.pw-title { font-size: 18px; font-weight: 700; color: var(--t1); margin-bottom: 8px }
+.pw-desc { font-size: 13px; color: var(--t2); line-height: 1.6; margin-bottom: 24px; max-width: 280px }
+.pw-btn {
+  width: 100%; max-width: 280px; height: 48px;
+  background: var(--acc); border: none; border-radius: 14px;
+  font-family: inherit; font-size: 12px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: #fff;
+  cursor: pointer; margin-bottom: 12px;
+}
+.pw-btn:active { transform: scale(0.97) }
+.pw-close {
+  font-size: 11px; color: var(--t3);
+  background: none; border: none;
+  cursor: pointer; text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ INTRO BRIDGE ═══ -->
+<div class="intro" id="intro">
+  <div class="intro-text">
+    Ты узнала, кто он.<br>Теперь можешь спросить — <span>почему</span>.
+  </div>
+</div>
+
+<!-- ═══ CAROUSEL ═══ -->
+<div class="view" id="carouselView">
+  <div class="hdr">
+    <button class="back-btn" onclick="window.location.href='screen6.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="hdr-center">
+      <div class="m-logo">MARU</div>
+      <div class="subtitle">почему он так себя ведёт</div>
+    </div>
+  </div>
+
+  <div class="swiper-zone">
+    <div class="swiper" id="archSwiper">
+      <div class="swiper-wrapper" id="swiperWrapper"></div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+    <div class="progress-num" id="progNum">1 / 30</div>
+  </div>
+
+  <div class="footer">
+    <div class="disclaimer">Это модель его поведения. Не он — но его логика.</div>
+    <button class="cta-btn" id="talkBtn" disabled>Поговорить</button>
+  </div>
+</div>
+
+<!-- ═══ CHAT ═══ -->
+<div class="view hidden" id="chatView">
+  <div class="chat-hdr">
+    <button class="chat-back" id="chatBack">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <img class="chat-avatar" id="chatAvatar" src="" alt="">
+    <div class="chat-info">
+      <div class="chat-title" id="chatName"></div>
+      <div class="chat-sub">его механика</div>
+    </div>
+  </div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-input-wrap">
+    <input class="chat-input" id="chatInput" type="text" placeholder="Спросите его..." maxlength="300" enterkeyhint="send">
+    <button class="chat-send" id="chatSend" disabled>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ═══ PAYWALL ═══ -->
+<div class="pw" id="paywall">
+  <div class="pw-icon">&#128274;</div>
+  <div class="pw-title">3 сообщения использованы</div>
+  <div class="pw-desc">Разблокируйте безлимитный диалог с любым архетипом. Узнайте, почему он так поступает.</div>
+  <button class="pw-btn" id="pwBuy">Разблокировать — 499 ₽/мес</button>
+  <button class="pw-close" id="pwClose">Вернуться к архетипам</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+/* ═══ Telegram ═══ */
+try {
+  var tg = window.Telegram && Telegram.WebApp;
+  if (tg) { tg.ready(); tg.expand(); tg.setBackgroundColor('#efefee'); tg.setHeaderColor('#efefee'); }
+} catch(e) {}
+
+/* ═══ Config ═══ */
+var CDN = 'https://cdn.jsdelivr.net/gh/MARU-hub22/maru-data@main/maru_archetypes.json';
+var PHOTO_BASE = 'https://raw.githubusercontent.com/MARU-hub22/MARU-test/main/photos/';
+
+var HOOKS = {
+  geroy:         'Побеждает молча. Его сила — в расчёте, не в крике.',
+  prodavets:     'Обещает мир. Но что получаешь ты?',
+  strateg:       'Молчит не потому что не любит. Просчитывает на три хода вперёд.',
+  istorik:       'Помнит каждое слово. Особенно то, что ты хотела забыть.',
+  nastavnik:     'Учит, направляет, ведёт. Но никогда не идёт рядом.',
+  igrok:         'Жизнь — это ставка. И ты — тоже.',
+  komandir:      'Решает за двоих. Не спрашивая.',
+  filosof:       'Ищет смысл. Но не в отношениях с тобой.',
+  poet:          'Чувствует глубже всех. Но молчит красиво.',
+  atlant:        'Несёт мир на плечах. Своей боли не замечает.',
+  strukturalist: 'Порядок — его любовь. Ты — переменная.',
+  artist:        'Горит ярко. Но не греет.',
+  zakonodatel:   'Правила для всех. Исключений не бывает.',
+  shoumen:       'Блистает на публике. Гаснет дома.',
+  inzhener:      'Чинит всё. Кроме того, что между вами.',
+  rezhisser:     'Ставит сцены. Ты — в его сценарии.',
+  generator:     'Фонтан идей. Ни одну не доводит до конца.',
+  konverter:     'Превращает хаос в систему. И тебя тоже.',
+  dizayner:      'Видит красоту во всём. И ищет идеал.',
+  ideolog:       'Верит в идею. Сильнее, чем в тебя.',
+  arkhitektor:   'Строит будущее. Но ты не в чертежах.',
+  lider:         'Ведёт за собой. Не оглядываясь.',
+  khranitel:     'Держит всё внутри. Взрывается, когда не ждёшь.',
+  mentor:        'Знает как лучше. Для всех, кроме себя.',
+  sistematik:    'Всё по полочкам. Чувства — тоже.',
+  dokumentalist: 'Фиксирует факты. Эмоции не в протоколе.',
+  organizator:   'Контролирует всё. И всех.',
+  instruktor:    'Объясняет мир. Но не свои чувства.',
+  ucheny:        'Ищет истину. Любовь — не его тема.',
+  pedagog:       'Терпелив к ошибкам. Но не к своим.'
+};
+
+var WHISPERS = {
+  geroy:         'Спроси — за что он сражается',
+  prodavets:     'Спроси — что он продаёт на самом деле',
+  strateg:       'Спроси — почему он молчит',
+  istorik:       'Спроси — что он не может забыть',
+  nastavnik:     'Спроси — кто научил его',
+  igrok:         'Спроси — что он ставит на кон',
+  komandir:      'Спроси — чего он боится',
+  filosof:       'Спроси — в чём его смысл',
+  poet:          'Спроси — о чём он молчит',
+  atlant:        'Спроси — кто держит его',
+  strukturalist: 'Спроси — что ломает его систему',
+  artist:        'Спроси — почему он горит',
+  zakonodatel:   'Спроси — кто пишет его правила',
+  shoumen:       'Спроси — кто он без сцены',
+  inzhener:      'Спроси — что он не может починить',
+  rezhisser:     'Спроси — кто пишет его сценарий',
+  generator:     'Спроси — почему он не доводит до конца',
+  konverter:     'Спроси — что он не может упорядочить',
+  dizayner:      'Спроси — что ему кажется красивым в тебе',
+  ideolog:       'Спроси — во что он верит по-настоящему',
+  arkhitektor:   'Спроси — что он строит на самом деле',
+  lider:         'Спроси — куда он ведёт',
+  khranitel:     'Спроси — что он прячет',
+  mentor:        'Спроси — кто помогает ему',
+  sistematik:    'Спроси — что не влезает в его систему',
+  dokumentalist: 'Спроси — что он не записывает',
+  organizator:   'Спроси — что он не контролирует',
+  instruktor:    'Спроси — чему он не может научить',
+  ucheny:        'Спроси — что он не может объяснить',
+  pedagog:       'Спроси — за что он себя не прощает'
+};
+
+var GREETINGS = {
+  geroy:         'Ты хотела поговорить? Быстро — у меня план.',
+  prodavets:     'О, новое лицо. Давай, расскажи, что тебе нужно.',
+  strateg:       'Интересно, что ты пришла. Я уже просчитал, что спросишь.',
+  istorik:       'Я помню всё. А ты?',
+  nastavnik:     'Садись. Я расскажу, как это работает.',
+  igrok:         'Новая партия. Твой ход.',
+  komandir:      'Говори. По делу.',
+  filosof:       'Присядь. Поговорим о важном.',
+  poet:          'Ты пришла... Я ждал. Нет, не тебя. Вдохновение.',
+  atlant:        'Я привык нести. Но сегодня — слушаю.',
+  strukturalist: 'Всё по порядку. Сначала — твой вопрос.',
+  artist:        'Ты пришла в интересный момент. Я как раз горю.',
+  zakonodatel:   'Есть правила. Даже в этом разговоре.',
+  shoumen:       'Аплодисменты? Нет? Ладно, продолжим без них.',
+  inzhener:      'Давай разберём это. По деталям.',
+  rezhisser:     'Эта сцена — не по моему сценарию. Интересно.',
+  generator:     'У меня сто идей. Какую хочешь первой?',
+  konverter:     'Хаос — это данные. Задавай вопрос.',
+  dizayner:      'Я вижу красоту даже в твоём вопросе.',
+  ideolog:       'Ты пришла с вопросом или с сомнением?',
+  arkhitektor:   'Я строю. Даже этот разговор — конструкция.',
+  lider:         'Я привык вести. Но сегодня — слушаю.',
+  khranitel:     '…Привет. Я не очень хорош в разговорах.',
+  mentor:        'Я знаю, что тебе нужно. Но сначала — спроси.',
+  sistematik:    'Формулируй точно. Я ценю структуру.',
+  dokumentalist: 'Записываю. Продолжай.',
+  organizator:   'У нас три минуты. Начинай.',
+  instruktor:    'Объясню. Но только если ты готова слушать.',
+  ucheny:        'Гипотеза? Или факт? С чего начнём?',
+  pedagog:       'Ошибки — это нормально. Спрашивай.'
+};
+var DEFAULT_GREETING = 'Ты пришла. Что хочешь узнать?';
+
+/* ═══ State ═══ */
+var archetypes = {};
+var archKeys = [];
+var currentArch = null;
+var myArchKey = '';
+var swiper = null;
+var msgCount = {};
+
+/* ═══ Intro ═══ */
+setTimeout(function() {
+  document.getElementById('intro').classList.add('fade');
+  setTimeout(function() { document.getElementById('intro').style.display = 'none'; }, 600);
+}, 2200);
+
+/* ═══ Load ═══ */
+function loadArchetypes() {
+  fetch(CDN)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      archetypes = data.archetypes || {};
+      archKeys = Object.keys(archetypes).slice(0, 30);
+      myArchKey = getMyArchKey();
+      buildCards();
+      initSwiper();
+    })
+    .catch(function(e) {
+      console.error('Load error:', e);
+      document.getElementById('swiperWrapper').innerHTML =
+        '<div style="padding:40px;text-align:center;color:var(--t2);font-size:13px">Не удалось загрузить</div>';
+    });
+}
+
+function getMyArchKey() {
+  try {
+    var d = JSON.parse(localStorage.getItem('maru_archetype_data') || '{}');
+    return d.key || d.id || '';
+  } catch(e) { return ''; }
+}
+
+/* ═══ Cards ═══ */
+function buildCards() {
+  var html = '';
+  for (var i = 0; i < archKeys.length; i++) {
+    var key = archKeys[i];
+    var a = archetypes[key];
+    var hook = HOOKS[key] || firstSentence(a.first_para);
+    var whisper = WHISPERS[key] || '';
+    var isHis = key === myArchKey;
+    html +=
+      '<div class="swiper-slide' + (isHis ? ' is-his' : '') + '" data-key="' + key + '">' +
+        '<div class="his-badge">его тип</div>' +
+        '<div class="card-img">' +
+          '<img src="' + PHOTO_BASE + key + '.jpg" class="loading" alt="' + a.name + '"' +
+          ' onload="this.classList.remove(\'loading\')" onerror="this.style.display=\'none\'">' +
+        '</div>' +
+        '<div class="card-body">' +
+          '<div class="card-name">' + a.name + '</div>' +
+          '<div class="card-hook">' + hook + '</div>' +
+          (whisper ? '<div class="card-whisper">' + whisper + '</div>' : '') +
+        '</div>' +
+      '</div>';
+  }
+  document.getElementById('swiperWrapper').innerHTML = html;
+}
+
+function firstSentence(text) {
+  if (!text) return '';
+  var m = text.match(/^[^.!?]+[.!?]/);
+  var s = m ? m[0].trim() : text.slice(0, 70);
+  return s.length > 65 ? s.slice(0, 65) + '…' : s;
+}
+
+/* ═══ Swiper ═══ */
+function initSwiper() {
+  var startIdx = myArchKey ? archKeys.indexOf(myArchKey) : 0;
+  if (startIdx < 0) startIdx = 0;
+
+  swiper = new Swiper('#archSwiper', {
+    effect: 'coverflow',
+    grabCursor: true,
+    centeredSlides: true,
+    slidesPerView: 'auto',
+    coverflowEffect: { rotate: 0, stretch: 60, depth: 100, modifier: 1.2, slideShadows: false },
+    initialSlide: startIdx,
+    loop: archKeys.length > 3,
+    on: {
+      slideChange: function() { updateActive(this); },
+      afterInit: function() { updateActive(this); }
+    }
+  });
+}
+
+function updateActive(sw) {
+  var slide = sw.slides[sw.activeIndex];
+  if (!slide) return;
+  var key = slide.getAttribute('data-key');
+  if (key && archetypes[key]) {
+    currentArch = { key: key, name: archetypes[key].name, data: archetypes[key] };
+    document.getElementById('talkBtn').disabled = false;
+  }
+
+  /* progress bar */
+  var real = sw.realIndex || 0;
+  var total = archKeys.length;
+  var pct = ((real + 0.5) / total) * 100;
+  var fillW = Math.max(3.3, 100 / total);
+  document.getElementById('progFill').style.left = Math.min(pct - fillW / 2, 100 - fillW) + '%';
+  document.getElementById('progFill').style.width = fillW + '%';
+  document.getElementById('progNum').textContent = (real + 1) + ' / ' + total;
+}
+
+/* ═══ Chat ═══ */
+function openChat() {
+  if (!currentArch) return;
+  document.getElementById('chatName').textContent = currentArch.name;
+  document.getElementById('chatAvatar').src = PHOTO_BASE + currentArch.key + '.jpg';
+  document.getElementById('chatMessages').innerHTML = '';
+
+  document.getElementById('carouselView').classList.add('hidden');
+  document.getElementById('chatView').classList.remove('hidden');
+
+  if (!msgCount[currentArch.key]) msgCount[currentArch.key] = 0;
+
+  /* пауза зависит от архетипа */
+  var delay = currentArch.key === 'khranitel' ? 2500 : 600;
+  setTimeout(function() {
+    showTyping(function() {
+      addMsg(GREETINGS[currentArch.key] || DEFAULT_GREETING, 'bot');
+    }, currentArch.key === 'khranitel' ? 2000 : undefined);
+  }, delay);
+
+  document.getElementById('chatInput').focus();
+  haptic('light');
+}
+
+function closeChat() {
+  document.getElementById('chatView').classList.add('hidden');
+  document.getElementById('carouselView').classList.remove('hidden');
+  haptic('light');
+}
+
+function addMsg(text, type) {
+  removeTyping();
+  var el = document.createElement('div');
+  el.className = 'msg ' + type;
+  el.textContent = text;
+  var box = document.getElementById('chatMessages');
+  box.appendChild(el);
+  box.scrollTop = box.scrollHeight;
+}
+
+function showTyping(cb, duration) {
+  var el = document.createElement('div');
+  el.className = 'msg bot typing';
+  el.id = 'typingMsg';
+  el.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
+  var box = document.getElementById('chatMessages');
+  box.appendChild(el);
+  box.scrollTop = box.scrollHeight;
+  setTimeout(function() { if (cb) cb(); }, duration || (700 + Math.random() * 500));
+}
+
+function removeTyping() {
+  var t = document.getElementById('typingMsg');
+  if (t) t.remove();
+}
+
+/* ═══ Send ═══ */
+function sendMessage() {
+  var input = document.getElementById('chatInput');
+  var text = input.value.trim();
+  if (!text || !currentArch) return;
+
+  input.value = '';
+  document.getElementById('chatSend').disabled = true;
+  addMsg(text, 'user');
+
+  msgCount[currentArch.key] = (msgCount[currentArch.key] || 0) + 1;
+
+  if (msgCount[currentArch.key] > 3) {
+    setTimeout(showPaywall, 400);
+    return;
+  }
+
+  showTyping(function() { addMsg(generateReply(text), 'bot'); });
+  haptic('soft');
+}
+
+/* ═══ Reply stub ═══ */
+function generateReply(text) {
+  var q = text.toLowerCase();
+  if (/молчи/.test(q))
+    return pick(['Молчание — не пустота. Это пространство, где я думаю.',
+                 'Я не молчу. Я выбираю слова.',
+                 'А ты уверена, что готова услышать?']);
+  if (/люб/.test(q))
+    return pick(['Любовь — не слова. Это то, что я делаю, пока ты не видишь.',
+                 'Я не говорю об этом. Если присмотришься — заметишь.',
+                 'Определи «любовь» — и я скажу, попадаю ли.']);
+  if (/вернёшь|вернеш|уходи/.test(q))
+    return pick(['Я не ухожу. Я отступаю, чтобы видеть картину целиком.',
+                 'Вернусь ли? Зависит от того, есть ли куда.',
+                 'Я возвращаюсь. Но не тогда, когда ты ждёшь.']);
+  if (/чувств|эмоц/.test(q))
+    return pick(['Мои чувства — не то, что я показываю. Это то, что контролирую.',
+                 'Ты хочешь знать, что я чувствую? Ты готова?',
+                 'Эмоции — данные. Я их обрабатываю.']);
+  if (/кто ты|расскаж/.test(q))
+    return 'Я — ' + currentArch.name + '. Модель того, как он думает. Не он — но его логика.';
+  if (/почему|зачем/.test(q))
+    return pick(['Потому что так устроен. Не хуже и не лучше — иначе.',
+                 'Ты хочешь причину? Или оправдание?',
+                 'Это не выбор. Это механика.']);
+  if (/боишь|страх|слаб/.test(q))
+    return pick(['Страх? Возможно. Но я называю это осторожностью.',
+                 'Слабость — это когда ты знаешь, но не делаешь. Я — делаю.',
+                 'Бояться — нормально. Показывать это — нет. Для меня.']);
+  return pick(['Интересный вопрос. Но уверена, что хочешь знать ответ?',
+               'Я слышу тебя. Но отвечу по-своему.',
+               'Ты спрашиваешь — я думаю. Не торопи.',
+               'Это сложнее, чем кажется.',
+               'Ты задаёшь правильные вопросы.']);
+}
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+/* ═══ Paywall ═══ */
+function showPaywall() {
+  removeTyping();
+  document.getElementById('paywall').classList.add('show');
+  haptic('warning');
+}
+
+/* ═══ Haptic ═══ */
+function haptic(type) {
+  try {
+    if (type === 'warning') Telegram.WebApp.HapticFeedback.notificationOccurred('warning');
+    else Telegram.WebApp.HapticFeedback.impactOccurred(type);
+  } catch(e) {}
+}
+
+/* ═══ Events ═══ */
+document.getElementById('talkBtn').addEventListener('click', openChat);
+document.getElementById('chatBack').addEventListener('click', closeChat);
+document.getElementById('chatSend').addEventListener('click', sendMessage);
+document.getElementById('chatInput').addEventListener('input', function() {
+  document.getElementById('chatSend').disabled = !this.value.trim();
+});
+document.getElementById('chatInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+document.getElementById('pwClose').addEventListener('click', function() {
+  document.getElementById('paywall').classList.remove('show');
+  closeChat();
+});
+document.getElementById('pwBuy').addEventListener('click', function() {
+  alert('Оплата будет подключена позже');
+});
+
+/* ═══ Start ═══ */
+loadArchetypes();
+</script>
+</body>
+</html>
