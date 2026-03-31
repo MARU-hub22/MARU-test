@@ -376,42 +376,39 @@
 </head>
 <body>
 
-<!-- ─── ОВЕРЛЕЙ 1: СТАРТ (Q1) ─── -->
+<!-- ─── ОВЕРЛЕЙ 1: СТАРТ ─── -->
 <div class="overlay" id="ov1">
   <div class="overlay-card">
     <div class="ov-icon">
       <svg viewBox="0 0 24 24"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
     </div>
     <div class="ov-text">
-      Лень — это отсутствие интереса и смысла. Приятель, мне это знакомо, поверь. Но стоит начать, результат изменит тебя. Я сам это проходил. <strong>Лети вперёд!</strong>
+      Отвечай быстро, не думай. Первая реакция — самая честная. <strong>Здесь нет правильных ответов.</strong>
     </div>
-    <div class="ov-author">Игорь Макаров</div>
   </div>
 </div>
 
-<!-- ─── ОВЕРЛЕЙ 2: СЕРЕДИНА (Q48) ─── -->
+<!-- ─── ОВЕРЛЕЙ 2: СЕРЕДИНА (Q22) ─── -->
 <div class="overlay" id="ov2">
   <div class="overlay-card">
     <div class="ov-icon">
       <svg viewBox="0 0 24 24"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
     </div>
     <div class="ov-text">
-      Половина пути — это даже не первый шаг! Ты сделал это. Сегодня ты сделал то, что изменит тебя навсегда. Я сейчас улыбаюсь — <strong>двигай вперёд.</strong>
+      Половина. Его портрет уже начинает проявляться. <strong>Ещё немного — и ты увидишь.</strong>
     </div>
-    <div class="ov-author">Игорь Макаров</div>
   </div>
 </div>
 
-<!-- ─── ОВЕРЛЕЙ 3: ФИНАЛ (Q80) ─── -->
+<!-- ─── ОВЕРЛЕЙ 3: ФИНИШ (Q38) ─── -->
 <div class="overlay" id="ov3">
   <div class="overlay-card">
     <div class="ov-icon">
       <svg viewBox="0 0 24 24"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
     </div>
     <div class="ov-text">
-      Я даже сам немного нервничаю, когда пишу это для тебя, потому что предвосхищаю, какой импакт сейчас случится. <strong>Я верю в тебя, и это не просто слова!</strong>
+      Финишная прямая. Через пару минут ты поймёшь то, <strong>что не могла объяснить себе месяцами.</strong>
     </div>
-    <div class="ov-author">Игорь Макаров</div>
   </div>
 </div>
 
@@ -446,7 +443,7 @@
   function showOverlay(id) {
     document.getElementById(id).classList.add('show');
     hap('l');
-    setTimeout(function() { closeOverlay(id); }, 7000);
+    setTimeout(function() { closeOverlay(id); }, 4000);
   }
 
   function closeOverlay(id) {
@@ -454,6 +451,7 @@
     document.getElementById(id).classList.remove('show');
     overlayActive = false;
     if (pendingNext !== null) { const idx = pendingNext; pendingNext = null; renderQ(idx); }
+    else if (id === 'ov1') { renderQ(0); }
   }
 
   let overlayActive = false, pendingNext = null, ov2Shown = false, ov3Shown = false;
@@ -469,7 +467,7 @@
     try {
       const res = await fetch('https://cdn.jsdelivr.net/gh/MARU-hub22/maru-data@main/maru_data.json');
       const data = await res.json();
-      QUESTIONS = data.questions;
+      QUESTIONS = data.questions.slice(0, 44);
       SCORING = data.scoring;
       ARCHETYPES_MAP = data.archetypes_map;
       overlayActive = true;
@@ -544,9 +542,9 @@
           setTimeout(() => {
             const next = idx + 1;
             // оверлей Q48 (после ответа на 47-й, idx=47)
-            if (next === 48 && !ov2Shown) {
+            if (next === 22 && !ov2Shown) {
               ov2Shown = true; overlayActive = true; pendingNext = next; showOverlay('ov2');
-            } else if (next === 80 && !ov3Shown) {
+            } else if (next === 38 && !ov3Shown) {
               ov3Shown = true; overlayActive = true; pendingNext = next; showOverlay('ov3');
             } else {
               renderQ(next);
