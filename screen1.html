@@ -422,11 +422,11 @@ function startTest(){
   hap('m');
   try{
     ['maru_block1','maru_progress','maru_result_id','maru_archetype_data','maru_answer_log'].forEach(function(k){localStorage.removeItem(k);});
-    sessionStorage.removeItem('maru_timer_start');
+    localStorage.removeItem('maru_timer_start');
     localStorage.setItem('maru_gender','female');
-    /* сохраняем выборы чипов если были сделаны */
+    /* сохраняем выборы чипов */
     var b1=document.querySelector('#chips1 .chip.sel');
-    if(b1)localStorage.setItem('maru_situation',b1.textContent);
+    if(b1)localStorage.setItem('maru_his_behavior',b1.textContent.trim());
   }catch(e){}
   var overlay=document.createElement('div');
   overlay.style.cssText='position:fixed;inset:0;background:var(--bg);opacity:0;z-index:9999;transition:opacity .4s ease;pointer-events:none';

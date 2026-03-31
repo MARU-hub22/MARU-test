@@ -541,7 +541,7 @@
           }, 80);
           setTimeout(() => {
             const next = idx + 1;
-            // оверлей Q48 (после ответа на 47-й, idx=47)
+            // оверлей Q23 (середина)
             if (next === 22 && !ov2Shown) {
               ov2Shown = true; overlayActive = true; pendingNext = next; showOverlay('ov2');
             } else if (next === 38 && !ov3Shown) {
@@ -598,6 +598,7 @@
     let mismatches = 0;
     if (SCORING.control_pairs) {
       SCORING.control_pairs.forEach(pair => {
+        if (pair.q1 > QUESTIONS.length || pair.q2 > QUESTIONS.length) return;
         const a1 = userAnswers[pair.q1 - 1];
         const a2 = userAnswers[pair.q2 - 1];
         if (a1 !== undefined && a2 !== undefined) {
@@ -662,7 +663,7 @@
     localStorage.setItem('maru_block1', JSON.stringify(result));
     try{localStorage.removeItem('maru_progress');}catch(e){}
     // детальный лог ответов (для бэкенда)
-    sessionStorage.setItem('maru_answer_log', JSON.stringify(answerLog));
+    localStorage.setItem('maru_answer_log', JSON.stringify(answerLog));
 
     // ─── FIREBASE ───
     const fbData = {
