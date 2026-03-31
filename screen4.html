@@ -118,9 +118,9 @@ html,body{
   opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s;
 }
 .hero.vis{opacity:1;transform:none}
-.hero-ring-wrap{position:relative;width:96px;height:96px;margin-bottom:8px;perspective:600px;}
+.hero-ring-wrap{position:relative;width:119px;height:119px;margin-bottom:16px;perspective:600px;}
 .hero-ring-inner{
-  position:absolute;inset:6px;border-radius:50%;
+  position:absolute;inset:2px;border-radius:50%;
   background:rgba(74,158,255,0.04);
   border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);
   display:flex;align-items:center;justify-content:center;overflow:hidden;
@@ -310,7 +310,7 @@ html,body{
 <!-- OVERLAY -->
 <div class="ov" id="ov">
   <div class="ov-phase" id="ovPhase">анализ</div>
-  <div class="ov-msg" id="ovMsg">Сопоставляем ваши ответы с 60 архетипами...</div>
+  <div class="ov-msg" id="ovMsg">Сопоставляем ваши ответы с 30 архетипами...</div>
   <div class="ov-dots" id="ovDots">
     <div class="ov-dot"></div><div class="ov-dot"></div><div class="ov-dot"></div>
   </div>
@@ -338,7 +338,7 @@ html,body{
       </div>
       <div class="hero-name" id="heroName"></div>
       <div class="hero-arch" id="heroArch"></div>
-      <div class="hero-rarity" id="heroRarity">один из 60 архетипов</div>
+      <div class="hero-rarity" id="heroRarity">один из 30 архетипов</div>
     </div>
 
     <div class="card" id="c0">
@@ -487,8 +487,8 @@ function startRarity(){
   var el=document.getElementById('heroRarity');
   if(!el)return;
   var phrases=[
-    function(){return 'один из 60 архетипов';},
-    function(){return counterVal>0?'<span style="color:var(--acc);font-weight:600">'+fmtNum(counterVal)+'</span> '+(male?'мужчин':'человек')+' прошли этот путь':'один из 60 архетипов';},
+    function(){return 'один из 30 архетипов';},
+    function(){return counterVal>0?'<span style="color:var(--acc);font-weight:600">'+fmtNum(counterVal)+'</span> '+(male?'мужчин':'человек')+' прошли этот путь':'один из 30 архетипов';},
     function(){return 'встречается у '+(RARITY[dom]||'редкого типа').replace('встречается у ','');},
   ];
   var idx=0;
@@ -550,7 +550,7 @@ var maxSc=sorted[0][1];
 var dom=sorted[0][0];
 var domPct=Math.round(D.scores[dom]/total*1000)/10;
 var RARITY={ЗН:'встречается у 6% мужчин',Ф:'встречается у 8% мужчин',СМ:'встречается у 3% мужчин',ЗВ:'встречается у 7% мужчин',Э:'встречается у 5% мужчин'};
-document.getElementById('heroRarity').textContent='один из 60 архетипов · '+(RARITY[dom]||'редкий тип');
+document.getElementById('heroRarity').textContent='один из 30 архетипов · '+(RARITY[dom]||'редкий тип');
 document.getElementById('insTextInner').textContent=INS_F[dom]||'';
 
 /* энергии убраны до оплаты */
@@ -652,7 +652,7 @@ function reveal(){
 
 /* оверлей */
 var PH=[
-  {tag:'анализ',  msg:'Сопоставляем ваши ответы с 60 архетипами...'},
+  {tag:'анализ',  msg:'Сопоставляем ваши ответы с 30 архетипами...'},
   {tag:'энергии', msg:'Анализируем взаимодействие энергий...'},
   {tag:'архетип', msg:'Формируем уникальный портрет...'},
 ];

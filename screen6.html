@@ -50,9 +50,9 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 /* ══ HERO ══ */
 .hero{display:flex;flex-direction:column;align-items:center;padding:8px 0 24px;opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s;}
 .hero.vis{opacity:1;transform:none}
-.hero-ring-wrap{position:relative;width:96px;height:96px;margin-bottom:8px;perspective:600px;}
+.hero-ring-wrap{position:relative;width:119px;height:119px;margin-bottom:16px;perspective:600px;}
 .hero-gyro{width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.1s ease-out;will-change:transform;}
-.hero-ring-inner{position:absolute;inset:6px;border-radius:50%;background:rgba(74,158,255,0.04);border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.hero-ring-inner{position:absolute;inset:2px;border-radius:50%;background:rgba(74,158,255,0.04);border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .hero-ring-inner img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .hero-initials{font-size:24px;font-weight:300;color:rgba(0,0,0,0.22)}
 .hero-name{font-size:12px;color:var(--t3);letter-spacing:.04em;margin-bottom:4px;text-align:center}
@@ -307,7 +307,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 <!-- OVERLAY -->
 <div class="ov" id="ov">
   <div class="ov-phase" id="ovPhase">анализ</div>
-  <div class="ov-msg" id="ovMsg">Сопоставляем ответы с 60 архетипами...</div>
+  <div class="ov-msg" id="ovMsg">Сопоставляем ответы с 30 архетипами...</div>
   <div class="ov-dots" id="ovDots">
     <div class="ov-dot"></div><div class="ov-dot"></div><div class="ov-dot"></div>
   </div>
@@ -327,7 +327,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
       </div>
       <div class="hero-name" id="heroName"></div>
       <div class="hero-arch" id="heroArch"><span class="hero-arch-inner" id="heroArchInner"></span></div>
-      <div class="hero-rarity" id="heroRarity">один из 60 архетипов</div>
+      <div class="hero-rarity" id="heroRarity">один из 30 архетипов</div>
     </div>
 
     <!-- ИНСАЙТ — первым, удар в точку -->
@@ -544,7 +544,7 @@ var curPov=male?'m':'f';
 
 /* оверлей */
 var PH=[
-  {tag:'анализ',   msg:'Сопоставляем ответы с 60 архетипами...'},
+  {tag:'анализ',   msg:'Сопоставляем ответы с 30 архетипами...'},
   {tag:'энергии',  msg:'Анализируем взаимодействие энергий...'},
   {tag:'архетип',  msg:'Формируем уникальный портрет...'},
 ];
@@ -660,8 +660,8 @@ function fmtNum(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ');}
 function startRarity(){
   var el=document.getElementById('heroRarity');if(!el)return;
   var phrases=[
-    function(){return 'один из 60 архетипов';},
-    function(){return counterVal>0?'<span style="color:var(--acc);font-weight:600">'+fmtNum(counterVal)+'</span> '+(male?'мужчин':'человек')+' прошли этот путь':'один из 60 архетипов';},
+    function(){return 'один из 30 архетипов';},
+    function(){return counterVal>0?'<span style="color:var(--acc);font-weight:600">'+fmtNum(counterVal)+'</span> '+(male?'мужчин':'человек')+' прошли этот путь':'один из 30 архетипов';},
     function(){return RARITY[dom]||'редкий тип';},
   ];
   var idx=0;
@@ -672,7 +672,7 @@ function startRarity(){
   },4000);
 }
 
-document.getElementById('heroRarity').textContent='один из 60 архетипов';
+document.getElementById('heroRarity').textContent='один из 30 архетипов';
 document.getElementById('insIco').innerHTML=ICON[dom]||'';
 var insIcoSvg=document.getElementById('insIco').querySelector('svg');
 if(insIcoSvg){insIcoSvg.setAttribute('width','16');insIcoSvg.setAttribute('height','16');}
