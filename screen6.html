@@ -22,21 +22,36 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
   background:var(--bg);transition:opacity .5s;
 }
 .ov.hide{opacity:0;pointer-events:none}
+.ov-group{display:flex;flex-direction:column;align-items:center}
 .ov-phase{
-  font-size:9px;letter-spacing:.26em;text-transform:uppercase;
-  color:rgba(74,158,255,0.5);margin-bottom:24px;min-height:14px;
+  font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--t3);min-height:14px;
   transition:opacity .3s;
 }
 .ov-msg{
-  font-size:13px;color:var(--t2);line-height:1.6;
-  text-align:center;margin-bottom:16px;
+  font-size:13px;font-weight:400;color:var(--t2);line-height:1.6;
+  text-align:center;margin-top:8px;max-width:240px;
   opacity:0;transform:translateY(4px);transition:opacity .35s,transform .35s;
 }
 .ov-msg.s{opacity:1;transform:none}
-.ov-dots{display:flex;gap:5px;margin-bottom:0;}
+.ov-dots{display:flex;gap:5px;margin-top:16px}
 .ov-dot{width:4px;height:4px;border-radius:50%;background:var(--t3);opacity:.3;animation:dp 1.4s ease infinite}
 .ov-dot:nth-child(2){animation-delay:.22s}.ov-dot:nth-child(3){animation-delay:.44s}
-@keyframes dp{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
+@keyframes dp{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:.7;transform:scale(1.5)}}
+.ov-arch{
+  font-size:24px;font-weight:600;color:var(--acc);
+  letter-spacing:-.01em;line-height:1;margin-top:4px;
+  text-align:center;
+  opacity:0;transform:translateY(4px);
+  transition:opacity .4s,transform .4s;
+}
+.ov-arch.s{opacity:1;transform:none}
+.ov-confirm{
+  font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--t3);margin-top:24px;
+  opacity:0;transition:opacity .4s;
+}
+.ov-confirm.s{opacity:1}
 
 
 /* ══ PAGE ══ */
@@ -306,10 +321,14 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 
 <!-- OVERLAY -->
 <div class="ov" id="ov">
-  <div class="ov-phase" id="ovPhase">анализ</div>
-  <div class="ov-msg" id="ovMsg">Сопоставляем ответы с 30 архетипами...</div>
-  <div class="ov-dots" id="ovDots">
-    <div class="ov-dot"></div><div class="ov-dot"></div><div class="ov-dot"></div>
+  <div class="ov-group">
+    <div class="ov-phase" id="ovPhase">анализ</div>
+    <div class="ov-msg" id="ovMsg"></div>
+    <div class="ov-dots" id="ovDots">
+      <div class="ov-dot"></div><div class="ov-dot"></div><div class="ov-dot"></div>
+    </div>
+    <div class="ov-arch" id="ovArch"></div>
+    <div class="ov-confirm" id="ovConfirm">определён</div>
   </div>
 </div>
 
@@ -425,7 +444,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
         <div class="share-row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
         <div class="share-row-title">Отправить подруге</div>
       </div>
-      <div class="share-row-hint">Я прошла тест — теперь понимаю его. Попробуй тоже</div>
+      <div class="share-row-hint">Я расшифровала его — теперь понимаю. Попробуй тоже</div>
       <div class="share-messengers">
         <button class="share-msg-btn" onclick="showFriendPreview('tg')"><svg viewBox="0 0 24 24" fill="none"><path d="M22 3L2 11l7 2.5M22 3l-4 18-7-7.5M22 3L9 13.5m0 0V20l3.5-3" stroke-linecap="round" stroke-linejoin="round"/></svg>TG</button>
         <button class="share-msg-btn" onclick="showFriendPreview('wa')"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>WA</button>
@@ -544,18 +563,41 @@ var curPov=male?'m':'f';
 
 /* оверлей */
 var PH=[
-  {tag:'анализ',   msg:'Сопоставляем ответы с 30 архетипами...'},
-  {tag:'энергии',  msg:'Анализируем взаимодействие энергий...'},
-  {tag:'архетип',  msg:'Формируем уникальный портрет...'},
+  {tag:'анализ',   msg:'Считываем паттерны его поведения'},
+  {tag:'энергии',  msg:'Определяем баланс пяти энергий'},
+  {tag:'портрет',  msg:'Собираем его психологический портрет'},
 ];
 var pT=document.getElementById('ovPhase'),pM=document.getElementById('ovMsg');
 pM.classList.add('s');
-[0,1300,2500].forEach(function(d,i){
+[0,1500,3000].forEach(function(d,i){
   setTimeout(function(){
     pM.classList.remove('s');
-    setTimeout(function(){pT.textContent=PH[i].tag;pM.textContent=PH[i].msg;pM.classList.add('s');hap('l');},220);
+    setTimeout(function(){pT.textContent=PH[i].tag;pM.textContent=PH[i].msg;pM.classList.add('s');hap('l');},250);
   },d);
 });
+setTimeout(function(){
+  document.getElementById('ovDots').style.display='none';
+  document.getElementById('ovPhase').style.display='none';
+},4200);
+setTimeout(function(){
+  pM.classList.remove('s');
+  setTimeout(function(){
+    pM.textContent='Его тип';
+    pM.style.fontSize='9px';
+    pM.style.fontWeight='400';
+    pM.style.letterSpacing='.18em';
+    pM.style.textTransform='uppercase';
+    pM.style.color='var(--t3)';
+    pM.style.marginTop='0';
+    pM.classList.add('s');
+  },250);
+},4400);
+setTimeout(function(){
+  document.getElementById('ovArch').textContent=D.archetype;
+  document.getElementById('ovArch').classList.add('s');
+  hap('m');
+},4800);
+setTimeout(function(){document.getElementById('ovConfirm').classList.add('s');},5200);
 setTimeout(function(){
   hap('m');
   document.getElementById('ov').classList.add('hide');
@@ -571,7 +613,7 @@ setTimeout(function(){
     setTimeout(reveal,300);
   }
   setTimeout(function(){var o=document.getElementById('ov');if(o)o.remove();},700);
-},5200);
+},6500);
 
 /* аватар */
 function getN(){try{var u=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;return u&&u.first_name?u.first_name:'';}catch(e){return '';}}
@@ -732,7 +774,7 @@ var ACC_META_M=[
 ];
 var ACC_META_F=[
   {t:'Его природа',                        s:'Кто он есть на самом деле',             key:'description'},
-  {t:'Что его ломает',                     s:'Триггеры · эмоциональные ловушки',      key:'frustration'},
+  {t:'Почему он закрывается',              s:'Триггеры · эмоциональные ловушки',      key:'frustration'},
   {t:'Как он строит отношения',            s:'Совместимость · конфликты · близость',  key:'svre_f'},
   {t:'Как он берёт контроль',              s:'Деньги · статус · влияние',             key:'deka'},
   {t:'Как устроено его желание',           s:'Природа влечения · что его притягивает', key:'libido'},
@@ -1085,7 +1127,7 @@ window.sharePartner=function(via){
   var appUrl=makeAppLink(rid||'');
   var myName=uN?uN:'';
   var intro=myName?myName+' — '+D.archetype+'.':'Я — '+D.archetype+'.';
-  var text=intro+'\n\nЯ прошла тест и наконец поняла, почему он так себя ведёт.\nПосмотри сам. Мне важна твоя реакция.\n\n'+appUrl+'\nКанал MARU \u2192 t.me/maru_love_maru';
+  var text=intro+'\n\nЯ расшифровала его поведение — и наконец поняла, почему он так себя ведёт.\nПосмотри. Мне важна твоя реакция.\n\n'+appUrl+'\nКанал MARU \u2192 t.me/maru_love_maru';
   shareVia(via,text,appUrl);
 };
 

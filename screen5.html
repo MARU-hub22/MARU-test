@@ -97,6 +97,8 @@ html,body{
   align-items:center;
   gap:8px;
   margin-top:24px;
+  margin-left:50%;
+  transform:translateX(-50%);
   padding:8px 14px;
   border-radius:10px;
   border-top:1px solid rgba(0,0,0,0.08);
@@ -158,18 +160,17 @@ html,body{
 .manifesto.vis{opacity:1;transform:none}
 .manifesto-text{
   font-size:13px;
-  color:var(--t1);
-  line-height:1.75;
-  font-weight:300;
+  color:var(--t2);
+  line-height:1.7;
+  font-weight:400;
 }
-.manifesto-text::first-letter{
-  float:left;
-  font-size:40px;
-  font-weight:300;
-  color:var(--t3);
-  line-height:.80;
-  margin-right:6px;
-  margin-top:4px;
+.manifesto-title{
+  font-size:20px;
+  font-weight:600;
+  color:var(--t1);
+  line-height:1.3;
+  letter-spacing:-.02em;
+  margin-bottom:12px;
 }
 .manifesto-sig{
   margin-top:20px;
@@ -270,7 +271,7 @@ html,body{
 
 /* ── COUNTER ── 20px от цены */
 .counter-line{
-  margin-top:20px;
+  margin-top:24px;
   text-align:center;
   font-size:11px;
   font-weight:500;
@@ -280,17 +281,7 @@ html,body{
 }
 .counter-line.vis{opacity:1}
 
-/* ── GUARANTEE ── математический центр между счётчиком и CTA */
-.guarantee{
-  margin-top:38px;
-  text-align:center;
-  font-size:11px;
-  color:var(--t2);
-  line-height:1.6;
-  opacity:0;
-  transition:opacity .4s;
-}
-.guarantee.vis{opacity:1}
+
 
 /* ── CTA ── fixed bottom ── */
 .cta-wrap{
@@ -417,32 +408,28 @@ html,body{
   <div class="scroll">
 
     <div class="manifesto" id="manifesto">
-      <div class="manifesto-text" id="manifestoText">Ты только что увидела его архетип. Но это — верхушка.<br><br>Под ней — то, что он сам не осознаёт: почему он отдаляется, когда ты ближе всего. Что его действительно ломает. Как устроено его желание.<br><br>Это не гороскоп. Это точная модель поведения — собранная из 44 паттернов. Девушки, которые это читали, говорят: «Я наконец поняла, что происходит».</div>
-      <div class="manifesto-sig"><b>Игорь Макаров</b> · основатель MARU</div>
-      <div class="identity-card">
-        <div class="id-lock"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <div class="id-arch" id="idArch">Стратег</div>
-        <div class="id-sep"></div>
-        <div class="id-status">ожидает разблокировки</div>
-      </div>
+      <div class="manifesto-title">Теперь ты видишь его иначе.</div>
+      <div class="manifesto-text">Полный профиль покажет то, чего он сам о себе не знает. И ты наконец примешь своё решение — не его. С уверенностью, а не с тревогой.</div>
+    </div>
+
+    <div class="counter-line" id="counterNote"></div>
+
+    <div class="identity-card">
+      <div class="id-lock"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <div class="id-arch" id="idArch"></div>
+      <div class="id-sep"></div>
+      <div class="id-status">ожидает разблокировки</div>
     </div>
 
     <div class="price-card" id="priceCard" onclick="toggleTooltip()">
-      <div class="price-lbl">Единоразовый платёж</div>
+      <div class="price-lbl">Один раз</div>
       <button class="price-info-btn" onclick="event.stopPropagation();toggleTooltip()">i</button>
       <div class="price-row">
         <div class="price-amount">999</div>
         <div class="price-cur">₽</div>
       </div>
-      <div class="price-desc">Навсегда · доступ не истекает</div>
-      <div class="price-tooltip" id="priceTooltip">у психолога 9 000 ₽</div>
-    </div>
-
-    <div class="counter-line" id="counterNote"></div>
-
-    <div class="guarantee" id="guarantee">
-      Доступ к результату предоставляется навсегда.<br>
-      Перечитывай и изучай в любое время.
+      <div class="price-desc">Навсегда · без подписок</div>
+      <div class="price-tooltip" id="priceTooltip">у психолога от 9 000 ₽</div>
     </div>
 
   </div>
@@ -470,21 +457,13 @@ function hap(t){
 }
 
 /* архетип и имя из screen5 + TG */
-var arch='Стратег';
-try{var b=JSON.parse(localStorage.getItem('maru_block1')||'{}');if(b.archetypeName)arch=b.archetypeName;}catch(e){}
-document.getElementById('idArch').textContent=arch;
+var arch='';
+try{var b=JSON.parse(localStorage.getItem('maru_block1')||'{}');arch=b.archetypeName||b.archetype||'';}catch(e){}
+document.getElementById('idArch').textContent=arch||'Архетип';
 
 /* имя из TG */
 var userName='';
 try{var u=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;if(u&&u.first_name)userName=u.first_name;}catch(e){}
-/* 7. подставить имя в начало манифеста */
-if(userName){
-  var mt=document.getElementById('manifestoText');
-  if(mt){
-    mt.innerHTML=mt.innerHTML.replace('Послушай,','Послушай, '+userName+',');
-  }
-}
-
 /* tooltip */
 var tooltipOpen=false;
 window.toggleTooltip=function(){
@@ -499,11 +478,10 @@ setTimeout(function(){document.getElementById('manifesto').classList.add('vis');
 setTimeout(function(){
   document.getElementById('priceCard').classList.add('vis');
   document.getElementById('timerNote').style.opacity='1';
-},340);
+},600);
 setTimeout(function(){
   document.getElementById('counterNote').classList.add('vis');
-  document.getElementById('guarantee').classList.add('vis');
-},480);
+},750);
 setTimeout(function(){
   document.getElementById('ctaWrap').classList.add('vis');
   setTimeout(runSpark,200);
@@ -514,7 +492,7 @@ setTimeout(function(){
     btn.classList.add('pulse');
     btn.addEventListener('animationend',function(){btn.classList.remove('pulse');},{once:true});
   },400);
-},580);
+},900);
 
 function runSpark(){
   var btn=document.getElementById('ctaBtn');
@@ -576,7 +554,7 @@ setInterval(function(){if(totalSec>0){totalSec--;timerEl.textContent=fmtTimer(to
       var ease=1-Math.pow(1-p,3);
       var val=Math.round(start+ease*(target-start));
       var fmt=val.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ');
-      el.innerHTML='<span style="color:var(--t3)">Уже разблокировали: </span><span style="color:var(--acc);font-weight:600">'+fmt+'</span>';
+      el.innerHTML='<span style="color:var(--acc);font-weight:600">'+fmt+'</span><span style="color:var(--t3)"> девушек уже понимают своего мужчину</span>';
       if(p<1)requestAnimationFrame(step);
     }
     requestAnimationFrame(step);

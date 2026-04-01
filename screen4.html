@@ -29,16 +29,44 @@ html,body{
   background:var(--bg);transition:opacity .5s;
 }
 .ov.hide{opacity:0;pointer-events:none}
-.ov-phase{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:rgba(74,158,255,0.5);margin-bottom:24px;min-height:14px;transition:opacity .3s;}
-.ov-msg{font-size:13px;color:var(--t2);line-height:1.6;text-align:center;margin-bottom:16px;opacity:0;transform:translateY(4px);transition:opacity .35s,transform .35s;}
+.ov-group{
+  display:flex;flex-direction:column;align-items:center;
+}
+
+/* фаза загрузки */
+.ov-phase{
+  font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--t3);min-height:14px;
+  transition:opacity .3s;
+}
+.ov-msg{
+  font-size:13px;font-weight:400;color:var(--t2);line-height:1.6;
+  text-align:center;margin-top:8px;max-width:240px;
+  opacity:0;transform:translateY(4px);
+  transition:opacity .35s,transform .35s;
+}
 .ov-msg.s{opacity:1;transform:none}
-.ov-dots{display:flex;gap:5px;margin-bottom:0;}
+.ov-dots{display:flex;gap:5px;margin-top:16px}
 .ov-dot{width:4px;height:4px;border-radius:50%;background:var(--t3);opacity:.3;animation:dp 1.4s ease infinite}
 .ov-dot:nth-child(2){animation-delay:.22s}.ov-dot:nth-child(3){animation-delay:.44s}
-@keyframes dp{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
-.ov-arch{font-size:36px;font-weight:700;color:var(--t1);letter-spacing:-.02em;line-height:1;margin-top:32px;min-height:44px;text-align:center;opacity:0;transform:translateY(4px);transition:opacity .4s,transform .4s;}
+@keyframes dp{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:.7;transform:scale(1.5)}}
+
+/* результат — лейбл + архетип = одна группа */
+.ov-arch{
+  font-size:24px;font-weight:600;color:var(--acc);
+  letter-spacing:-.01em;line-height:1;margin-top:4px;
+  text-align:center;
+  opacity:0;transform:translateY(4px);
+  transition:opacity .4s,transform .4s;
+}
 .ov-arch.s{opacity:1;transform:none}
-.ov-confirm{font-size:11px;color:var(--t3);margin-top:12px;opacity:0;transition:opacity .4s;display:flex;align-items:center;justify-content:center;gap:6px;}
+
+/* статус — отделён воздухом */
+.ov-confirm{
+  font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--t3);margin-top:24px;
+  opacity:0;transition:opacity .4s;
+}
 .ov-confirm.s{opacity:1}
 
 /* ══ СТРАНИЦА: fixed, flex-column ══ */
@@ -303,20 +331,23 @@ html,body{
   filter:blur(3.5px);user-select:none;pointer-events:none;
   background:rgba(0,0,0,0.03);
 }
+.acc-body-in.acc-open{
+  filter:none;user-select:auto;pointer-events:auto;
+}
 </style>
 </head>
 <body>
 
 <!-- OVERLAY -->
 <div class="ov" id="ov">
-  <div class="ov-phase" id="ovPhase">анализ</div>
-  <div class="ov-msg" id="ovMsg">Сопоставляем ваши ответы с 30 архетипами...</div>
-  <div class="ov-dots" id="ovDots">
-    <div class="ov-dot"></div><div class="ov-dot"></div><div class="ov-dot"></div>
-  </div>
-  <div class="ov-arch" id="ovArch">—</div>
-  <div class="ov-confirm" id="ovConfirm">
-    Ваш архетип определён
+  <div class="ov-group">
+    <div class="ov-phase" id="ovPhase">анализ</div>
+    <div class="ov-msg" id="ovMsg"></div>
+    <div class="ov-dots" id="ovDots">
+      <div class="ov-dot"></div><div class="ov-dot"></div><div class="ov-dot"></div>
+    </div>
+    <div class="ov-arch" id="ovArch"></div>
+    <div class="ov-confirm" id="ovConfirm">определён</div>
   </div>
 </div>
 
@@ -510,13 +541,16 @@ var ACC_META_M=[
 ];
 var ACC_META_F=[
   {t:'Его природа',                        s:'Кто он есть на самом деле',             key:'description'},
-  {t:'Что его ломает',                     s:'Триггеры · эмоциональные ловушки',      key:'frustration'},
+  {t:'Почему он закрывается',              s:'Триггеры · эмоциональные ловушки',      key:'frustration'},
   {t:'Как он строит отношения',            s:'Совместимость · конфликты · близость',  key:'svre_f'},
   {t:'Как он берёт контроль',              s:'Деньги · статус · влияние',             key:'deka'},
   {t:'Как устроено его желание',           s:'Природа влечения · что его притягивает', key:'libido'},
 ];
 var ACC_META = male ? ACC_META_M : ACC_META_F;
-var ACCS = ACC_META.map(function(m){ return {t:m.t, s:m.s, b:'Содержимое доступно после оплаты'}; });
+var ACCS = ACC_META.map(function(m, i){
+  /* первые 2 аккордеона — открытые (текст подставится из applyArch) */
+  return {t:m.t, s:m.s, b: i < 2 ? '' : 'Содержимое доступно после оплаты', open: i < 2};
+});
 
 /* аватар */
 function getN(){try{var u=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;return u&&u.first_name?u.first_name:'';}catch(e){return '';}}
@@ -551,7 +585,29 @@ var dom=sorted[0][0];
 var domPct=Math.round(D.scores[dom]/total*1000)/10;
 var RARITY={ЗН:'встречается у 6% мужчин',Ф:'встречается у 8% мужчин',СМ:'встречается у 3% мужчин',ЗВ:'встречается у 7% мужчин',Э:'встречается у 5% мужчин'};
 document.getElementById('heroRarity').textContent='один из 30 архетипов · '+(RARITY[dom]||'редкий тип');
-document.getElementById('insTextInner').textContent=INS_F[dom]||'';
+/* персональный мост из screen1 */
+var hisBehavior = '';
+try { hisBehavior = localStorage.getItem('maru_his_behavior') || ''; } catch(e) {}
+var BEHAVIOR_BRIDGE = {
+  'молчит':      'Ты говорила, что он молчит. Вот почему — это его природа, не выбор.',
+  'отдалился':   'Ты чувствуешь, что он отдалился. Это не про тебя — вот как он устроен.',
+  'холоден':     'Ты замечаешь его холодность. Но за ней — механика, которую можно понять.',
+  'вспыхивает':  'Он вспыхивает — и ты не понимаешь почему. Вот его устройство.',
+  'ссоры':       'Ссоры повторяются. Не потому что он плохой — а потому что так работает его тип.'
+};
+var bridge = '';
+if (hisBehavior) {
+  var key = hisBehavior.toLowerCase().trim();
+  for (var b in BEHAVIOR_BRIDGE) { if (key.indexOf(b) >= 0) { bridge = BEHAVIOR_BRIDGE[b]; break; } }
+}
+var insBody = INS_F[dom] || '';
+if (bridge) {
+  document.getElementById('insTextInner').innerHTML =
+    '<p style="margin-bottom:12px;font-weight:500;color:var(--t1)">' + bridge + '</p>' +
+    '<p>' + insBody + '</p>';
+} else {
+  document.getElementById('insTextInner').textContent = insBody;
+}
 
 /* энергии убраны до оплаты */
 var fills=[];
@@ -560,18 +616,19 @@ var fills=[];
 function buildAccordions(accs){
   var ah='';
   accs.forEach(function(a,i){
-    var lockIco='<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="rgba(0,0,0,0.35)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="11" width="18" height="11" rx="2.5" stroke="rgba(0,0,0,0.35)" stroke-width="2"/></svg>';
+    var isOpen = a.open;
+    var lockIco = isOpen ? '' : '<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="rgba(0,0,0,0.35)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="11" width="18" height="11" rx="2.5" stroke="rgba(0,0,0,0.35)" stroke-width="2"/></svg>';
     ah+=
-      '<div class="acc-item" id="acc'+i+'" onclick="tAcc('+i+')">'+
+      '<div class="acc-item' + (isOpen ? '' : '') + '" id="acc'+i+'" onclick="tAcc('+i+')">'+
         '<div class="acc-head">'+
-          '<div class="acc-lock-ico">'+lockIco+'</div>'+
+          (lockIco ? '<div class="acc-lock-ico">'+lockIco+'</div>' : '')+
           '<div class="acc-texts">'+
             '<div class="acc-title">'+a.t+'</div>'+
             '<div class="acc-sub">'+a.s+'</div>'+
           '</div>'+
           '<div class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>'+
         '</div>'+
-        '<div class="acc-body"><div class="acc-body-in">'+a.b+'</div></div>'+
+        '<div class="acc-body"><div class="acc-body-in'+(isOpen?' acc-open':'')+'">'+a.b+'</div></div>'+
       '</div>';
   });
   document.getElementById('accList').innerHTML=ah;
@@ -582,8 +639,9 @@ window.tAcc=function(i){
   hap('l');
   var el=document.getElementById('acc'+i);
   var bodyIn=el.querySelector('.acc-body-in');
-  /* если заблюренный — frustrated interaction */
-  if(bodyIn && !bodyIn.classList.contains('acc-open') && !el.classList.contains('open')){
+  var isUnlocked = bodyIn && bodyIn.classList.contains('acc-open');
+  /* если залочен — frustrated interaction */
+  if(!isUnlocked){
     hap('m');
     el.style.transition='transform .08s ease';
     el.style.transform='translateX(-3px)';
@@ -652,28 +710,55 @@ function reveal(){
 
 /* оверлей */
 var PH=[
-  {tag:'анализ',  msg:'Сопоставляем ваши ответы с 30 архетипами...'},
-  {tag:'энергии', msg:'Анализируем взаимодействие энергий...'},
-  {tag:'архетип', msg:'Формируем уникальный портрет...'},
+  {tag:'анализ',   msg:'Считываем паттерны его поведения'},
+  {tag:'энергии',  msg:'Определяем баланс пяти энергий'},
+  {tag:'портрет',  msg:'Собираем его психологический портрет'},
 ];
 var pT=document.getElementById('ovPhase'),pM=document.getElementById('ovMsg');
 pM.classList.add('s');
-[0,1300,2500].forEach(function(d,i){
+[0,1500,3000].forEach(function(d,i){
   setTimeout(function(){
     pM.classList.remove('s');
-    setTimeout(function(){pT.textContent=PH[i].tag;pM.textContent=PH[i].msg;pM.classList.add('s');hap('l');},220);
+    setTimeout(function(){
+      pT.textContent=PH[i].tag;
+      pM.textContent=PH[i].msg;
+      pM.classList.add('s');
+      hap('l');
+    },250);
   },d);
 });
-setTimeout(function(){document.getElementById('ovArch').textContent=D.archetype;hap('m');},3000);
-setTimeout(function(){document.getElementById('ovConfirm').classList.add('s');},3500);
-setTimeout(function(){document.getElementById('ovDots').style.display='none';},3800);
+/* архетип — крупно, кораллом */
+setTimeout(function(){
+  document.getElementById('ovDots').style.display='none';
+  document.getElementById('ovPhase').style.display='none';
+},4200);
+setTimeout(function(){
+  pM.classList.remove('s');
+  setTimeout(function(){
+    pM.textContent='Его тип';
+    pM.style.fontSize='9px';
+    pM.style.fontWeight='400';
+    pM.style.letterSpacing='.18em';
+    pM.style.textTransform='uppercase';
+    pM.style.color='var(--t3)';
+    pM.style.marginTop='0';
+    pM.classList.add('s');
+  },250);
+},4400);
+setTimeout(function(){
+  var archEl=document.getElementById('ovArch');
+  archEl.textContent=D.archetype;
+  archEl.classList.add('s');
+  hap('m');
+},4800);
+setTimeout(function(){document.getElementById('ovConfirm').classList.add('s');},5200);
 setTimeout(function(){
   hap('m');
   document.getElementById('ov').classList.add('hide');
   document.getElementById('page').classList.add('show');
   setTimeout(reveal,250);
   setTimeout(function(){var o=document.getElementById('ov');if(o)o.remove();},600);
-},5200);
+},6500);
 
 /* искра */
 function spark(){

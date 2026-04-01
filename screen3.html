@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>MARU · Тест</title>
+<title>MARU · Расшифровка</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -111,6 +111,14 @@
   }
   .q-text.fade-out { opacity: 0; transform: translateY(-4px); }
   .q-text.fade-in { animation: fadeInUp 0.28s cubic-bezier(0.22,1,0.36,1) forwards; }
+  .q-hint {
+    padding: 0 var(--sp3) 8px;
+    font-size: 11px; font-style: italic;
+    color: var(--acc); letter-spacing: .01em;
+    min-height: 0; opacity: 0;
+    transition: opacity .4s ease, min-height .3s ease;
+  }
+  .q-hint.show { opacity: 1; min-height: 18px; }
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -383,7 +391,7 @@
       <svg viewBox="0 0 24 24"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
     </div>
     <div class="ov-text">
-      Отвечай быстро, не думай. Первая реакция — самая честная. <strong>Здесь нет правильных ответов.</strong>
+      Отвечай честно — и ты увидишь, почему он так себя ведёт. Первая реакция — самая точная. <strong>Правильных ответов нет.</strong>
     </div>
   </div>
 </div>
@@ -428,6 +436,7 @@
 </div>
 
 <div class="q-text" id="qText"></div>
+<div class="q-hint" id="qHint"></div>
 
 <div class="answers" id="answers"></div>
 
@@ -498,6 +507,20 @@
     const q = QUESTIONS[idx];
     updateRing(idx);
     timestamps[idx] = Date.now();
+
+    /* микро-инсайты */
+    var hintEl = document.getElementById('qHint');
+    var HINTS = {
+      10: 'Его эмоциональный профиль проявляется...',
+      20: 'Стратегия в конфликте становится ясней...',
+      30: 'Почти готово. Его тип уже виден...'
+    };
+    if (HINTS[idx]) {
+      hintEl.textContent = HINTS[idx];
+      hintEl.classList.add('show');
+    } else {
+      hintEl.classList.remove('show');
+    }
 
     const qEl = document.getElementById('qText');
     qEl.classList.remove('fade-in'); qEl.classList.add('fade-out');

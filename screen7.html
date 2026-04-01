@@ -331,6 +331,30 @@ html, body {
   50%      { opacity: .8;  transform: scale(1.4) }
 }
 
+/* prompt chips */
+.chat-prompts {
+  flex-shrink: 0;
+  display: flex; gap: 6px; flex-wrap: wrap;
+  padding: 8px 16px 4px;
+}
+.chat-prompts.hidden { display: none }
+.prompt-chip {
+  padding: 6px 12px;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.5);
+  font-family: inherit; font-size: 11px;
+  color: var(--t2); cursor: pointer;
+  transition: all .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.prompt-chip:active { background: var(--acc); color: #fff; border-color: var(--acc) }
+
+/* night mode */
+.night .chat-messages { background: rgba(0,0,0,0.02) }
+.night .msg.bot { background: rgba(0,0,0,0.06) }
+.night .chat-sub::after { content: ' · ночь'; font-style: italic }
+
 .chat-input-wrap {
   flex-shrink: 0;
   display: flex; align-items: center; gap: 8px;
@@ -445,6 +469,7 @@ html, body {
     </button>
   </div>
   <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-prompts" id="chatPrompts"></div>
   <div class="chat-input-wrap">
     <input class="chat-input" id="chatInput" type="text" placeholder="Спросите его..." maxlength="300" enterkeyhint="send">
     <button class="chat-send" id="chatSend" disabled>
@@ -519,7 +544,7 @@ var WHISPERS = {
   filosof:       'Спроси — в чём его смысл',
   poet:          'Спроси — о чём он молчит',
   atlant:        'Спроси — кто держит его',
-  strukturalist: 'Спроси — что ломает его систему',
+  strukturalist: 'Спроси — почему он закрывается',
   artist:        'Спроси — почему он горит',
   zakonodatel:   'Спроси — кто пишет его правила',
   shoumen:       'Спроси — кто он без сцены',
@@ -575,6 +600,55 @@ var GREETINGS = {
 };
 var DEFAULT_GREETING = 'Ты пришла. Что хочешь узнать?';
 
+/* чипы-подсказки для чата */
+var PROMPT_CHIPS = {
+  geroy:         ['Почему ты не показываешь слабость?', 'За что ты сражаешься?', 'Ты меня любишь?'],
+  prodavets:     ['Что ты продаёшь на самом деле?', 'Ты всегда такой уверенный?', 'Что тебя ранит?'],
+  strateg:       ['Почему ты молчишь?', 'Ты просчитываешь меня?', 'Что ты чувствуешь?'],
+  istorik:       ['Ты помнишь всё?', 'Почему ты не отпускаешь прошлое?', 'Что ты не можешь забыть?'],
+  nastavnik:     ['Почему ты всех учишь?', 'Кто учит тебя?', 'Ты устал быть сильным?'],
+  igrok:         ['Я для тебя — тоже ставка?', 'Тебе скучно со мной?', 'Что ты боишься проиграть?'],
+  komandir:      ['Почему ты решаешь за двоих?', 'Ты боишься потерять контроль?', 'Ты можешь просто обнять?'],
+  filosof:       ['В чём ты ищешь смысл?', 'Почему ты уходишь в себя?', 'Я для тебя — смысл?'],
+  poet:          ['О чём ты молчишь?', 'Почему ты красиво говоришь, но не о нас?', 'Ты чувствуешь меня?'],
+  atlant:        ['Кто держит тебя?', 'Ты устал нести всё?', 'Почему не просишь помощи?'],
+  strukturalist: ['Я ломаю твою систему?', 'Что тебя бесит?', 'Ты можешь быть спонтанным?'],
+  artist:        ['Почему ты горишь?', 'Тебе скучно?', 'Ты любишь или увлекаешься?'],
+  zakonodatel:   ['Бывают ли исключения?', 'Почему столько правил?', 'Ты сам их соблюдаешь?'],
+  shoumen:       ['Кто ты без сцены?', 'Почему дома ты другой?', 'Тебе нужны аплодисменты?'],
+  inzhener:      ['Что ты не можешь починить?', 'Почему чинишь всё кроме нас?', 'Ты чувствуешь или анализируешь?'],
+  rezhisser:     ['Я в твоём сценарии?', 'Ты контролируешь всё?', 'А если я импровизирую?'],
+  generator:     ['Почему не доводишь до конца?', 'Какая идея сейчас?', 'Тебе тесно со мной?'],
+  konverter:     ['Ты и меня упорядочишь?', 'Что ты не можешь систематизировать?', 'Хаос — это я?'],
+  dizayner:      ['Ты ищешь идеал?', 'Я достаточно красива?', 'Что ты видишь во мне?'],
+  ideolog:       ['Что важнее — я или идея?', 'Ты можешь изменить мнение?', 'Во что ты веришь?'],
+  arkhitektor:   ['Я есть в твоих планах?', 'Что ты строишь?', 'Почему ты всё планируешь?'],
+  lider:         ['Куда ты ведёшь?', 'Ты оглядываешься?', 'Кто ведёт тебя?'],
+  khranitel:     ['Что ты прячешь?', 'Когда ты взорвёшься?', 'Ты вообще чувствуешь?'],
+  mentor:        ['Кто помогает тебе?', 'Ты знаешь всё лучше?', 'А если я не соглашусь?'],
+  sistematik:    ['Чувства тоже по полочкам?', 'Что не влезает?', 'Ты можешь отпустить?'],
+  dokumentalist: ['Что ты не записываешь?', 'Зачем ты всё фиксируешь?', 'Ты помнишь или контролируешь?'],
+  organizator:   ['Ты и меня контролируешь?', 'Что будет если отпустишь?', 'Ты доверяешь мне?'],
+  instruktor:    ['Чему ты не можешь научить?', 'Ты объясняешь или прячешься?', 'Покажи чувства, не слова'],
+  ucheny:        ['Любовь — это эксперимент?', 'Что ты не можешь объяснить?', 'Ты анализируешь нас?'],
+  pedagog:       ['За что ты себя не прощаешь?', 'Ты терпелив со мной?', 'Кто прощает тебя?']
+};
+var DEFAULT_CHIPS = ['Почему ты молчишь?', 'Ты вернёшься?', 'Что ты чувствуешь?'];
+
+/* ночной режим */
+var isNight = (function() {
+  var h = new Date().getHours();
+  return h >= 23 || h < 6;
+})();
+
+var NIGHT_REPLIES = [
+  'Ночью я честнее. Спрашивай.',
+  'В это время я не прячусь. Спрашивай.',
+  'Ночь — единственное время, когда я не контролирую слова.',
+  'Ты не спишь. Я тоже. Значит, это важно.',
+  'Сейчас я скажу то, что днём бы промолчал.'
+];
+
 var QUICK_FACTS = {
   geroy:         'Его главный страх — оказаться слабым в чужих глазах.',
   prodavets:     'Он всегда знает, чего ты хочешь. Раньше тебя.',
@@ -617,6 +691,13 @@ var swiper = null;
 var msgCount = {};
 
 /* ═══ Intro ═══ */
+try {
+  var introData = JSON.parse(localStorage.getItem('maru_block1') || '{}');
+  if (introData.archetype) {
+    document.querySelector('.intro-text').innerHTML =
+      'Он — ' + introData.archetype + '.<br>Теперь можешь спросить — почему.';
+  }
+} catch(e) {}
 setTimeout(function() {
   document.getElementById('intro').classList.add('fade');
   setTimeout(function() { document.getElementById('intro').style.display = 'none'; }, 600);
@@ -736,17 +817,45 @@ function openChat() {
   document.getElementById('carouselView').classList.add('hidden');
   document.getElementById('chatView').classList.remove('hidden');
 
+  /* ночной режим */
+  if (isNight) document.getElementById('chatView').classList.add('night');
+  else document.getElementById('chatView').classList.remove('night');
+
   if (!msgCount[currentArch.key]) msgCount[currentArch.key] = 0;
+
+  /* чипы-подсказки */
+  buildPromptChips();
 
   var delay = currentArch.key === 'khranitel' ? 2500 : 600;
   setTimeout(function() {
     showTyping(function() {
-      addMsg(GREETINGS[currentArch.key] || DEFAULT_GREETING, 'bot');
+      var greeting = GREETINGS[currentArch.key] || DEFAULT_GREETING;
+      if (isNight) greeting = pick(NIGHT_REPLIES);
+      addMsg(greeting, 'bot');
     }, currentArch.key === 'khranitel' ? 2000 : undefined);
   }, delay);
 
   document.getElementById('chatInput').focus();
   haptic('light');
+}
+
+function buildPromptChips() {
+  var wrap = document.getElementById('chatPrompts');
+  var chips = PROMPT_CHIPS[currentArch.key] || DEFAULT_CHIPS;
+  wrap.innerHTML = '';
+  wrap.classList.remove('hidden');
+  chips.forEach(function(text) {
+    var chip = document.createElement('button');
+    chip.className = 'prompt-chip';
+    chip.textContent = text;
+    chip.onclick = function() {
+      document.getElementById('chatInput').value = text;
+      document.getElementById('chatSend').disabled = false;
+      sendMessage();
+      wrap.classList.add('hidden');
+    };
+    wrap.appendChild(chip);
+  });
 }
 
 function closeChat() {
@@ -789,6 +898,7 @@ function sendMessage() {
 
   input.value = '';
   document.getElementById('chatSend').disabled = true;
+  document.getElementById('chatPrompts').classList.add('hidden');
   addMsg(text, 'user');
 
   msgCount[currentArch.key] = (msgCount[currentArch.key] || 0) + 1;
@@ -831,6 +941,13 @@ function generateReply(text) {
     return pick(['Страх? Возможно. Но я называю это осторожностью.',
                  'Слабость — когда знаешь, но не делаешь. Я — делаю.',
                  'Бояться — нормально. Показывать — нет. Для меня.']);
+  /* ночные ответы — откровеннее */
+  if (isNight)
+    return pick(['Ночью сложнее врать. Спрашивай ещё.',
+                 'Сейчас я бы ответил иначе, чем днём. Но промолчу.',
+                 'Ты не спишь. Значит, это важно. Мне тоже.',
+                 'Ночью я уязвимее. Пользуйся.',
+                 'В три ночи честность — не выбор. Это неизбежность.']);
   return pick(['Интересный вопрос. Но уверена, что хочешь знать?',
                'Слышу тебя. Но отвечу по-своему.',
                'Спрашиваешь — думаю. Не торопи.',
