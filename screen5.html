@@ -90,7 +90,7 @@ html,body{
 /* ── IDENTITY CARD — Вариант А ── */
 @keyframes cardPulse{
   0%,100%{border-top-color:rgba(0,0,0,0.08);border-left-color:rgba(0,0,0,0.06);border-bottom-color:rgba(255,255,255,0.55);border-right-color:rgba(255,255,255,0.45)}
-  50%{border-top-color:rgba(255,107,107,0.5);border-left-color:rgba(255,107,107,0.4);border-bottom-color:rgba(255,107,107,0.3);border-right-color:rgba(255,107,107,0.25)}
+  50%{border-top-color:rgba(255,111,97,0.5);border-left-color:rgba(255,111,97,0.4);border-bottom-color:rgba(255,111,97,0.3);border-right-color:rgba(255,111,97,0.25)}
 }
 .identity-card{
   display:inline-flex;
@@ -268,6 +268,8 @@ html,body{
   transition:max-height .28s ease,opacity .28s ease;
 }
 .price-tooltip.show{max-height:20px;opacity:1}
+@keyframes tipPulse{0%,100%{opacity:1}50%{opacity:.5}}
+.price-tooltip.pulse-tip{animation:tipPulse 2s ease-in-out infinite}
 
 /* ── COUNTER ── 20px от цены */
 .counter-line{
@@ -364,9 +366,9 @@ html,body{
 }
 .spark-svg.run path{animation:sparkAnim 1.6s cubic-bezier(.3,0,.2,1) forwards}
 @keyframes btnPulse{
-  0%{box-shadow:0 0 0 0 rgba(255,107,107,0)}
-  40%{box-shadow:0 0 0 6px rgba(255,107,107,0.3)}
-  100%{box-shadow:0 0 0 0 rgba(255,107,107,0)}
+  0%{box-shadow:0 0 0 0 rgba(255,111,97,0)}
+  40%{box-shadow:0 0 0 6px rgba(255,111,97,0.3)}
+  100%{box-shadow:0 0 0 0 rgba(255,111,97,0)}
 }
 .cta-btn.pulse{animation:btnPulse 2.0s ease 0s 1}
 .cta-note{
@@ -408,22 +410,22 @@ html,body{
   <div class="scroll">
 
     <div class="manifesto" id="manifesto">
-      <div class="manifesto-title">Теперь ты видишь его иначе.</div>
-      <div class="manifesto-text">Полный профиль покажет то, чего он сам о себе не знает. И ты наконец примешь своё решение — не его. С уверенностью, а не с тревогой.</div>
+      <div class="manifesto-title">Ты уже чувствуешь — что-то стало понятнее.</div>
+      <div class="manifesto-text">Осталось увидеть целиком. И принять именно своё решение — с уверенностью, а не с тревогой.</div>
     </div>
 
-    <div class="counter-line" id="counterNote"></div>
+    <!-- sunk cost и counter убраны — чистая иерархия -->
 
     <div class="identity-card">
       <div class="id-lock"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
       <div class="id-arch" id="idArch"></div>
       <div class="id-sep"></div>
-      <div class="id-status">ожидает разблокировки</div>
+      <div class="id-status">ожидает тебя</div>
     </div>
 
     <div class="price-card" id="priceCard" onclick="toggleTooltip()">
       <div class="price-lbl">Один раз</div>
-      <button class="price-info-btn" onclick="event.stopPropagation();toggleTooltip()">i</button>
+      <!-- info btn убран: tooltip auto-show -->
       <div class="price-row">
         <div class="price-amount">999</div>
         <div class="price-cur">₽</div>
@@ -432,16 +434,18 @@ html,body{
       <div class="price-tooltip" id="priceTooltip">у психолога от 9 000 ₽</div>
     </div>
 
+    <div style="text-align:center;font-size:12px;font-style:italic;color:var(--t2);line-height:1.6;margin-top:20px;padding:0 16px;opacity:0;transition:opacity .4s" id="testimonial">«Я наконец перестала додумывать за него»</div>
+
   </div>
 
   <div class="cta-wrap" id="ctaWrap">
     <button class="cta-btn" id="ctaBtn" onclick="hap('m');goPay();">
-      <span class="cta-main">РАЗБЛОКИРОВАТЬ ЕГО ПРОФИЛЬ</span>
+      <span class="cta-main">ПОЛУЧИТЬ СВОЙ ОТВЕТ</span>
       <svg class="spark-svg" id="sparkSvg"><path id="sparkPath"/></svg>
     </button>
     <div class="cta-note">999₽ · Безопасная оплата · Доступ сразу</div>
     <div class="timer-note" id="timerNote" style="opacity:0;transition:opacity .4s;">
-      Результат актуален ещё <span id="timerVal">23:59:42</span>
+      Результат сохранён на 48 часов. После — нужно проходить заново.
     </div>
   </div>
 
@@ -471,17 +475,41 @@ window.toggleTooltip=function(){
   tooltipOpen=!tooltipOpen;
   document.getElementById('priceTooltip').classList.toggle('show',tooltipOpen);
 };
+/* auto-show tooltip через 5 сек, держится 8 сек */
+setTimeout(function(){
+  if(!tooltipOpen){
+    tooltipOpen=true;
+    var tt=document.getElementById('priceTooltip');
+    tt.classList.add('show','pulse-tip');
+    setTimeout(function(){
+      tooltipOpen=false;
+      tt.classList.remove('show','pulse-tip');
+    },8000);
+  }
+},5000);
+
+/* «С возвращением» — если уже была на этом экране */
+var returnKey='maru_saw_paywall';
+var isReturn=false;
+try{isReturn=!!localStorage.getItem(returnKey);}catch(e){}
+try{localStorage.setItem(returnKey,'1');}catch(e){}
+var mTitle=document.getElementById('manifesto').querySelector('.manifesto-title');
+var mText=document.getElementById('manifesto').querySelector('.manifesto-text');
+if(isReturn&&mTitle&&mText){
+  mTitle.textContent='С возвращением. Твой результат всё ещё ждёт.';
+  mText.textContent='Принять именно своё решение — с уверенностью, а не с тревогой.';
+}
 
 /* stagger */
 setTimeout(function(){document.getElementById('page').classList.add('show');},60);
 setTimeout(function(){document.getElementById('manifesto').classList.add('vis');},180);
+/* sunkCost убран */
 setTimeout(function(){
   document.getElementById('priceCard').classList.add('vis');
   document.getElementById('timerNote').style.opacity='1';
 },600);
-setTimeout(function(){
-  document.getElementById('counterNote').classList.add('vis');
-},750);
+setTimeout(function(){document.getElementById('testimonial').style.opacity='1';},700);
+/* counterNote убран */
 setTimeout(function(){
   document.getElementById('ctaWrap').classList.add('vis');
   setTimeout(runSpark,200);
@@ -526,50 +554,9 @@ window.goBackS5=function(){
   setTimeout(function(){window.location.href='screen4.html';},250);
 };
 
-/* таймер 24ч */
-var TIMER_DURATION=24*3600;
-function fmtTimer(s){
-  var h=Math.floor(s/3600),m=Math.floor((s%3600)/60),ss=s%60;
-  return (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;
-}
-var timerKey='maru_timer_start';
-var now=Math.floor(Date.now()/1000);
-var startTs=parseInt(sessionStorage.getItem(timerKey)||'0',10);
-if(!startTs){startTs=now;sessionStorage.setItem(timerKey,startTs);}
-var totalSec=Math.max(TIMER_DURATION-(now-startTs),0);
-var timerEl=document.getElementById('timerVal');
-timerEl.textContent=fmtTimer(totalSec);
-setInterval(function(){if(totalSec>0){totalSec--;timerEl.textContent=fmtTimer(totalSec);}},1000);
+/* таймер убран — честный urgency через текст */
 
-/* 3. Firebase + живой инкремент */
-(function(){
-  var MIN=22126;
-  function animateCounter(el,target){
-    var start=target-50;
-    var duration=1200;
-    var startTime=null;
-    function step(ts){
-      if(!startTime)startTime=ts;
-      var p=Math.min((ts-startTime)/duration,1);
-      var ease=1-Math.pow(1-p,3);
-      var val=Math.round(start+ease*(target-start));
-      var fmt=val.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ');
-      el.innerHTML='<span style="color:var(--acc);font-weight:600">'+fmt+'</span><span style="color:var(--t3)"> девушек уже понимают своего мужчину</span>';
-      if(p<1)requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-  fetch('https://maru-app-2071c-default-rtdb.firebaseio.com/results.json?shallow=true')
-    .then(function(r){return r.json();})
-    .then(function(d){
-      var n=d?Math.max(Object.keys(d).length,MIN):MIN;
-      var el=document.getElementById('counterNote');
-      if(el)animateCounter(el,n);
-    }).catch(function(){
-      var el=document.getElementById('counterNote');
-      if(el)animateCounter(el,MIN);
-    });
-})();
+/* counter убран */
 
 document.getElementById('ctaBtn').addEventListener('click',function(){
   setTimeout(function(){goTo('screen6.html');},700);

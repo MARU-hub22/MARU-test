@@ -123,9 +123,9 @@ html,body{
 }
 .cta-btn:active{transform:scale(0.98);opacity:.88}
 @keyframes btnPulse{
-  0%{box-shadow:0 0 0 0 rgba(255,107,107,0)}
-  40%{box-shadow:0 0 0 6px rgba(255,107,107,0.3)}
-  100%{box-shadow:0 0 0 0 rgba(255,107,107,0)}
+  0%{box-shadow:0 0 0 0 rgba(255,111,97,0)}
+  40%{box-shadow:0 0 0 6px rgba(255,111,97,0.3)}
+  100%{box-shadow:0 0 0 0 rgba(255,111,97,0)}
 }
 .cta-btn.pulse{animation:btnPulse 2.0s ease 0s 1}
 .cta-note{
@@ -133,7 +133,7 @@ html,body{
   font-size:10px;color:var(--t3);margin-top:8px;letter-spacing:.04em;
 }
 .spark-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-.spark-svg path{fill:none;stroke:rgba(255,107,107,0.45);stroke-width:0.8;stroke-linecap:round;stroke-dasharray:0 9999;opacity:0}
+.spark-svg path{fill:none;stroke:rgba(255,111,97,0.45);stroke-width:0.8;stroke-linecap:round;stroke-dasharray:0 9999;opacity:0}
 @keyframes sparkAnim{0%{stroke-dasharray:0 9999;opacity:0}6%{opacity:1}75%{stroke-dasharray:9999 0;opacity:.75}100%{stroke-dasharray:9999 0;opacity:0}}
 .spark-svg.run path{animation:sparkAnim 1.8s cubic-bezier(.3,0,.2,1) forwards}
 @keyframes sparkPulse{0%{stroke-dasharray:0 9999;opacity:0}10%{opacity:.5}50%{opacity:.3}68%{stroke-dasharray:9999 0;opacity:.15}100%{stroke-dasharray:9999 0;opacity:0}}
@@ -167,7 +167,7 @@ html,body{
   font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--t3);
   margin-top:32px;margin-bottom:16px;
 }
-.sl-line{width:1px;height:10px;background:rgba(255,107,107,0.4);flex-shrink:0}
+.sl-line{width:1px;height:10px;background:rgba(255,111,97,0.4);flex-shrink:0}
 .sl-hot{color:var(--acc)}
 
 /* ══ CARD ══ */
@@ -182,8 +182,8 @@ html,body{
 /* ══ ИНСАЙТ ══ */
 .ins-wrap{padding:16px 16px 16px}
 .ins-label{
-  font-size:9px;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--t3);margin-bottom:12px;
+  font-size:13px;font-weight:600;letter-spacing:-.01em;
+  color:var(--t1);margin-bottom:12px;
 }
 .ins-row{display:flex;align-items:center;gap:12px}
 .ins-ico{
@@ -372,6 +372,8 @@ html,body{
       <div class="hero-rarity" id="heroRarity">один из 30 архетипов</div>
     </div>
 
+    <div class="her-context" id="herContext" style="font-size:13px;color:var(--t2);line-height:1.6;text-align:center;padding:0 12px 16px;opacity:0;transform:translateY(4px);transition:opacity .5s,transform .5s;"></div>
+
     <div class="card" id="c0">
       <div class="ins-wrap">
         <div class="ins-label">Его природа</div>
@@ -385,7 +387,7 @@ html,body{
 
     <!-- РАЗДЕЛИТЕЛЬ -->
     <div style="margin:20px 0 20px;text-align:center">
-      <span style="font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(0,0,0,0.35)">закрытый профиль</span>
+      <span style="font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(0,0,0,0.35)">полный ответ</span>
     </div>
 
     <!-- АККОРДЕОНЫ -->
@@ -398,7 +400,7 @@ html,body{
   <!-- CTA -->
   <div class="cta-wrap" id="ctaWrap" style="opacity:0;transition:opacity .4s">
     <button class="cta-btn" id="ctaBtn" onclick="goToPay()">
-      <span id="ctaTxt">Узнать, что тебя разрушает</span>
+      <span id="ctaTxt">Понять, как действовать</span>
       <svg class="spark-svg" id="sparkSvg"><path id="sparkPath"/></svg>
     </button>
     <div class="cta-note">Единоразово · доступ навсегда</div>
@@ -427,7 +429,7 @@ try{
 var male=D.gender==='М';
 /* CTA текст по гендеру */
 var ctaEl=document.getElementById('ctaTxt');
-if(ctaEl)ctaEl.textContent='УЗНАТЬ, ЧТО ЕГО ЛОМАЕТ';
+if(ctaEl)ctaEl.textContent='ПОНЯТЬ, КАК ДЕЙСТВОВАТЬ';
 var ARCHETYPES_URL='https://cdn.jsdelivr.net/gh/MARU-hub22/maru-data@main/maru_archetypes.json';
 var NAMES_MAP={'Герой':'geroy','Продавец':'prodavets','Стратег':'strateg','Историк':'istorik','Наставник':'nastavnik','Игрок':'igrok','Командир':'komandir','Философ':'filosof','Поэт':'poet','Атлант':'atlant','Структуралист':'strukturalist','Артист':'artist','Законодатель':'zakonodatel','Шоумен':'shoumen','Продюсер':'produser','Инженер':'inzhener','Эстет':'estet','Декоратор':'dekorator','Визионер':'vizioner','Новатор':'novator','Вдохновитель':'vdokhnovitel','Драматург':'dramaturg','Агент':'agent','Символист':'simvolist','Режиссер':'rezhisser','Генератор':'generator','Транслятор':'translyator','Конвертер':'konverter','Теоретик':'teoretik','Методолог':'metodolog','Созерцатель':'sozertatel','Концептуалист':'kontseptualist','Интерпретатор':'interpretator','Полемик':'polemik','Аналитик':'analitik','Оракул':'orakul','Дизайнер':'dizayner','Идеолог':'ideolog','Архитектор':'arkhitektor','Лидер':'lider','Хранитель':'khranitel','Ментор':'mentor','Систематик':'sistematik','Документалист':'dokumentalist','Организатор':'organizator','Инструктор':'instruktor','Ученый':'ucheny','Педагог':'pedagog','Администратор':'administrator','Спикер':'spiker','Сторителлер':'storiteller','Переговорщик':'peregovorshchik','Комментатор':'kommentator','Презентатор':'prezentator','Куратор':'kurator','Прогнозист':'prognozist','Мистик':'mistik','Сценарист':'stenarist','Маэстро':'maestro','Лирик':'lirik'};
 function loadArchetypeData(){
@@ -519,7 +521,7 @@ function startRarity(){
   if(!el)return;
   var phrases=[
     function(){return 'один из 30 архетипов';},
-    function(){return counterVal>0?'<span style="color:var(--acc);font-weight:600">'+fmtNum(counterVal)+'</span> '+(male?'мужчин':'человек')+' прошли этот путь':'один из 30 архетипов';},
+    function(){return counterVal>0?'<span style="color:var(--acc);font-weight:600">'+fmtNum(counterVal)+'</span> '+'девушек уже разобрались':'один из 30 архетипов';},
     function(){return 'встречается у '+(RARITY[dom]||'редкого типа').replace('встречается у ','');},
   ];
   var idx=0;
@@ -685,6 +687,32 @@ function animBars(){
   requestAnimationFrame(fr);
 }
 
+/* her context — зеркало */
+function showHerContext(){
+  var el=document.getElementById('herContext');
+  if(!el)return;
+  var state='';
+  try{state=localStorage.getItem('maru_her_state')||'';}catch(e){}
+  if(!state)return;
+
+  var h=new Date().getHours();
+  var m=new Date().getMinutes();
+  var time=(h<10?'0':'')+h+':'+(m<10?'0':'')+m;
+  var msg='';
+
+  if(h>=23||h<5){
+    msg='Ты написала: «'+state+'». Сейчас '+time+' ночи — и ты всё ещё думаешь о нём.';
+  }else if(h>=5&&h<12){
+    msg='Ты написала: «'+state+'». Вот что стоит за его поведением.';
+  }else{
+    msg='Ты написала: «'+state+'». Вот что на самом деле происходит.';
+  }
+
+  el.textContent=msg;
+  el.style.opacity='1';
+  el.style.transform='none';
+}
+
 /* reveal */
 function reveal(){
   setTimeout(function(){document.getElementById('hero').classList.add('vis');animArch();},100);
@@ -693,7 +721,8 @@ function reveal(){
     if(cl){cl.classList.add('vis');}
     startRarity();
   },300);
-  setTimeout(function(){document.getElementById('c0').classList.add('vis');},360);
+  setTimeout(function(){showHerContext();},280);
+  setTimeout(function(){document.getElementById('c0').classList.add('vis');},460);
   setTimeout(function(){document.getElementById('c1').classList.add('vis');animBars();},570);
   setTimeout(function(){document.getElementById('c2').classList.add('vis');},870);
   setTimeout(function(){
@@ -853,7 +882,7 @@ window.goToPay=function(){
   var fired=false;
   scroll.addEventListener('scroll',function(){
     if(fired)return;
-    var sep=document.querySelector('[style*="закрытый профиль"]');
+    var sep=document.querySelector('[style*="полный ответ"]');
     if(!sep)return;
     var r=sep.getBoundingClientRect();
     if(r.top<window.innerHeight*0.8){fired=true;hap('m');}

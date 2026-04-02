@@ -12,7 +12,7 @@
   --t1:#1a1a1a;
   --t2:#888;
   --t3:#aaa;
-  --acc:#FF6B6B;
+  --acc:#FF6F61;
   --r:16px;
   --bt:1px solid rgba(0,0,0,0.12);
   --bl:1px solid rgba(0,0,0,0.08);
@@ -253,7 +253,7 @@ body{
 <div class="logo">MARU</div>
 <div class="scr">
 
-  <div class="phrase stg d2">Ты не понимаешь, что с ним происходит</div>
+  <div class="phrase stg d2">Когда не понимаешь, что происходит — тяжелее всего</div>
 
   <!-- Плеер -->
   <div class="player stg d3">
@@ -275,11 +275,11 @@ body{
     </button>
     <div class="acc-panel">
       <div class="acc-chips" id="chips1">
-        <button class="chip" onclick="pick(this,'1','молчит')">молчит</button>
-        <button class="chip" onclick="pick(this,'1','отдалился')">отдалился</button>
-        <button class="chip" onclick="pick(this,'1','холоден')">холоден</button>
-        <button class="chip" onclick="pick(this,'1','ссоры')">ссоры</button>
         <button class="chip" onclick="pick(this,'1','тревожно')">тревожно</button>
+        <button class="chip" onclick="pick(this,'1','он отдалился')">он отдалился</button>
+        <button class="chip" onclick="pick(this,'1','в ссоре')">в ссоре</button>
+        <button class="chip" onclick="pick(this,'1','не понимаю его')">не понимаю его</button>
+        <button class="chip" onclick="pick(this,'1','хочу разобраться')">хочу разобраться</button>
       </div>
     </div>
   </div>
@@ -287,7 +287,7 @@ body{
 </div>
 
 <div class="cta-wrap">
-  <button class="cta-btn" id="ctaBtn" onclick="startTest()">ПОНЯТЬ ЕГО ПОВЕДЕНИЕ</button>
+  <button class="cta-btn" id="ctaBtn" onclick="startTest()">РАЗОБРАТЬСЯ</button>
   <div class="offer-link">Нажимая — принимаю <span onclick="openAo()">условия</span></div>
 </div>
 
@@ -426,7 +426,7 @@ function startTest(){
     localStorage.setItem('maru_gender','female');
     /* сохраняем выборы чипов */
     var b1=document.querySelector('#chips1 .chip.sel');
-    if(b1)localStorage.setItem('maru_his_behavior',b1.textContent.trim());
+    if(b1)localStorage.setItem('maru_her_state',b1.textContent.trim());
   }catch(e){}
   var overlay=document.createElement('div');
   overlay.style.cssText='position:fixed;inset:0;background:var(--bg);opacity:0;z-index:9999;transition:opacity .4s ease;pointer-events:none';

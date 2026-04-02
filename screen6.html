@@ -115,7 +115,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 
 
 .sl{display:flex;align-items:center;justify-content:center;gap:8px;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:rgba(0,0,0,0.45);margin-top:32px;margin-bottom:20px;}
-.sl-line{width:1px;height:10px;background:rgba(255,107,107,0.4);flex-shrink:0}
+.sl-line{width:1px;height:10px;background:rgba(255,111,97,0.4);flex-shrink:0}
 .sl-hot{color:var(--acc)}
 
 /* ══ CARD ══ */
@@ -199,7 +199,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
   border-top:1px solid rgba(0,0,0,0.05);cursor:pointer;-webkit-tap-highlight-color:transparent;
   opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s,border-bottom-color .4s;
 }
-@keyframes accHint{0%,100%{border-bottom-color:rgba(0,0,0,0.05)}50%{border-bottom-color:rgba(255,107,107,0.15)}}
+@keyframes accHint{0%,100%{border-bottom-color:rgba(0,0,0,0.05)}50%{border-bottom-color:rgba(255,111,97,0.15)}}
 .acc-item:not(.open).vis{animation:accHint 1.2s ease 8s 1}
 /* описание дышит */
 @keyframes insBreathe{0%,100%{opacity:0.88}50%{opacity:1}}
@@ -295,14 +295,14 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 }
 .cta-btn:active{transform:scale(0.98);opacity:.88}
 @keyframes btnPulse{
-  0%{box-shadow:0 0 0 0 rgba(255,107,107,0)}
-  40%{box-shadow:0 0 0 6px rgba(255,107,107,0.3)}
-  100%{box-shadow:0 0 0 0 rgba(255,107,107,0)}
+  0%{box-shadow:0 0 0 0 rgba(255,111,97,0)}
+  40%{box-shadow:0 0 0 6px rgba(255,111,97,0.3)}
+  100%{box-shadow:0 0 0 0 rgba(255,111,97,0)}
 }
 .cta-btn.pulse{animation:btnPulse 2.0s ease 0s 1}
 .cta-note{text-align:center;font-size:10px;color:var(--t3);margin-top:8px;letter-spacing:.04em;}
 .spark-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-.spark-svg path{fill:none;stroke:rgba(255,107,107,0.45);stroke-width:0.8;stroke-linecap:round;stroke-dasharray:0 9999;opacity:0}
+.spark-svg path{fill:none;stroke:rgba(255,111,97,0.45);stroke-width:0.8;stroke-linecap:round;stroke-dasharray:0 9999;opacity:0}
 @keyframes sparkAnim{0%{stroke-dasharray:0 9999;opacity:0}6%{opacity:1}75%{stroke-dasharray:9999 0;opacity:.75}100%{stroke-dasharray:9999 0;opacity:0}}
 .spark-svg.run path{animation:sparkAnim 1.8s cubic-bezier(.3,0,.2,1) forwards}
 
@@ -428,7 +428,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
     <!-- КАРТОЧКА ДЛЯ НЕЁ / ПАРТНЁРА — объединено -->
     <div class="share-row">
       <div class="share-row-head">
-        <div class="share-row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <div class="share-row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6F61" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
         <div class="share-row-title" style="color:var(--acc)">Отправить ему — пусть узнает себя</div>
       </div>
       <div class="share-row-hint">Карточка с его архетипом · пусть увидит себя твоими глазами</div>
@@ -472,9 +472,9 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
     <div style="font-size:13px;color:#666;margin-top:8px;line-height:1.6">Это то, что заложено во мне природой</div>
     <div style="margin-top:16px">
       <div style="font-size:12px;color:#666">t.me/maru_22_bot</div>
-      <div style="font-size:12px;color:#FF6B6B;margin-top:4px">t.me/maru_woman</div>
+      <div style="font-size:12px;color:#FF6F61;margin-top:4px">t.me/maru_woman</div>
     </div>
-    <button id="storyConfirmBtn" style="margin-top:16px;width:100%;height:56px;border-radius:16px;background:transparent;color:#FF6B6B;font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);cursor:pointer;-webkit-tap-highlight-color:transparent" onclick="confirmStories()">Отправить в Instagram</button>
+    <button id="storyConfirmBtn" style="margin-top:16px;width:100%;height:56px;border-radius:16px;background:transparent;color:#FF6F61;font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);cursor:pointer;-webkit-tap-highlight-color:transparent" onclick="confirmStories()">Отправить в Instagram</button>
     <div style="margin-top:10px;font-size:11px;color:#999;letter-spacing:.04em;cursor:pointer" onclick="closeStoryPreview()">отмена</div>
   </div>
 </div>
@@ -483,7 +483,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 <div id="friendPreview" style="position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(44,44,44,0.6);opacity:0;pointer-events:none;transition:opacity .3s;padding:24px" onclick="if(event.target===this)closeFriendPreview()">
   <div style="width:100%;max-width:320px;background:#e8e8e8;border-radius:16px;padding:24px;text-align:center;font-family:Inter,sans-serif;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45)">
     <div id="friendCard"></div>
-    <button id="friendConfirmBtn" style="margin-top:16px;width:100%;height:56px;border-radius:16px;background:transparent;color:#FF6B6B;font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);cursor:pointer;-webkit-tap-highlight-color:transparent">Отправить</button>
+    <button id="friendConfirmBtn" style="margin-top:16px;width:100%;height:56px;border-radius:16px;background:transparent;color:#FF6F61;font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);cursor:pointer;-webkit-tap-highlight-color:transparent">Отправить</button>
     <div style="margin-top:10px;font-size:11px;color:#999;letter-spacing:.04em;cursor:pointer" onclick="closeFriendPreview()">отмена</div>
   </div>
 </div>
@@ -1047,7 +1047,7 @@ function revealAccordions(){
       hap('l');
       /* микро-вспышка бордера — ощущение гравировки */
       item.style.transition='border-bottom-color .3s ease';
-      item.style.borderBottomColor='rgba(255,107,107,0.25)';
+      item.style.borderBottomColor='rgba(255,111,97,0.25)';
       setTimeout(function(){item.style.borderBottomColor='';},320);
     },i*400);
   });
@@ -1275,7 +1275,7 @@ function drawStoryCanvas(ctx,photoImg){
   ctx.font='400 '+linkH+'px Inter';
   ctx.fillStyle='#666';
   ctx.fillText('Пройди тест · t.me/maru_22_bot',cx,link1Y);
-  ctx.fillStyle='#FF6B6B';
+  ctx.fillStyle='#FF6F61';
   ctx.fillText('t.me/maru_woman',cx,link2Y);
 }
 
@@ -1534,8 +1534,8 @@ window.toggleInsText=function(){
     <div style="font-size:11px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:#666;text-align:center;margin-bottom:16px">Как его зовут</div>
     <input id="herNameInput" type="text" placeholder="" maxlength="20" autocomplete="off"
       style="width:100%;background:transparent;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);border-radius:10px;outline:none;font-family:Inter,sans-serif;font-size:15px;color:#2c2c2c;padding:10px 12px;letter-spacing:.02em;-webkit-user-select:auto;user-select:auto;transition:border-color .2s;margin-bottom:16px;"
-      oninput="this.style.borderColor=this.value?'rgba(255,107,107,0.45)':''">
-    <button id="herNameSend" style="width:100%;height:56px;border-radius:16px;background:transparent;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);color:#FF6B6B;font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-bottom:10px" onclick="confirmHerName()">Отправить</button>
+      oninput="this.style.borderColor=this.value?'rgba(255,111,97,0.45)':''">
+    <button id="herNameSend" style="width:100%;height:56px;border-radius:16px;background:transparent;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);color:#FF6F61;font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-bottom:10px" onclick="confirmHerName()">Отправить</button>
     <div style="text-align:center;font-size:11px;color:var(--t3);cursor:pointer;letter-spacing:.04em" onclick="closeHerNameModal()">отмена</div>
   </div>
 </div>
