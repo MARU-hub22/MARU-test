@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>MARU</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Nunito:wght@800&family=Varela+Round&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
 :root{
-  --bg:#F28B7D;
-  --sd:#D07068;
-  --sl:#FFA99E;
+  --bg:#E8919B;
+  --sd:#C48080;
+  --sl:#F5C0C0;
   --acc:#FF6F61;
 }
 html,body{width:100%;height:100%;overflow:hidden;-webkit-font-smoothing:antialiased}
@@ -42,13 +42,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);margin:0 auto;max-width
 }
 
 .spl-letter{
-  font-size:clamp(28px, 8.5vw, 34px);
-  font-weight:700;
-  letter-spacing:0.06em;
+  font-family:'Nunito','Varela Round',sans-serif;
+  font-size:clamp(34px, 10vw, 42px);
+  font-weight:800;
+  letter-spacing:0.18em;
+  text-transform:lowercase;
   color:var(--bg);
   text-shadow:
-     1px  1px 2px rgba(255,255,255,0.35),
-    -1px -1px 2px rgba(0,0,0,0.25);
+    -1.5px -1.5px 2px rgba(0,0,0,0.2),
+     1.5px  1.5px 2px rgba(255,255,255,0.25);
+  -webkit-text-stroke:0;
   display:inline-block;
   cursor:pointer;
   opacity:0;
@@ -135,10 +138,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);margin:0 auto;max-width
 
 <div id="splash">
 
-  <!-- текстура картона -->
-  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0.045">
+  <!-- текстура бумаги -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0.07;mix-blend-mode:multiply">
     <filter id="noiseFilter">
-      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/>
       <feColorMatrix type="saturate" values="0"/>
     </filter>
     <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
@@ -174,7 +177,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);margin:0 auto;max-width
     tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
-    try{tg.setBackgroundColor('#F28B7D');tg.setHeaderColor('#F28B7D');}catch(e){}
+    try{tg.setBackgroundColor('#E8919B');tg.setHeaderColor('#E8919B');}catch(e){}
   }
 
   /* ── РЕДИРЕКТ: если открыто по ссылке с результатом ── */
