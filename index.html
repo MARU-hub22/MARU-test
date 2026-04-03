@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>MARU</title>
 <script>
-var V="20260403b";
+var V="20260403e";
 if(localStorage.getItem("maru_v")!==V){localStorage.setItem("maru_v",V);location.reload(true);}
 </script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -18,53 +18,35 @@ if(localStorage.getItem("maru_v")!==V){localStorage.setItem("maru_v",V);location
 html,body{width:100%;height:100%;overflow:hidden;-webkit-font-smoothing:antialiased}
 body{font-family:'Inter',sans-serif;background:transparent}
 
-/* ===== Splash — полный экран ===== */
 #splash{
-  position:fixed;top:0;left:50%;
-  transform:translateX(-50%);
+  position:fixed;top:0;left:50%;transform:translateX(-50%);
   width:100%;max-width:390px;height:100%;
   z-index:100;overflow:hidden;
 }
 
-/* Фоновая картинка — на весь экран */
-#content{position:absolute;inset:0;top:-16px;overflow:hidden}
+/* Фон-картинка */
+#content{position:absolute;inset:0;overflow:hidden;z-index:0}
 #content img{
-  position:absolute;top:0;left:0;
-  width:100%;height:calc(100% + 80px);
-  object-fit:cover;
-  object-position:center center;
-  z-index:0;
+  position:absolute;top:-38px;left:0;
+  width:100%;height:calc(100% + 110px);
+  object-fit:cover;object-position:center center;
 }
 
-/* Подпись — под лого. Лого в картинке на 50% высоты.
-   object-position:center 45% чуть сдвигает вверх.
-   Подпись ставим на 55% экрана — гарантированно ниже лого */
+/* Подпись под лого */
 #subtitle{
-  position:absolute;
-  left:0;right:0;
-  bottom:calc(50% - 80px);
-  z-index:2;
-  font-family:'Inter',sans-serif;
-  font-size:11px;
-  font-weight:400;
-  letter-spacing:0.12em;
-  color:rgba(255,255,255,0.7);
-  text-align:center;
-  opacity:0;
-  transform:translateY(6px);
+  position:absolute;left:0;right:0;top:56%;z-index:2;
+  font-size:11px;font-weight:400;letter-spacing:0.12em;
+  color:rgba(255,255,255,0.7);text-align:center;
+  opacity:0;transform:translateY(6px);
   transition:opacity 0.8s ease, transform 0.8s ease;
 }
 #subtitle.show{opacity:1;transform:translateY(0)}
 
-/* CTA кнопка внизу */
+/* CTA */
 #cta{
-  position:absolute;
-  bottom:calc(28px + env(safe-area-inset-bottom));
-  left:0;right:0;
-  display:flex;justify-content:center;
-  z-index:2;
-  opacity:0;
-  transform:translateY(14px);
+  position:absolute;bottom:calc(28px + env(safe-area-inset-bottom));
+  left:0;right:0;display:flex;justify-content:center;z-index:2;
+  opacity:0;transform:translateY(14px);
   transition:opacity 0.9s cubic-bezier(0.22,1,0.36,1),
              transform 0.9s cubic-bezier(0.22,1,0.36,1);
 }
@@ -72,8 +54,7 @@ body{font-family:'Inter',sans-serif;background:transparent}
 
 #cta button{
   background:none;border:none;
-  font-family:'Inter',sans-serif;
-  font-size:11px;font-weight:400;
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:400;
   letter-spacing:0.26em;text-transform:uppercase;
   color:rgba(255,255,255,0.75);
   cursor:pointer;padding:8px 4px;
@@ -97,8 +78,8 @@ body{font-family:'Inter',sans-serif;background:transparent}
 <div id="splash">
   <div id="content">
     <img src="splash-logo.png" alt="">
-    <div id="subtitle">30 архетипов мужчин · узнай его тип</div>
   </div>
+  <div id="subtitle">30 архетипов мужчин · узнай его тип</div>
   <div id="cta">
     <button id="btn">
       <span class="t v" id="t1">> узнать, кто он</span>
@@ -115,7 +96,6 @@ body{font-family:'Inter',sans-serif;background:transparent}
     tg.ready();tg.expand();
   }
 
-  /* Deep link → screen6 */
   if(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.start_param){
     window.location.replace('screen6.html');return;
   }
@@ -126,27 +106,24 @@ body{font-family:'Inter',sans-serif;background:transparent}
   var cta=document.getElementById('cta');
   var img=splash.querySelector('img');
 
-  /* Считываем средний цвет верхней полосы картинки → хедер и body */
+  if(location.protocol!=='file:')img.crossOrigin='anonymous';
+
   function applyColorFromImage(){
     try{
       var c=document.createElement('canvas');
       c.width=img.naturalWidth;c.height=img.naturalHeight;
       var ctx=c.getContext('2d');
       ctx.drawImage(img,0,0);
-      /* Берём полосу: вся ширина, верхние 10px — средний цвет */
       var strip=ctx.getImageData(0,0,c.width,10).data;
       var r=0,g=0,b=0,count=strip.length/4;
       for(var i=0;i<strip.length;i+=4){r+=strip[i];g+=strip[i+1];b+=strip[i+2];}
       r=Math.round(r/count);g=Math.round(g/count);b=Math.round(b/count);
       var hex='#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
       document.body.style.background=hex;
-      if(tg){
-        try{tg.setHeaderColor(hex);tg.setBackgroundColor(hex);}catch(e){}
-      }
+      if(tg){try{tg.setHeaderColor(hex);tg.setBackgroundColor(hex);}catch(e){}}
     }catch(e){}
   }
 
-  /* Ждём загрузку картинки, потом анимируем */
   function init(){
     applyColorFromImage();
     setTimeout(function(){sub.classList.add('show');},800);
@@ -154,7 +131,6 @@ body{font-family:'Inter',sans-serif;background:transparent}
   }
   if(img.complete)init();else{img.onload=init;img.onerror=init;}
 
-  /* Crossfade фраз */
   var t1=document.getElementById('t1'),t2=document.getElementById('t2'),s=true;
   function flip(){
     if(s){t1.className='t h';setTimeout(function(){t2.className='t v';},300);}
@@ -163,7 +139,6 @@ body{font-family:'Inter',sans-serif;background:transparent}
   }
   setTimeout(function(){setInterval(flip,4000);},4500);
 
-  /* Свайп вниз → screen1 */
   var sy=0,pull=false,pd=0,TH=80;
   splash.addEventListener('touchstart',function(e){
     if(e.target===btn||btn.contains(e.target))return;
@@ -185,7 +160,6 @@ body{font-family:'Inter',sans-serif;background:transparent}
     else{splash.style.transition='opacity .4s ease, transform .4s cubic-bezier(.34,1.56,.64,1)';splash.style.opacity='1';splash.style.transform='scale(1)';}
   },{passive:true});
 
-  /* Переход */
   var done=false;
   function go(){
     if(done)return;done=true;
