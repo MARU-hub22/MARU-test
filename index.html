@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>MARU</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preload" href="splash-logo.png" as="image">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
@@ -141,10 +142,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);margin:0 auto;max-width
   var btnWrap = document.getElementById('btnWrap');
   var btn     = document.getElementById('splBtn');
 
-  /* ── ПОЯВЛЕНИЕ СПЛЭША ── */
-  setTimeout(function(){
-    splash.style.opacity = '1';
-  }, 100);
+  /* ── ПОЯВЛЕНИЕ СПЛЭША — ждём загрузку картинки ── */
+  var bgImg = new Image();
+  bgImg.onload = function(){ splash.style.opacity = '1'; };
+  bgImg.onerror = function(){ splash.style.opacity = '1'; }; /* fallback */
+  bgImg.src = 'splash-logo.png?v=2';
 
   /* ── ПОДЗАГОЛОВОК 1.2s ── */
   setTimeout(function(){
