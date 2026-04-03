@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>MARU</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link rel="preload" href="splash-logo.png" as="image">
+<link rel="preload" href="photos/Gemini_Generated_Image_dmhkyzdmhkyzdmhk.png" as="image">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
@@ -20,24 +20,22 @@ body{font-family:'Inter',sans-serif;background:#D4959E;margin:0 auto;max-width:3
   z-index:100;overflow:hidden;
 }
 
-/* Фон-картинка — отдельный слой, обрезаем низ чтобы скрыть звёздочку Gemini */
 #splash-bg{
   position:absolute;inset:0;
-  background:url('splash-logo.png') center 40%/cover no-repeat;
   z-index:0;
 }
-/* Перекрытие звёздочки Gemini внизу */
-#splash-bg::after{
-  content:'';position:absolute;
-  bottom:0;left:0;right:0;height:60px;
-  background:#D4959E;
+#splash-bg img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center top;
 }
 
-/* Подзаголовок — ПОД лого */
+/* Подзаголовок — ПОД лого (лого на картинке по центру, подпись чуть ниже) */
 .spl-sub{
   position:absolute;
   left:0;right:0;
-  top:calc(40% + 45px);
+  top:calc(50% + 30px);
   z-index:2;
   font-family:'Inter',sans-serif;
   font-size:11px;
@@ -48,6 +46,10 @@ body{font-family:'Inter',sans-serif;background:#D4959E;margin:0 auto;max-width:3
   opacity:0;
   transform:translateY(6px);
   transition:opacity 0.8s ease, transform 0.8s ease;
+}
+.spl-sub.visible{
+  opacity:1;
+  transform:translateY(0);
 }
 
 /* CTA внизу */
@@ -62,6 +64,10 @@ body{font-family:'Inter',sans-serif;background:#D4959E;margin:0 auto;max-width:3
   transition:opacity 0.9s cubic-bezier(0.22,1,0.36,1),
              transform 0.9s cubic-bezier(0.22,1,0.36,1);
 }
+.spl-btn-wrap.visible{
+  opacity:1;
+  transform:translateY(0);
+}
 .spl-btn{
   background:none;border:none;
   font-family:'Inter',sans-serif;
@@ -69,6 +75,7 @@ body{font-family:'Inter',sans-serif;background:#D4959E;margin:0 auto;max-width:3
   letter-spacing:0.26em;text-transform:uppercase;
   color:rgba(255,255,255,0.75);
   cursor:pointer;padding:8px 4px;position:relative;
+  width:200px;height:32px;
 }
 .spl-btn::after{
   content:'';position:absolute;
@@ -91,14 +98,16 @@ body{font-family:'Inter',sans-serif;background:#D4959E;margin:0 auto;max-width:3
 <body>
 
 <div id="splash">
-  <div id="splash-bg"></div>
+  <div id="splash-bg">
+    <img src="photos/Gemini_Generated_Image_dmhkyzdmhkyzdmhk.png" alt="">
+  </div>
 
   <div class="spl-sub" id="splSub">30 архетипов мужчин · узнай его тип</div>
 
   <div class="spl-btn-wrap" id="btnWrap">
-    <button class="spl-btn" id="splBtn" style="width:200px;height:32px;">
-      <span class="btn-text visible" id="txt1">&gt; узнать, кто он</span>
-      <span class="btn-text hidden"  id="txt2">&gt; 30 типов · один его</span>
+    <button class="spl-btn" id="splBtn">
+      <span class="btn-text visible" id="txt1">> узнать, кто он</span>
+      <span class="btn-text hidden"  id="txt2">> 30 типов · один его</span>
     </button>
   </div>
 </div>
@@ -119,28 +128,20 @@ body{font-family:'Inter',sans-serif;background:#D4959E;margin:0 auto;max-width:3
   }
 
   var splash  = document.getElementById('splash');
-  var splashBg = document.getElementById('splash-bg');
   var btnWrap = document.getElementById('btnWrap');
   var btn     = document.getElementById('splBtn');
 
-  /* Показать сплэш после загрузки картинки */
-  var bgImg = new Image();
-  bgImg.onload = show;
-  bgImg.onerror = show;
-  bgImg.src = 'splash-logo.png';
+  /* Показать после загрузки картинки */
+  var img = document.querySelector('#splash-bg img');
+  if(img.complete) show();
+  else { img.onload = show; img.onerror = show; }
 
   function show(){
-    /* Подзаголовок */
     setTimeout(function(){
-      var sub = document.getElementById('splSub');
-      sub.style.opacity = '1';
-      sub.style.transform = 'translateY(0)';
+      document.getElementById('splSub').classList.add('visible');
     }, 800);
-
-    /* Кнопка */
     setTimeout(function(){
-      btnWrap.style.opacity = '1';
-      btnWrap.style.transform = 'translateY(0)';
+      btnWrap.classList.add('visible');
     }, 1400);
   }
 
