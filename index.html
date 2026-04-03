@@ -10,7 +10,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
 :root{
-  --bg:#E8919B;
+  --bg:#D8909A;
   --sd:#C48080;
   --sl:#F5C0C0;
   --acc:#FF6F61;
@@ -22,7 +22,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);margin:0 auto;max-width
   position:absolute;top:0;bottom:0;
   left:50%;transform:translateX(-50%);
   width:100%;max-width:390px;
-  background:var(--bg) url('splash-logo.png?v=2') center/cover no-repeat;
+  background:var(--bg) url('splash-logo.png?v=3') center 42%/cover no-repeat;
   display:flex;flex-direction:column;
   justify-content:center;align-items:center;
   z-index:100;
@@ -35,7 +35,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);margin:0 auto;max-width
 .spl-sub{
   position:absolute;
   left:0;right:0;
-  top:calc(50% + 30px);
+  top:calc(42% + 30px);
   z-index:2;
   font-size:11px;
   font-weight:400;
@@ -53,7 +53,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);margin:0 auto;max-width
 /* CTA */
 .spl-btn-wrap{
   position:absolute;
-  bottom:calc(40px + env(safe-area-inset-bottom));
+  bottom:calc(24px + env(safe-area-inset-bottom));
   left:0;right:0;
   display:flex;
   justify-content:center;
@@ -129,7 +129,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);margin:0 auto;max-width
     tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
-    try{tg.setBackgroundColor('#E8919B');tg.setHeaderColor('#E8919B');}catch(e){}
+    try{tg.setBackgroundColor('#D8909A');tg.setHeaderColor('#D8909A');}catch(e){}
   }
 
   /* ── РЕДИРЕКТ: если открыто по ссылке с результатом ── */
@@ -232,7 +232,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);margin:0 auto;max-width
   function goToScreen1(alreadyPulled){
     if(exited) return;
     exited = true;
-    if(tg) tg.HapticFeedback.impactOccurred('medium');
+    if(tg){
+      tg.HapticFeedback.impactOccurred('medium');
+      try{tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee');}catch(e){}
+    }
     if(navigator.vibrate) navigator.vibrate(18);
 
     splash.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
