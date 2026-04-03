@@ -60,14 +60,6 @@ body{font-family:'Inter',sans-serif;background:transparent}
   cursor:pointer;padding:8px 4px;
   position:relative;width:200px;height:32px;
 }
-#cta button::after{
-  content:'';position:absolute;
-  bottom:4px;left:4px;right:4px;height:1px;
-  background:rgba(255,255,255,0.4);
-  transform:scaleX(0);transform-origin:left;
-  animation:lineIn 1.2s 2.2s cubic-bezier(0.22,1,0.36,1) forwards;
-}
-@keyframes lineIn{to{transform:scaleX(1)}}
 
 .t{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;transition:opacity 0.6s ease}
 .t.h{opacity:0}.t.v{opacity:1}
