@@ -20,17 +20,19 @@ body{font-family:'Inter',sans-serif;background:transparent}
 
 /* ===== Splash — полный экран ===== */
 #splash{
-  position:fixed;top:0;left:0;
-  width:100%;height:100%;
+  position:fixed;top:0;left:50%;
+  transform:translateX(-50%);
+  width:100%;max-width:390px;height:100%;
   z-index:100;overflow:hidden;
 }
 
 /* Фоновая картинка — на весь экран */
-#splash img{
+#content{position:absolute;inset:0;top:-16px;overflow:hidden}
+#content img{
   position:absolute;top:0;left:0;
   width:100%;height:calc(100% + 80px);
-  object-fit:contain;
-  object-position:center top;
+  object-fit:cover;
+  object-position:center center;
   z-index:0;
 }
 
@@ -40,7 +42,7 @@ body{font-family:'Inter',sans-serif;background:transparent}
 #subtitle{
   position:absolute;
   left:0;right:0;
-  bottom:calc(50% - 56px);
+  bottom:calc(50% - 80px);
   z-index:2;
   font-family:'Inter',sans-serif;
   font-size:11px;
@@ -93,8 +95,10 @@ body{font-family:'Inter',sans-serif;background:transparent}
 <body>
 
 <div id="splash">
-  <img src="splash-logo.png" alt="">
-  <div id="subtitle">30 архетипов мужчин · узнай его тип</div>
+  <div id="content">
+    <img src="splash-logo.png" alt="">
+    <div id="subtitle">30 архетипов мужчин · узнай его тип</div>
+  </div>
   <div id="cta">
     <button id="btn">
       <span class="t v" id="t1">> узнать, кто он</span>
