@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>MARU</title>
 <script>
-var V="20260403e";
+var V="20260404a";
 if(localStorage.getItem("maru_v")!==V){localStorage.setItem("maru_v",V);location.reload(true);}
 </script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -24,16 +24,16 @@ body{font-family:'Inter',sans-serif;background:transparent}
   z-index:100;overflow:hidden;
 }
 
-/* Фон-картинка */
 #content{position:absolute;inset:0;overflow:hidden;z-index:0}
 #content img{
   position:absolute;top:0;left:0;
-  width:100%;height:auto;
+  width:100%;height:calc(100% + 80px);
+  object-fit:cover;
+  object-position:center top;
 }
 
-/* Подпись под лого */
 #subtitle{
-  position:absolute;left:0;right:0;top:56%;z-index:2;
+  position:absolute;left:0;right:0;top:calc(56% + 16px);z-index:2;
   font-size:11px;font-weight:400;letter-spacing:0.12em;
   color:rgba(255,255,255,0.7);text-align:center;
   opacity:0;transform:translateY(6px);
@@ -41,7 +41,6 @@ body{font-family:'Inter',sans-serif;background:transparent}
 }
 #subtitle.show{opacity:1;transform:translateY(0)}
 
-/* CTA */
 #cta{
   position:absolute;bottom:calc(28px + env(safe-area-inset-bottom));
   left:0;right:0;display:flex;justify-content:center;z-index:2;
@@ -58,7 +57,9 @@ body{font-family:'Inter',sans-serif;background:transparent}
   color:rgba(255,255,255,0.75);
   cursor:pointer;padding:8px 4px;
   position:relative;width:200px;height:32px;
+  animation:ctaPulse 3s ease-in-out infinite;
 }
+@keyframes ctaPulse{0%,100%{opacity:0.75}50%{opacity:1}}
 
 .t{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;transition:opacity 0.6s ease}
 .t.h{opacity:0}.t.v{opacity:1}
@@ -68,7 +69,7 @@ body{font-family:'Inter',sans-serif;background:transparent}
 
 <div id="splash">
   <div id="content">
-    <img id="splashImg" src="splash-logo.png" alt="">
+    <img src="splash-logo.png" alt="">
   </div>
   <div id="subtitle">30 архетипов мужчин · узнай его тип</div>
   <div id="cta">
@@ -97,7 +98,6 @@ body{font-family:'Inter',sans-serif;background:transparent}
   var cta=document.getElementById('cta');
   var img=splash.querySelector('img');
 
-  var colorApplied=false;
   function applyColorFromImage(){
     try{
       var c=document.createElement('canvas');
@@ -108,7 +108,6 @@ body{font-family:'Inter',sans-serif;background:transparent}
       var hex='#'+((1<<24)+(px[0]<<16)+(px[1]<<8)+px[2]).toString(16).slice(1);
       document.body.style.background=hex;
       if(tg){try{tg.setHeaderColor(hex);tg.setBackgroundColor(hex);}catch(e){}}
-      colorApplied=true;
     }catch(e){
       if(!img.crossOrigin&&location.protocol!=='file:'){
         img.crossOrigin='anonymous';
