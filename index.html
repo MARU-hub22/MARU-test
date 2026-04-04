@@ -69,7 +69,7 @@ body{font-family:'Inter',sans-serif;background:transparent}
 
 <div id="splash">
   <div id="content">
-    <img src="splash-logo.png" crossorigin="anonymous" alt="">
+    <img id="splashImg" src="splash-logo.png" alt="">
   </div>
   <div id="subtitle">30 архетипов мужчин · узнай его тип</div>
   <div id="cta">
@@ -111,7 +111,13 @@ body{font-family:'Inter',sans-serif;background:transparent}
       var hex='#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
       document.body.style.background=hex;
       if(tg){try{tg.setHeaderColor(hex);tg.setBackgroundColor(hex);}catch(e){}}
-    }catch(e){}
+    }catch(e){
+      if(!img.crossOrigin&&location.protocol!=='file:'){
+        img.crossOrigin='anonymous';
+        img.onload=function(){applyColorFromImage();};
+        img.src=img.src;
+      }
+    }
   }
 
   function init(){
@@ -142,12 +148,12 @@ body{font-family:'Inter',sans-serif;background:transparent}
     var p=Math.min(pd/TH,1);
     splash.style.transition='none';
     splash.style.opacity=1-p*0.6;
-    splash.style.transform='scale('+(1-p*0.05)+')';
+    splash.style.transform='translateX(-50%) scale('+(1-p*0.05)+')';
   },{passive:true});
   splash.addEventListener('touchend',function(){
     if(!pull||done)return;pull=false;
     if(pd/TH>=1)go();
-    else{splash.style.transition='opacity .4s ease, transform .4s cubic-bezier(.34,1.56,.64,1)';splash.style.opacity='1';splash.style.transform='scale(1)';}
+    else{splash.style.transition='opacity .4s ease, transform .4s cubic-bezier(.34,1.56,.64,1)';splash.style.opacity='1';splash.style.transform='translateX(-50%) scale(1)';}
   },{passive:true});
 
   var done=false;
