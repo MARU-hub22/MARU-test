@@ -735,12 +735,12 @@ function reveal(){
 /* оверлей */
 var PH=[
   {tag:'анализ',   msg:'Считываем паттерны его поведения'},
-  {tag:'энергии',  msg:'Определяем баланс пяти энергий'},
+  {tag:'силы',     msg:'Определяем баланс пяти сил'},
   {tag:'портрет',  msg:'Собираем его психологический портрет'},
 ];
 var pT=document.getElementById('ovPhase'),pM=document.getElementById('ovMsg');
 pM.classList.add('s');
-[0,1500,3000].forEach(function(d,i){
+[0,1100,2200].forEach(function(d,i){
   setTimeout(function(){
     pM.classList.remove('s');
     setTimeout(function(){
@@ -748,14 +748,14 @@ pM.classList.add('s');
       pM.textContent=PH[i].msg;
       pM.classList.add('s');
       hap('l');
-    },250);
+    },200);
   },d);
 });
 /* архетип — крупно, кораллом */
 setTimeout(function(){
   document.getElementById('ovDots').style.display='none';
   document.getElementById('ovPhase').style.display='none';
-},4200);
+},3100);
 setTimeout(function(){
   pM.classList.remove('s');
   setTimeout(function(){
@@ -767,22 +767,22 @@ setTimeout(function(){
     pM.style.color='var(--t3)';
     pM.style.marginTop='0';
     pM.classList.add('s');
-  },250);
-},4400);
+  },200);
+},3300);
 setTimeout(function(){
   var archEl=document.getElementById('ovArch');
   archEl.textContent=D.archetype;
   archEl.classList.add('s');
   hap('m');
-},4800);
-setTimeout(function(){document.getElementById('ovConfirm').classList.add('s');},5200);
+},3700);
+setTimeout(function(){document.getElementById('ovConfirm').classList.add('s');},4100);
 setTimeout(function(){
   hap('m');
   document.getElementById('ov').classList.add('hide');
   document.getElementById('page').classList.add('show');
   setTimeout(reveal,250);
   setTimeout(function(){var o=document.getElementById('ov');if(o)o.remove();},600);
-},6500);
+},5000);
 
 /* искра */
 function spark(){

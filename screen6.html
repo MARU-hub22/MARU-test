@@ -59,7 +59,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .page.show{opacity:1;transform:none}
 .hdr{flex-shrink:0;display:flex;align-items:center;justify-content:center;padding-top:max(calc(env(safe-area-inset-top,0px) + 8px),24px);padding-bottom:8px;padding-left:20px;padding-right:20px;}
 .m-logo{font-size:24px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--bg);text-shadow:-1px -1px 1px rgba(0,0,0,0.2),1px 1px 1px rgba(255,255,255,0.75),0 0 3px rgba(0,0,0,0.04);}
-.scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 20px calc(env(safe-area-inset-bottom,0px) + 120px);-webkit-overflow-scrolling:touch;}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 20px calc(env(safe-area-inset-bottom,0px) + 200px);-webkit-overflow-scrolling:touch;}
 .scroll::-webkit-scrollbar{display:none}
 
 /* ══ HERO ══ */
@@ -124,14 +124,14 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 
 /* ══ ИНСАЙТ ══ */
 .ins-wrap{padding:16px}
-.ins-label{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:12px;}
+.ins-label{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--t2);margin-bottom:12px;}
 .ins-row{display:flex;align-items:center;gap:12px}
 .ins-ico{width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .ins-ico svg{width:16px;height:16px;fill:none;stroke:var(--acc);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .ins-body{flex:1}
-.ins-title{font-size:14px;font-weight:600;color:var(--t1);line-height:1.2}
-.ins-sub{font-size:11px;color:var(--t3);margin-top:2px}
-.ins-text{font-size:13px;color:var(--t2);line-height:1.65;margin-top:12px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.05);position:relative;}
+.ins-title{font-size:18px;font-weight:700;color:var(--t1);line-height:1.2}
+.ins-sub{font-size:10px;color:var(--t3);margin-top:4px;letter-spacing:.04em}
+.ins-text{font-size:13px;color:var(--t2);line-height:1.65;margin-top:16px;padding-top:16px;border-top:1px solid rgba(0,0,0,0.06);position:relative;}
 .ins-text-inner{display:-webkit-box;-webkit-line-clamp:9;-webkit-box-orient:vertical;overflow:hidden;transition:all .4s cubic-bezier(.4,0,.2,1);}
 .ins-text-inner.expanded{display:block;-webkit-line-clamp:unset;}
 .ins-fade{position:absolute;bottom:22px;left:0;right:0;height:40px;background:linear-gradient(to bottom,rgba(239,239,238,0),rgba(239,239,238,1));pointer-events:none;transition:opacity .3s ease;}
@@ -203,9 +203,19 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 }
 @keyframes accHint{0%,100%{border-bottom-color:rgba(0,0,0,0.05)}50%{border-bottom-color:rgba(255,111,97,0.15)}}
 .acc-item:not(.open).vis{animation:accHint 1.2s ease 8s 1}
-/* описание дышит */
-@keyframes insBreathe{0%,100%{opacity:0.88}50%{opacity:1}}
-.ins-text{animation:insBreathe 6s ease-in-out infinite}
+/* одноразовый пульс бордера — привлечь внимание */
+@keyframes borderPulse{
+  0%{border-color:rgba(0,0,0,0.08)}
+  12%{border-color:rgba(255,111,97,0.3)}
+  25%{border-color:rgba(0,0,0,0.08)}
+  37%{border-color:rgba(255,111,97,0.27)}
+  50%{border-color:rgba(0,0,0,0.08)}
+  62%{border-color:rgba(255,111,97,0.2)}
+  75%{border-color:rgba(0,0,0,0.08)}
+  87%{border-color:rgba(255,111,97,0.12)}
+  100%{border-color:rgba(0,0,0,0.08)}
+}
+.arch-pulse-card.vis{animation:borderPulse 4s ease 0.3s 1}
 .acc-item:first-child{border-top:none}
 .acc-item.vis{opacity:1;transform:none}
 .acc-head{display:flex;align-items:center;padding:14px 16px;gap:10px;}
@@ -363,7 +373,6 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
           </div>
         </div>
         <div class="ins-row">
-          <div class="ins-ico" id="insIco"></div>
           <div class="ins-body">
             <div class="ins-title" id="insTitle"></div>
             <div class="ins-sub">то, что им движет</div>
@@ -380,8 +389,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
     </div>
 
     <!-- ЖИВЫЕ ЭНЕРГИИ -->
-    <div class="sl"><span>5 сил</span><span class="sl-line"></span><span class="sl-hot">его природа</span></div>
-    <div style="text-align:center;font-size:11px;color:var(--t3);line-height:1.5;margin-bottom:12px;padding:0 20px">Из комбинации этих сил складывается его архетип</div>
+    <div class="sl"><span>Что для него важнее всего</span></div>
     <div class="card" id="c1">
       <div class="ef-wrap">
         <div class="ef-cols" id="efCols"></div>
@@ -418,7 +426,17 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
       </div>
     </div>
 
-    <!-- CTA ПОДЕЛИТЬСЯ — в скролле, самый низ -->
+    <!-- Совместимость → screen7 -->
+    <div id="compatCard" onclick="window.location.href='screen7.html'" style="margin-top:40px;padding:14px 16px;border-radius:14px;border-top:1px solid rgba(0,0,0,0.06);border-left:2px solid var(--acc);border-bottom:1px solid rgba(255,255,255,0.45);border-right:1px solid rgba(255,255,255,0.35);cursor:pointer;-webkit-tap-highlight-color:transparent;opacity:0;transition:opacity .5s">
+      <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--t3);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between"><span id="compatTitle"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.5" stroke-linecap="round"><polyline points="9 6 15 12 9 18"/></svg></div>
+      <div style="display:flex;align-items:center;gap:10px" id="compatPair"></div>
+      <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:10px;color:var(--t3)">Все 30 архетипов · кто ему подходит</span>
+        <span style="font-size:10px;font-weight:500;color:var(--acc)">Смотреть →</span>
+      </div>
+    </div>
+
+    <!-- CTA ПОДЕЛИТЬСЯ -->
     <div style="text-align:center;margin-top:0"><span id="accBadge" style="font-size:10px;letter-spacing:.12em;color:var(--t3);transition:color .3s"></span></div>
     <div class="cta-scroll" id="ctaScroll">
       <button class="cta-btn" id="ctaBtn" onclick="openShare()">
@@ -426,12 +444,6 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
         <svg class="spark-svg" id="sparkSvg"><path id="sparkPath"/></svg>
       </button>
       <div class="cta-note" id="ctaNote">Доступ к результату сохранён навсегда</div>
-      <!-- Совместимость → screen7 -->
-      <div id="compatCard" onclick="window.location.href='screen7.html'" style="pointer-events:auto;margin-top:14px;padding:14px 16px;border-radius:14px;border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.04);border-bottom:1px solid rgba(255,255,255,0.45);border-right:1px solid rgba(255,255,255,0.35);cursor:pointer;-webkit-tap-highlight-color:transparent">
-        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--t3);margin-bottom:8px" id="compatTitle"></div>
-        <div style="display:flex;align-items:center;gap:10px" id="compatPair"></div>
-        <div style="font-size:10px;color:var(--t3);margin-top:10px;padding-top:8px;border-top:1px solid rgba(0,0,0,0.04)">Совместимость — в следующем разборе. <a href="https://t.me/maru_love_maru" target="_blank" onclick="event.stopPropagation()" style="color:var(--acc);text-decoration:none;font-weight:500">Подпишись</a></div>
-      </div>
     </div>
 
   </div>
@@ -580,59 +592,22 @@ var INS_F={
 };
 var curPov=male?'m':'f';
 
-/* оверлей */
-var PH=[
-  {tag:'анализ',   msg:'Считываем паттерны его поведения'},
-  {tag:'силы',     msg:'Определяем баланс пяти сил'},
-  {tag:'портрет',  msg:'Собираем его психологический портрет'},
-];
-var pT=document.getElementById('ovPhase'),pM=document.getElementById('ovMsg');
+/* оверлей — короткий, она уже знает архетип */
+var pM=document.getElementById('ovMsg');
+document.getElementById('ovPhase').style.display='none';
+document.getElementById('ovDots').style.display='none';
+document.getElementById('ovConfirm').style.display='none';
+document.getElementById('ovArch').style.display='none';
+pM.textContent='Твой полный портрет готов';
 pM.classList.add('s');
-[0,1500,3000].forEach(function(d,i){
-  setTimeout(function(){
-    pM.classList.remove('s');
-    setTimeout(function(){pT.textContent=PH[i].tag;pM.textContent=PH[i].msg;pM.classList.add('s');hap('l');},250);
-  },d);
-});
-setTimeout(function(){
-  document.getElementById('ovDots').style.display='none';
-  document.getElementById('ovPhase').style.display='none';
-},4200);
-setTimeout(function(){
-  pM.classList.remove('s');
-  setTimeout(function(){
-    pM.textContent='Его тип';
-    pM.style.fontSize='9px';
-    pM.style.fontWeight='400';
-    pM.style.letterSpacing='.18em';
-    pM.style.textTransform='uppercase';
-    pM.style.color='var(--t3)';
-    pM.style.marginTop='0';
-    pM.classList.add('s');
-  },250);
-},4400);
-setTimeout(function(){
-  document.getElementById('ovArch').textContent=D.archetype;
-  document.getElementById('ovArch').classList.add('s');
-  hap('m');
-},4800);
-setTimeout(function(){document.getElementById('ovConfirm').classList.add('s');},5200);
+hap('l');
 setTimeout(function(){
   hap('m');
   document.getElementById('ov').classList.add('hide');
   document.getElementById('page').classList.add('show');
-  if(startParam){
-    /* ждём Firebase — девушка видит свежие данные */
-    fetch('https://maru-app-2071c-default-rtdb.firebaseio.com/results/'+startParam+'.json')
-      .then(function(r){return r.json();})
-      .then(function(data){applyFirebaseResult(data);})
-      .catch(function(){})
-      .finally(function(){setTimeout(reveal,300);});
-  } else {
-    setTimeout(reveal,300);
-  }
+  setTimeout(reveal,300);
   setTimeout(function(){var o=document.getElementById('ov');if(o)o.remove();},700);
-},6500);
+},1500);
 
 /* slugs для fetch */
 var NAMES_MAP={
@@ -757,9 +732,6 @@ function startRarity(){
 }
 
 document.getElementById('heroRarity').textContent='один из 30 архетипов';
-document.getElementById('insIco').innerHTML=ICON[dom]||'';
-var insIcoSvg=document.getElementById('insIco').querySelector('svg');
-if(insIcoSvg){insIcoSvg.setAttribute('width','16');insIcoSvg.setAttribute('height','16');}
 document.getElementById('insTitle').textContent=(NAME[dom]||dom)+' · '+domPct+'%';
 document.getElementById('insTextInner').textContent=curPov==='m'?(INS_M[dom]||''):(INS_F[dom]||'');
 clampIns();
@@ -938,6 +910,9 @@ function checkMirror(i){
           children[j].style.filter='none';
           children[j].style.opacity='1';
         }
+        /* совместимость появляется после блюра */
+        var cc=document.getElementById('compatCard');
+        if(cc) cc.style.opacity='1';
       },5000);
     },400);
   }
@@ -963,7 +938,7 @@ window.tAcc=function(i){
     accRead[i]=true;
     var cnt=Object.keys(accRead).length;
     var badge=document.getElementById('accBadge');
-    if(badge){badge.textContent=cnt+'/7 прочитано';if(cnt>=7){badge.style.color='var(--t3)';
+    if(badge){badge.textContent=cnt>=3&&cnt<7?cnt+'/7 · отправь подруге, пусть тоже узнает':cnt+'/7 прочитано';if(cnt>=7){badge.style.color='var(--t3)';
       /* меняем CTA текст */
       var ct=document.getElementById('ctaTxt');
       if(ct){ct.style.transition='opacity .35s';ct.style.opacity='0';
