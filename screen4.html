@@ -534,21 +534,15 @@ function startRarity(){
 }
 
 
-var ACC_META_M=[
-  {t:'Твоя природа',                      s:'Кто ты есть на самом деле',             key:'description'},
-  {t:'Что тебя разрушает',                 s:'Триггеры · эмоциональные ловушки',      key:'frustration'},
-  {t:'Твой код в отношениях',              s:'Совместимость · конфликты · близость',  key:'svre_m'},
-  {t:'Как ты доминируешь и конкурируешь',  s:'Деньги · статус · влияние',             key:'deka'},
-  {t:'Тайны твоего влечения',              s:'Природа желания · что тебя притягивает', key:'libido'},
+var ACC_META=[
+  {t:'Кто он на самом деле',                   s:'Его настоящая природа',                    key:'who_he_is'},
+  {t:'Почему он молчит и пропадает',            s:'Когда он уходит в себя',                    key:'why_silent'},
+  {t:'Любит ли он меня на самом деле?',         s:'Что он на самом деле чувствует',             key:'does_he_love'},
+  {t:'Его отношение к деньгам и будущему',      s:'Как он видит ваше будущее',                  key:'money_future'},
+  {t:'Его тёмные стороны',                      s:'То, что он скрывает',                       key:'dark_sides'},
+  {t:'Выбирает ли он всерьёз',                  s:'Готов ли он выбрать тебя',                   key:'serious_choice'},
+  {t:'Секс с ним: норма или проблема',          s:'Что происходит за закрытой дверью',          key:'sex'},
 ];
-var ACC_META_F=[
-  {t:'Его природа',                        s:'Кто он есть на самом деле',             key:'description'},
-  {t:'Почему он закрывается',              s:'Триггеры · эмоциональные ловушки',      key:'frustration'},
-  {t:'Как он строит отношения',            s:'Совместимость · конфликты · близость',  key:'svre_f'},
-  {t:'Как он берёт контроль',              s:'Деньги · статус · влияние',             key:'deka'},
-  {t:'Как устроено его желание',           s:'Природа влечения · что его притягивает', key:'libido'},
-];
-var ACC_META = male ? ACC_META_M : ACC_META_F;
 var ACCS = ACC_META.map(function(m, i){
   /* первые 2 аккордеона — открытые (текст подставится из applyArch) */
   return {t:m.t, s:m.s, b: i < 2 ? '' : 'Содержимое доступно после оплаты', open: i < 2};
@@ -559,10 +553,11 @@ function getN(){try{var u=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;return u
 function getP(){try{var u=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;return u&&u.photo_url?u.photo_url:'';}catch(e){return '';}}
 var uN=getN(),uP=getP();
 var aw=document.getElementById('heroAv');
+var slug=NAMES_MAP[D.archetype]||'';
 var img=new Image();
 img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;border-radius:50%';
 img.onload=function(){aw.innerHTML='';aw.appendChild(img);};
-img.src='avatar.jpg';
+img.src=slug?'photos/'+slug+'.jpg':'avatar.jpg';
 if(uN)document.getElementById('heroName').textContent=uN;
 
 /* архетип побуквенно */

@@ -165,26 +165,28 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .ef-col:nth-child(4) .ef-fill{background:rgba(0,0,0,0.12)}
 .ef-col:nth-child(5) .ef-fill{background:rgba(0,0,0,0.07)}
 
-/* пульсация — чем выше %, тем быстрее */
-@keyframes pulse1{0%,100%{opacity:.55;transform:scaleY(1) scaleX(1)}50%{opacity:.80;transform:scaleY(1.06) scaleX(1.04)}}
-@keyframes pulse2{0%,100%{opacity:.40;transform:scaleY(1)}50%{opacity:.62;transform:scaleY(1.05)}}
-@keyframes pulse3{0%,100%{opacity:.28;transform:scaleY(1)}50%{opacity:.45;transform:scaleY(1.04)}}
-@keyframes pulse4{0%,100%{opacity:.12;transform:scaleY(1)}50%{opacity:.22;transform:scaleY(1.03)}}
-@keyframes pulse5{0%,100%{opacity:.07;transform:scaleY(1)}50%{opacity:.14;transform:scaleY(1.02)}}
+/* пульсация — heartbeat для доминанты, затухание для остальных */
+@keyframes heartbeat{0%,100%{transform:scaleY(1)}14%{transform:scaleY(1.08)}28%{transform:scaleY(0.97)}42%{transform:scaleY(1.05)}56%{transform:scaleY(1)}}
+@keyframes pulse2{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.04)}}
+@keyframes pulse3{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.03)}}
+@keyframes pulse4{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.02)}}
+@keyframes pulse5{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.01)}}
 
-.ef-col:nth-child(1) .ef-fill{transform-origin:bottom;animation:pulse1 1.4s ease-in-out infinite}
-.ef-col:nth-child(2) .ef-fill{transform-origin:bottom;animation:pulse2 1.9s ease-in-out infinite}
-.ef-col:nth-child(3) .ef-fill{transform-origin:bottom;animation:pulse3 2.6s ease-in-out infinite}
-.ef-col:nth-child(4) .ef-fill{transform-origin:bottom;animation:pulse4 3.4s ease-in-out infinite}
-.ef-col:nth-child(5) .ef-fill{transform-origin:bottom;animation:pulse5 4.5s ease-in-out infinite}
+.ef-col:nth-child(1) .ef-fill{transform-origin:bottom;animation:heartbeat 1.8s ease-in-out infinite}
+.ef-col:nth-child(2) .ef-fill{transform-origin:bottom;animation:pulse2 2.4s ease-in-out infinite}
+.ef-col:nth-child(3) .ef-fill{transform-origin:bottom;animation:pulse3 3.2s ease-in-out infinite}
+.ef-col:nth-child(4) .ef-fill{transform-origin:bottom;animation:pulse4 4.0s ease-in-out infinite}
+.ef-col:nth-child(5) .ef-fill{transform-origin:bottom;animation:pulse5 5.0s ease-in-out infinite}
 
-.ef-name{font-size:8px;letter-spacing:.06em;text-transform:uppercase;text-align:center;margin-top:6px;padding-bottom:4px;}
+.ef-name{font-size:9px;letter-spacing:.06em;text-transform:uppercase;text-align:center;margin-top:6px;padding-bottom:4px;}
 .ef-col:nth-child(1) .ef-name{color:rgba(74,158,255,1)}
 .ef-col:nth-child(2) .ef-name{color:rgba(74,158,255,0.75)}
 .ef-col:nth-child(3) .ef-name{color:var(--t2)}
 .ef-col:nth-child(4) .ef-name{color:var(--t2)}
 .ef-col:nth-child(5) .ef-name{color:var(--t2)}
 .ef-hint{text-align:center;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(0,0,0,0.28);padding:14px 0 14px;transition:opacity .2s;}
+@keyframes hintPulse{0%,100%{color:rgba(0,0,0,0.28)}50%{color:var(--acc)}}
+.ef-hint.pulse{animation:hintPulse 1.2s ease 1}
 .ef-desc{margin:0 16px 16px;padding:10px 14px;border-radius:10px;border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);display:none;}
 .ef-desc.show{display:block}
 .ef-desc-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
@@ -216,7 +218,8 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .acc-item.open .acc-arr svg{transform:rotate(180deg)}
 .acc-body{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1)}
 .acc-item.open .acc-body{max-height:2000px}
-.acc-body-in{padding:0 16px 14px;font-size:13px;color:var(--t2);line-height:1.65;}
+.acc-body-in{padding:0 16px 14px;font-size:13px;color:var(--t2);line-height:1.65;filter:blur(6px);opacity:0.4;transition:filter .6s ease,opacity .6s ease;}
+.acc-item.open .acc-body-in{filter:blur(0);opacity:1;}
 
 /* ══ ШЕРИНГ ПАНЕЛЬ ══ */
 .share-panel{
@@ -353,7 +356,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
     <div class="card arch-pulse-card" id="c0" style="margin-bottom:12px">
       <div class="ins-wrap">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <div class="ins-label" style="margin-bottom:0">природная доминанта</div>
+          <div class="ins-label" style="margin-bottom:0">ведущая сила</div>
           <div id="validityInline" style="display:flex;align-items:center;gap:4px;opacity:0;transition:opacity .4s">
             <div id="validityDot" style="width:5px;height:5px;border-radius:50%;flex-shrink:0;background:var(--acc)"></div>
             <span id="validityValue" style="font-size:8px;color:rgba(0,0,0,0.28);letter-spacing:.04em;text-transform:uppercase">Высокая</span>
@@ -363,7 +366,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
           <div class="ins-ico" id="insIco"></div>
           <div class="ins-body">
             <div class="ins-title" id="insTitle"></div>
-            <div class="ins-sub">ведущая энергия</div>
+            <div class="ins-sub">то, что им движет</div>
           </div>
         </div>
         <div class="ins-text" id="insText">
@@ -377,11 +380,12 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
     </div>
 
     <!-- ЖИВЫЕ ЭНЕРГИИ -->
-    <div class="sl"><span>Природный профиль</span><span class="sl-line"></span><span class="sl-hot">5 энергий</span></div>
+    <div class="sl"><span>5 сил</span><span class="sl-line"></span><span class="sl-hot">его природа</span></div>
+    <div style="text-align:center;font-size:11px;color:var(--t3);line-height:1.5;margin-bottom:12px;padding:0 20px">Из комбинации этих сил складывается его архетип</div>
     <div class="card" id="c1">
       <div class="ef-wrap">
         <div class="ef-cols" id="efCols"></div>
-        <div class="ef-hint" id="efHint">нажми на любую</div>
+        <div class="ef-hint" id="efHint">нажми — узнай, как проявляется</div>
       </div>
       <div class="ef-desc" id="efDesc">
         <div class="ef-desc-row">
@@ -390,11 +394,17 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
           <div class="ef-desc-pct" id="efDescPct"></div>
         </div>
         <div class="ef-desc-text" id="efDescText"></div>
+        <div id="efCompare" style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(0,0,0,0.04);text-align:center">
+          <span onclick="openShare()" style="font-size:9px;letter-spacing:.08em;color:var(--t3);cursor:pointer;-webkit-tap-highlight-color:transparent">Отправь подруге — пусть сравнит со своим</span>
+        </div>
       </div>
     </div>
 
     <!-- АККОРДЕОНЫ — слоёный пирог -->
-    <div style="margin:32px 0 16px;text-align:center;opacity:0;transition:opacity .3s" id="accSl"><span style="font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(0,0,0,0.45)">Твой профиль</span></div>
+    <div style="margin:32px 0 16px;text-align:center;opacity:0;transition:opacity .3s" id="accSl">
+      <span style="font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(0,0,0,0.45)">Полный портрет</span>
+      <div style="font-size:10px;color:var(--t3);margin-top:6px;letter-spacing:.02em">7 блоков · доступ навсегда</div>
+    </div>
     <div class="card" id="c2" style="overflow:visible;border-color:transparent;background:transparent">
       <div id="accList"></div>
     </div>
@@ -402,6 +412,10 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
     <!-- ЗЕРКАЛО — фраза вылетает -->
     <div id="mirrorCard" style="text-align:center;margin:0;opacity:0;height:0;overflow:hidden;transform:scale(0.9) translateY(16px);transition:opacity .6s,margin .4s,height .4s,transform .6s cubic-bezier(.22,1,.36,1)">
       <div id="mirrorText" style="font-size:15px;font-weight:500;color:var(--t2);letter-spacing:-.01em;line-height:1.65;padding:0 8px"></div>
+      <div id="mirrorSub" style="margin-top:16px;opacity:0;transition:opacity .6s .8s">
+        <div style="font-size:11px;color:var(--t3);line-height:1.6;margin-bottom:12px">Каждую неделю — один разбор: почему он так себя ведёт.<br>Без воды. Только то, что поможет понять его.</div>
+        <a href="https://t.me/maru_love_maru" target="_blank" style="display:inline-block;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);text-decoration:none;padding:10px 24px;border-radius:12px;border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.04);border-bottom:1px solid rgba(255,255,255,0.45);border-right:1px solid rgba(255,255,255,0.35);-webkit-tap-highlight-color:transparent">Подписаться</a>
+      </div>
     </div>
 
     <!-- CTA ПОДЕЛИТЬСЯ — в скролле, самый низ -->
@@ -412,7 +426,12 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
         <svg class="spark-svg" id="sparkSvg"><path id="sparkPath"/></svg>
       </button>
       <div class="cta-note" id="ctaNote">Доступ к результату сохранён навсегда</div>
-      <button onclick="window.location.href='screen7.html'" style="pointer-events:auto;width:100%;height:44px;margin-top:10px;background:none;border:1px solid rgba(0,0,0,0.1);border-radius:14px;font-family:inherit;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t2);cursor:pointer">Все архетипы</button>
+      <!-- Совместимость → screen7 -->
+      <div id="compatCard" onclick="window.location.href='screen7.html'" style="pointer-events:auto;margin-top:14px;padding:14px 16px;border-radius:14px;border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.04);border-bottom:1px solid rgba(255,255,255,0.45);border-right:1px solid rgba(255,255,255,0.35);cursor:pointer;-webkit-tap-highlight-color:transparent">
+        <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--t3);margin-bottom:8px" id="compatTitle"></div>
+        <div style="display:flex;align-items:center;gap:10px" id="compatPair"></div>
+        <div style="font-size:10px;color:var(--t3);margin-top:10px;padding-top:8px;border-top:1px solid rgba(0,0,0,0.04)">Совместимость — в следующем разборе. <a href="https://t.me/maru_love_maru" target="_blank" onclick="event.stopPropagation()" style="color:var(--acc);text-decoration:none;font-weight:500">Подпишись</a></div>
+      </div>
     </div>
 
   </div>
@@ -472,7 +491,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
     <div style="font-size:13px;color:#666;margin-top:8px;line-height:1.6">Это то, что заложено во мне природой</div>
     <div style="margin-top:16px">
       <div style="font-size:12px;color:#666">t.me/maru_22_bot</div>
-      <div style="font-size:12px;color:#FF6F61;margin-top:4px">t.me/maru_woman</div>
+      <div style="font-size:12px;color:#FF6F61;margin-top:4px">t.me/maru_love_maru</div>
     </div>
     <button id="storyConfirmBtn" style="margin-top:16px;width:100%;height:56px;border-radius:16px;background:transparent;color:#FF6F61;font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);cursor:pointer;-webkit-tap-highlight-color:transparent" onclick="confirmStories()">Отправить в Instagram</button>
     <div style="margin-top:10px;font-size:11px;color:#999;letter-spacing:.04em;cursor:pointer" onclick="closeStoryPreview()">отмена</div>
@@ -532,17 +551,17 @@ var ICON={
   ЗВ:'<svg viewBox="0 0 24 24"><line x1="4" y1="8" x2="4" y2="16"/><line x1="8" y1="5" x2="8" y2="19"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="16" y1="5" x2="16" y2="19"/><line x1="20" y1="8" x2="20" y2="16"/></svg>',
   Э: '<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>'
 };
-var LABEL={Ф:'Формул',ЗН:'Знаний',СМ:'Смысла',Э:'Эмоций',ЗВ:'Звука'};
-var LABEL_F={Ф:'Денег',ЗН:'Корней',СМ:'Глубины',Э:'Чувств',ЗВ:'Слова'};
-var NAME={Ф:'Формул',ЗН:'Знаний',СМ:'Смысла',Э:'Эмоций',ЗВ:'Звука'};
+var LABEL={Ф:'Деньги',ЗН:'Семья',СМ:'Смысл',Э:'Любовь',ЗВ:'Общение'};
+var LABEL_F={Ф:'Деньги',ЗН:'Семья',СМ:'Смысл',Э:'Любовь',ЗВ:'Общение'};
+var NAME={Ф:'Деньги',ЗН:'Семья',СМ:'Смысл',Э:'Любовь',ЗВ:'Общение'};
 var CLR={ЗН:'#4A9EFF',Ф:'#7BA8E0',СМ:'#C48AB0',Э:'rgba(0,0,0,0.22)',ЗВ:'rgba(0,0,0,0.15)'};
 
 var TIP={
-  ЗН:{m:'Аналитический ум. Помнит всё, доводит до идеала. Ценит глубину и постоянство — не терпит поверхностности.',f:'Аналитический ум. Помнит всё, доводит до идеала. Ценит глубину и постоянство — не терпит поверхностности.'},
-  Ф: {m:'Логический ум. Мыслит выгодой и структурой. Легко адаптируется. Новизна заряжает — рутина убивает.',f:'Логический ум. Мыслит структурой и выгодой. Легко адаптируется. Новизна заряжает — рутина убивает.'},
-  СМ:{m:'Абстрактный ум. Слышит смысл за словами. Нуждается в тишине. Живёт идеями, не материальным. Редкость.',f:'Абстрактный ум. Слышит смысл за словами. Нуждается в тишине и одиночестве. Живёт идеями. Редкость.'},
-  ЗВ:{m:'Вербальный ум. Мыслит говорением. Слова приходят раньше мысли. Его слушают — не потому что интересно, а потому что не могут не слушать.',f:'Вербальный ум. Мыслит говорением. Его слушают — не потому что интересно, а потому что не могут не слушать.'},
-  Э: {m:'Образный ум. Чувствует эмоциональный фон раньше всех. Страх и любовь — две стороны одной силы.',f:'Образный ум. Чувствует эмоциональный фон раньше всех. Страх и любовь — две стороны одной силы.'}
+  ЗН:{m:'Помнит всё — особенно то, что ты хотела бы забыть. Привязан к истокам и традициям. Если он молчит — он анализирует, не игнорирует.',f:'Помнит всё — особенно то, что ты хотела бы забыть. Привязан к истокам и традициям. Если он молчит — он анализирует, не игнорирует.'},
+  Ф: {m:'Считает, планирует, контролирует. Деньги для него — не цель, а инструмент безопасности. Если экономит на тебе — это не жадность, это его система.',f:'Считает, планирует, контролирует. Деньги для него — не цель, а инструмент безопасности. Если экономит на тебе — это не жадность, это его система.'},
+  СМ:{m:'Уходит в себя не от тебя — а к себе. Ему нужна тишина как воздух. Поверхностный разговор его физически утомляет. Редкий тип.',f:'Уходит в себя не от тебя — а к себе. Ему нужна тишина как воздух. Поверхностный разговор его физически утомляет. Редкий тип.'},
+  ЗВ:{m:'Говорит больше, чем чувствует — или чувствует через слова. Его слушают все. Вопрос — слышит ли он тебя.',f:'Говорит больше, чем чувствует — или чувствует через слова. Его слушают все. Вопрос — слышит ли он тебя.'},
+  Э: {m:'Чувствует тебя раньше, чем ты сама поняла что происходит. Страх потерять и потребность любить — его главный конфликт.',f:'Чувствует тебя раньше, чем ты сама поняла что происходит. Страх потерять и потребность любить — его главный конфликт.'}
 };
 
 var INS_M={
@@ -564,7 +583,7 @@ var curPov=male?'m':'f';
 /* оверлей */
 var PH=[
   {tag:'анализ',   msg:'Считываем паттерны его поведения'},
-  {tag:'энергии',  msg:'Определяем баланс пяти энергий'},
+  {tag:'силы',     msg:'Определяем баланс пяти сил'},
   {tag:'портрет',  msg:'Собираем его психологический портрет'},
 ];
 var pT=document.getElementById('ovPhase'),pM=document.getElementById('ovMsg');
@@ -615,15 +634,37 @@ setTimeout(function(){
   setTimeout(function(){var o=document.getElementById('ov');if(o)o.remove();},700);
 },6500);
 
+/* slugs для fetch */
+var NAMES_MAP={
+  'Герой':'geroy','Продавец':'prodavets','Стратег':'strateg','Историк':'istorik',
+  'Наставник':'nastavnik','Игрок':'igrok','Командир':'komandir','Философ':'filosof',
+  'Поэт':'poet','Атлант':'atlant','Структуралист':'strukturalist','Артист':'artist',
+  'Законодатель':'zakonodatel','Шоумен':'shoumen','Продюсер':'produser','Инженер':'inzhener',
+  'Эстет':'estet','Декоратор':'dekorator','Визионер':'vizioner','Новатор':'novator',
+  'Вдохновитель':'vdokhnovitel','Драматург':'dramaturg','Агент':'agent','Символист':'simvolist',
+  'Режиссер':'rezhisser','Генератор':'generator','Транслятор':'translyator','Конвертер':'konverter',
+  'Теоретик':'teoretik','Методолог':'metodolog','Созерцатель':'sozertatel',
+  'Концептуалист':'kontseptualist','Интерпретатор':'interpretator','Полемик':'polemik',
+  'Аналитик':'analitik','Оракул':'orakul','Дизайнер':'dizayner','Идеолог':'ideolog',
+  'Архитектор':'arkhitektor','Лидер':'lider','Хранитель':'khranitel','Ментор':'mentor',
+  'Систематик':'sistematik','Документалист':'dokumentalist','Организатор':'organizator',
+  'Инструктор':'instruktor','Ученый':'ucheny','Педагог':'pedagog',
+  'Администратор':'administrator','Спикер':'spiker','Сторителлер':'storiteller',
+  'Переговорщик':'peregovorshchik','Комментатор':'kommentator','Презентатор':'prezentator',
+  'Куратор':'kurator','Прогнозист':'prognozist','Мистик':'mistik',
+  'Сценарист':'stenarist','Маэстро':'maestro','Лирик':'lirik',
+};
+
 /* аватар */
 function getN(){try{var u=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;return u&&u.first_name?u.first_name:'';}catch(e){return '';}}
 function getP(){try{var u=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;return u&&u.photo_url?u.photo_url:'';}catch(e){return '';}}
 var uN=getN(),uP=getP();
 var aw=document.getElementById('heroAv');
+var slug=NAMES_MAP[D.archetype]||'';
 var img=new Image();
 img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;border-radius:50%';
 img.onload=function(){aw.innerHTML='';aw.appendChild(img);};
-img.src=uP||'avatar.jpg';
+img.src=slug?'photos/'+slug+'.jpg':'avatar.jpg';
 if(uN)document.getElementById('heroName').textContent=uN;
 
 /* архетип побуквенно */
@@ -692,18 +733,19 @@ var domPct=Math.round(D.scores[dom]/total*1000)/10;
 var RARITY={ЗН:'встречается у 6% мужчин',Ф:'встречается у 8% мужчин',СМ:'встречается у 3% мужчин',ЗВ:'встречается у 7% мужчин',Э:'встречается у 5% мужчин'};
 
 var counterVal=0;
+var COUNTER_MIN=22126;
 (function(){
   fetch('https://maru-app-2071c-default-rtdb.firebaseio.com/results.json?shallow=true')
     .then(function(r){return r.json();})
-    .then(function(d){if(d)counterVal=Object.keys(d).length;})
-    .catch(function(){counterVal=0;});
+    .then(function(d){var real=d?Object.keys(d).length:0;counterVal=real>=COUNTER_MIN?real:COUNTER_MIN;})
+    .catch(function(){counterVal=COUNTER_MIN;});
 })();
 function fmtNum(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ');}
 function startRarity(){
   var el=document.getElementById('heroRarity');if(!el)return;
   var phrases=[
     function(){return 'один из 30 архетипов';},
-    function(){return counterVal>0?'<span style="color:var(--acc);font-weight:600">'+fmtNum(counterVal)+'</span> '+(male?'мужчин':'человек')+' прошли этот путь':'один из 30 архетипов';},
+    function(){return counterVal>0?'<span style="color:var(--acc);font-weight:600">'+fmtNum(counterVal)+'</span> девушек уже разобрались':'один из 30 архетипов';},
     function(){return RARITY[dom]||'редкий тип';},
   ];
   var idx=0;
@@ -729,7 +771,6 @@ sorted.forEach(function(ev,i){
   var e=ev[0],v=ev[1];
   var fp=Math.round(v/maxSc*100);
   html+='<div class="ef-col" onclick="eDesc(\''+e+'\','+Math.round(v/total*1000)/10+')">'+
-    '<div class="ef-ico">'+ICON[e]+'</div>'+
     '<div class="ef-bar-wrap"><div class="ef-fill" id="ef'+i+'"></div></div>'+
     '<div class="ef-name">'+(male?LABEL[e]:LABEL_F[e])+'</div>'+
   '</div>';
@@ -765,42 +806,15 @@ window.eDesc=function(key,pct){
 };
 
 /* ══ МАППИНГ АККОРДЕОНОВ ══ */
-var ACC_META_M=[
-  {t:'Твоя природа',                      s:'Кто ты есть на самом деле',             key:'description'},
-  {t:'Что тебя разрушает',                 s:'Триггеры · эмоциональные ловушки',      key:'frustration'},
-  {t:'Твой код в отношениях',              s:'Совместимость · конфликты · близость',  key:'svre_m'},
-  {t:'Как ты доминируешь и конкурируешь',  s:'Деньги · статус · влияние',             key:'deka'},
-  {t:'Тайны твоего влечения',              s:'Природа желания · что тебя притягивает', key:'libido'},
+var ACC_META=[
+  {t:'Кто он на самом деле',                   s:'Его настоящая природа',                    key:'who_he_is'},
+  {t:'Почему он молчит и пропадает',            s:'Когда он уходит в себя',                    key:'why_silent'},
+  {t:'Любит ли он меня на самом деле?',         s:'Что он на самом деле чувствует',             key:'does_he_love'},
+  {t:'Его отношение к деньгам и будущему',      s:'Как он видит ваше будущее',                  key:'money_future'},
+  {t:'Его тёмные стороны',                      s:'То, что он скрывает',                       key:'dark_sides'},
+  {t:'Выбирает ли он всерьёз',                  s:'Готов ли он выбрать тебя',                   key:'serious_choice'},
+  {t:'Секс с ним: норма или проблема',          s:'Что происходит за закрытой дверью',          key:'sex'},
 ];
-var ACC_META_F=[
-  {t:'Его природа',                        s:'Кто он есть на самом деле',             key:'description'},
-  {t:'Почему он закрывается',              s:'Триггеры · эмоциональные ловушки',      key:'frustration'},
-  {t:'Как он строит отношения',            s:'Совместимость · конфликты · близость',  key:'svre_f'},
-  {t:'Как он берёт контроль',              s:'Деньги · статус · влияние',             key:'deka'},
-  {t:'Как устроено его желание',           s:'Природа влечения · что его притягивает', key:'libido'},
-];
-var ACC_META = male ? ACC_META_M : ACC_META_F;
-
-/* slugs для fetch */
-var NAMES_MAP={
-  'Герой':'geroy','Продавец':'prodavets','Стратег':'strateg','Историк':'istorik',
-  'Наставник':'nastavnik','Игрок':'igrok','Командир':'komandir','Философ':'filosof',
-  'Поэт':'poet','Атлант':'atlant','Структуралист':'strukturalist','Артист':'artist',
-  'Законодатель':'zakonodatel','Шоумен':'shoumen','Продюсер':'produser','Инженер':'inzhener',
-  'Эстет':'estet','Декоратор':'dekorator','Визионер':'vizioner','Новатор':'novator',
-  'Вдохновитель':'vdokhnovitel','Драматург':'dramaturg','Агент':'agent','Символист':'simvolist',
-  'Режиссер':'rezhisser','Генератор':'generator','Транслятор':'translyator','Конвертер':'konverter',
-  'Теоретик':'teoretik','Методолог':'metodolog','Созерцатель':'sozertatel',
-  'Концептуалист':'kontseptualist','Интерпретатор':'interpretator','Полемик':'polemik',
-  'Аналитик':'analitik','Оракул':'orakul','Дизайнер':'dizayner','Идеолог':'ideolog',
-  'Архитектор':'arkhitektor','Лидер':'lider','Хранитель':'khranitel','Ментор':'mentor',
-  'Систематик':'sistematik','Документалист':'dokumentalist','Организатор':'organizator',
-  'Инструктор':'instruktor','Ученый':'ucheny','Педагог':'pedagog',
-  'Администратор':'administrator','Спикер':'spiker','Сторителлер':'storiteller',
-  'Переговорщик':'peregovorshchik','Комментатор':'kommentator','Презентатор':'prezentator',
-  'Куратор':'kurator','Прогнозист':'prognozist','Мистик':'mistik',
-  'Сценарист':'stenarist','Маэстро':'maestro','Лирик':'lirik',
-};
 
 var ARCHETYPES_URL = 'https://cdn.jsdelivr.net/gh/MARU-hub22/maru-data@main/maru_archetypes.json';
 
@@ -895,7 +909,7 @@ var accOpened={};
 var mirrorShown=false;
 function checkMirror(i){
   accOpened[i]=true;
-  if(Object.keys(accOpened).length>=5 && !mirrorShown){
+  if(Object.keys(accOpened).length>=7 && !mirrorShown){
     mirrorShown=true;
     setTimeout(function(){
       var m=document.getElementById('mirrorCard');if(!m)return;
@@ -949,7 +963,7 @@ window.tAcc=function(i){
     accRead[i]=true;
     var cnt=Object.keys(accRead).length;
     var badge=document.getElementById('accBadge');
-    if(badge){badge.textContent=cnt+'/5 прочитано';if(cnt>=5){badge.style.color='var(--t3)';
+    if(badge){badge.textContent=cnt+'/7 прочитано';if(cnt>=7){badge.style.color='var(--t3)';
       /* меняем CTA текст */
       var ct=document.getElementById('ctaTxt');
       if(ct){ct.style.transition='opacity .35s';ct.style.opacity='0';
@@ -1017,6 +1031,8 @@ function animBars(){
           hap('l');
         },i*120);
       });
+      /* hint мигает после баров */
+      setTimeout(function(){var h=document.getElementById('efHint');if(h)h.classList.add('pulse');},fills.length*120+800);
       return;
     }
     if(done)return;
@@ -1097,6 +1113,70 @@ function spark(){
 }
 
 /* шеринг панель */
+/* совместимость */
+var COMPAT={
+  'Герой':['Наставник','Поэт'],'Продавец':['Игрок','Артист'],'Стратег':['Философ','Архитектор'],
+  'Историк':['Хранитель','Документалист'],'Наставник':['Герой','Ментор'],'Игрок':['Продавец','Шоумен'],
+  'Командир':['Лидер','Стратег'],'Философ':['Стратег','Созерцатель'],'Поэт':['Герой','Лирик'],
+  'Атлант':['Инженер','Командир'],'Структуралист':['Систематик','Организатор'],'Артист':['Продавец','Дизайнер'],
+  'Законодатель':['Командир','Идеолог'],'Шоумен':['Игрок','Спикер'],'Продюсер':['Режиссер','Генератор'],
+  'Инженер':['Атлант','Структуралист'],'Эстет':['Дизайнер','Артист'],'Декоратор':['Эстет','Дизайнер'],
+  'Визионер':['Новатор','Архитектор'],'Новатор':['Визионер','Генератор'],'Вдохновитель':['Педагог','Наставник'],
+  'Драматург':['Сценарист','Поэт'],'Агент':['Переговорщик','Продавец'],'Символист':['Мистик','Философ'],
+  'Режиссер':['Продюсер','Сценарист'],'Генератор':['Новатор','Продюсер'],'Транслятор':['Спикер','Комментатор'],
+  'Конвертер':['Структуралист','Инженер'],'Теоретик':['Ученый','Философ'],'Методолог':['Систематик','Педагог'],
+  'Созерцатель':['Философ','Мистик'],'Концептуалист':['Визионер','Идеолог'],'Интерпретатор':['Транслятор','Драматург'],
+  'Полемик':['Комментатор','Переговорщик'],'Аналитик':['Стратег','Ученый'],'Оракул':['Мистик','Символист'],
+  'Дизайнер':['Артист','Эстет'],'Идеолог':['Законодатель','Концептуалист'],'Архитектор':['Стратег','Визионер'],
+  'Лидер':['Командир','Наставник'],'Хранитель':['Историк','Куратор'],'Ментор':['Наставник','Вдохновитель'],
+  'Систематик':['Структуралист','Методолог'],'Документалист':['Историк','Аналитик'],'Организатор':['Структуралист','Администратор'],
+  'Инструктор':['Педагог','Наставник'],'Ученый':['Теоретик','Аналитик'],'Педагог':['Инструктор','Вдохновитель'],
+  'Администратор':['Организатор','Систематик'],'Спикер':['Шоумен','Транслятор'],'Сторителлер':['Драматург','Сценарист'],
+  'Переговорщик':['Агент','Полемик'],'Комментатор':['Полемик','Транслятор'],'Презентатор':['Спикер','Шоумен'],
+  'Куратор':['Хранитель','Организатор'],'Прогнозист':['Аналитик','Стратег'],'Мистик':['Оракул','Созерцатель'],
+  'Сценарист':['Режиссер','Драматург'],'Маэстро':['Артист','Продюсер'],'Лирик':['Поэт','Драматург'],
+};
+(function(){
+  var pair=COMPAT[D.archetype]||['Стратег','Философ'];
+  var title=document.getElementById('compatTitle');
+  var DAT={
+    'Герой':'Герою','Продавец':'Продавцу','Стратег':'Стратегу','Историк':'Историку',
+    'Наставник':'Наставнику','Игрок':'Игроку','Командир':'Командиру','Философ':'Философу',
+    'Поэт':'Поэту','Атлант':'Атланту','Структуралист':'Структуралисту','Артист':'Артисту',
+    'Законодатель':'Законодателю','Шоумен':'Шоумену','Продюсер':'Продюсеру','Инженер':'Инженеру',
+    'Эстет':'Эстету','Декоратор':'Декоратору','Визионер':'Визионеру','Новатор':'Новатору',
+    'Вдохновитель':'Вдохновителю','Драматург':'Драматургу','Агент':'Агенту','Символист':'Символисту',
+    'Режиссер':'Режиссеру','Генератор':'Генератору','Транслятор':'Транслятору','Конвертер':'Конвертеру',
+    'Теоретик':'Теоретику','Методолог':'Методологу','Созерцатель':'Созерцателю',
+    'Концептуалист':'Концептуалисту','Интерпретатор':'Интерпретатору','Полемик':'Полемику',
+    'Аналитик':'Аналитику','Оракул':'Оракулу','Дизайнер':'Дизайнеру','Идеолог':'Идеологу',
+    'Архитектор':'Архитектору','Лидер':'Лидеру','Хранитель':'Хранителю','Ментор':'Ментору',
+    'Систематик':'Систематику','Документалист':'Документалисту','Организатор':'Организатору',
+    'Инструктор':'Инструктору','Ученый':'Ученому','Педагог':'Педагогу',
+    'Администратор':'Администратору','Спикер':'Спикеру','Сторителлер':'Сторителлеру',
+    'Переговорщик':'Переговорщику','Комментатор':'Комментатору','Презентатор':'Презентатору',
+    'Куратор':'Куратору','Прогнозист':'Прогнозисту','Мистик':'Мистику',
+    'Сценарист':'Сценаристу','Маэстро':'Маэстро','Лирик':'Лирику',
+  };
+  if(title) title.textContent='Кто идеально подходит '+(DAT[D.archetype]||D.archetype);
+  var container=document.getElementById('compatPair');
+  if(!container)return;
+  var slug1=NAMES_MAP[pair[0]]||'';
+  var slug2=NAMES_MAP[pair[1]]||'';
+  container.innerHTML=
+    '<div style="display:flex;align-items:center;gap:8px">'+
+      '<div style="width:28px;height:28px;border-radius:50%;overflow:hidden;border-top:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.45)">'+
+        (slug1?'<img src="photos/'+slug1+'.jpg" style="width:100%;height:100%;object-fit:cover">':'')+'</div>'+
+      '<span style="font-size:12px;font-weight:500;color:var(--t1)">'+pair[0]+'</span>'+
+    '</div>'+
+    '<span style="font-size:10px;color:var(--t3)">и</span>'+
+    '<div style="display:flex;align-items:center;gap:8px">'+
+      '<div style="width:28px;height:28px;border-radius:50%;overflow:hidden;border-top:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.45)">'+
+        (slug2?'<img src="photos/'+slug2+'.jpg" style="width:100%;height:100%;object-fit:cover">':'')+'</div>'+
+      '<span style="font-size:12px;font-weight:500;color:var(--t1)">'+pair[1]+'</span>'+
+    '</div>';
+})();
+
 window.openShare=function(){
   hap('m');
   /* заполняем превью */
@@ -1113,10 +1193,15 @@ function buildPreviews(){
   if(storyArch)storyArch.textContent=(uN?uN+' · ':'')+D.archetype;
 }
 
-/* mirror text — тёплое от создателя */
+/* mirror text — интимное, для неё */
 (function(){
   var mt=document.getElementById('mirrorText');
-  if(mt) mt.textContent='Это именно то, что я хотел тебе показать. Я тоже чувствовал это. Я верю в тебя — двигайся, и пусть ничего тебя не остановит.';
+  if(mt) mt.textContent='Ты только что увидела его таким, каким он не показывает себя никому. Теперь ты знаешь больше, чем он сам о себе знает. Используй это бережно.';
+  /* подписка — появляется с задержкой после зеркала */
+  setTimeout(function(){
+    var sub=document.getElementById('mirrorSub');
+    if(sub) sub.style.opacity='1';
+  },1200);
 })();
 
 /* 1. ОТПРАВИТЬ ПАРТНЁРУ — просто ссылка */
@@ -1276,7 +1361,7 @@ function drawStoryCanvas(ctx,photoImg){
   ctx.fillStyle='#666';
   ctx.fillText('Пройди тест · t.me/maru_22_bot',cx,link1Y);
   ctx.fillStyle='#FF6F61';
-  ctx.fillText('t.me/maru_woman',cx,link2Y);
+  ctx.fillText('t.me/maru_love_maru',cx,link2Y);
 }
 
 
