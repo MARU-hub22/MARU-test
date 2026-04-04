@@ -27,9 +27,8 @@ body{font-family:'Inter',sans-serif;background:transparent}
 /* Фон-картинка */
 #content{position:absolute;inset:0;overflow:hidden;z-index:0}
 #content img{
-  position:absolute;top:-38px;left:0;
-  width:100%;height:calc(100% + 110px);
-  object-fit:cover;object-position:center center;
+  position:absolute;top:0;left:0;
+  width:100%;height:auto;
 }
 
 /* Подпись под лого */
@@ -98,19 +97,18 @@ body{font-family:'Inter',sans-serif;background:transparent}
   var cta=document.getElementById('cta');
   var img=splash.querySelector('img');
 
+  var colorApplied=false;
   function applyColorFromImage(){
     try{
       var c=document.createElement('canvas');
       c.width=img.naturalWidth;c.height=img.naturalHeight;
       var ctx=c.getContext('2d');
       ctx.drawImage(img,0,0);
-      var strip=ctx.getImageData(0,0,c.width,10).data;
-      var r=0,g=0,b=0,count=strip.length/4;
-      for(var i=0;i<strip.length;i+=4){r+=strip[i];g+=strip[i+1];b+=strip[i+2];}
-      r=Math.round(r/count);g=Math.round(g/count);b=Math.round(b/count);
-      var hex='#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+      var px=ctx.getImageData(Math.floor(c.width/2),5,1,1).data;
+      var hex='#'+((1<<24)+(px[0]<<16)+(px[1]<<8)+px[2]).toString(16).slice(1);
       document.body.style.background=hex;
       if(tg){try{tg.setHeaderColor(hex);tg.setBackgroundColor(hex);}catch(e){}}
+      colorApplied=true;
     }catch(e){
       if(!img.crossOrigin&&location.protocol!=='file:'){
         img.crossOrigin='anonymous';
