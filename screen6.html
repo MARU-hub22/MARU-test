@@ -314,6 +314,15 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 }
 .cta-btn.pulse{animation:btnPulse 2.0s ease 0s 1}
 .cta-note{text-align:center;font-size:10px;color:var(--t3);margin-top:8px;letter-spacing:.04em;}
+.fb-chip{
+  font-family:inherit;font-size:13px;font-weight:500;color:var(--t2);
+  background:transparent;padding:10px 20px;border-radius:12px;cursor:pointer;
+  border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.04);
+  border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);
+  -webkit-tap-highlight-color:transparent;transition:all .2s;
+}
+.fb-chip:active{transform:scale(0.95)}
+.fb-chip.picked{background:var(--acc);color:#fff;border-color:transparent}
 .spark-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
 .spark-svg path{fill:none;stroke:rgba(255,111,97,0.45);stroke-width:0.8;stroke-linecap:round;stroke-dasharray:0 9999;opacity:0}
 @keyframes sparkAnim{0%{stroke-dasharray:0 9999;opacity:0}6%{opacity:1}75%{stroke-dasharray:9999 0;opacity:.75}100%{stroke-dasharray:9999 0;opacity:0}}
@@ -426,24 +435,25 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
       </div>
     </div>
 
-    <!-- Совместимость → screen7 -->
-    <div id="compatCard" onclick="window.location.href='screen7.html'" style="margin-top:40px;padding:14px 16px;border-radius:14px;border-top:1px solid rgba(0,0,0,0.06);border-left:2px solid var(--acc);border-bottom:1px solid rgba(255,255,255,0.45);border-right:1px solid rgba(255,255,255,0.35);cursor:pointer;-webkit-tap-highlight-color:transparent;opacity:0;transition:opacity .5s">
-      <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--t3);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between"><span id="compatTitle"></span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.5" stroke-linecap="round"><polyline points="9 6 15 12 9 18"/></svg></div>
-      <div style="display:flex;align-items:center;gap:10px" id="compatPair"></div>
-      <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:space-between">
-        <span style="font-size:10px;color:var(--t3)">Все 30 архетипов · кто ему подходит</span>
-        <span style="font-size:10px;font-weight:500;color:var(--acc)">Смотреть →</span>
+    <!-- Feedback — температура пары -->
+    <div id="feedbackBlock" style="margin-top:40px;text-align:center;padding:0 20px">
+      <div style="font-size:14px;font-weight:500;color:var(--t1);margin-bottom:12px">Сегодня между вами...</div>
+      <div style="display:flex;justify-content:center;gap:8px" id="fbRow">
+        <button class="fb-chip" data-val="warm" onclick="pickFeedback(this)">тепло</button>
+        <button class="fb-chip" data-val="neutral" onclick="pickFeedback(this)">ровно</button>
+        <button class="fb-chip" data-val="cold" onclick="pickFeedback(this)">холодно</button>
       </div>
+      <div style="font-size:11px;color:var(--t3);margin-top:10px;line-height:1.4">Завтрашняя карточка это учтёт</div>
     </div>
 
-    <!-- CTA ПОДЕЛИТЬСЯ -->
+    <!-- CTA Основной → screen7 -->
     <div style="text-align:center;margin-top:0"><span id="accBadge" style="font-size:10px;letter-spacing:.12em;color:var(--t3);transition:color .3s"></span></div>
     <div class="cta-scroll" id="ctaScroll">
-      <button class="cta-btn" id="ctaBtn" onclick="openShare()">
-        <span id="ctaTxt">ПОДЕЛИТЬСЯ</span>
+      <button class="cta-btn" id="ctaBtn" onclick="window.location.href='screen7.html'">
+        <span id="ctaTxt">УЗНАТЬ, КАК ДЕЙСТВОВАТЬ</span>
         <svg class="spark-svg" id="sparkSvg"><path id="sparkPath"/></svg>
       </button>
-      <div class="cta-note" id="ctaNote">Доступ к результату сохранён навсегда</div>
+      <button id="shareBtn" onclick="openShare()" style="display:block;margin:12px auto 0;background:none;border:none;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--t2);cursor:pointer;-webkit-tap-highlight-color:transparent;pointer-events:auto">Поделиться</button>
     </div>
 
   </div>
@@ -593,21 +603,33 @@ var INS_F={
 var curPov=male?'m':'f';
 
 /* оверлей — короткий, она уже знает архетип */
-var pM=document.getElementById('ovMsg');
-document.getElementById('ovPhase').style.display='none';
-document.getElementById('ovDots').style.display='none';
-document.getElementById('ovConfirm').style.display='none';
-document.getElementById('ovArch').style.display='none';
-pM.textContent='Твой полный портрет готов';
-pM.classList.add('s');
-hap('l');
-setTimeout(function(){
-  hap('m');
-  document.getElementById('ov').classList.add('hide');
+var wasHere=false;
+try{wasHere=localStorage.getItem('maru_seen_screen6')==='1'}catch(e){}
+
+if(wasHere){
+  /* возврат с screen7 — без оверлея, compatCard сразу */
+  var ovEl=document.getElementById('ov');if(ovEl)ovEl.remove();
   document.getElementById('page').classList.add('show');
-  setTimeout(reveal,300);
-  setTimeout(function(){var o=document.getElementById('ov');if(o)o.remove();},700);
-},1500);
+  setTimeout(reveal,100);
+  var cc=document.getElementById('compatCard');if(cc)cc.style.opacity='1';
+} else {
+  try{localStorage.setItem('maru_seen_screen6','1')}catch(e){}
+  var pM=document.getElementById('ovMsg');
+  document.getElementById('ovPhase').style.display='none';
+  document.getElementById('ovDots').style.display='none';
+  document.getElementById('ovConfirm').style.display='none';
+  document.getElementById('ovArch').style.display='none';
+  pM.textContent='Твой полный портрет готов';
+  pM.classList.add('s');
+  hap('l');
+  setTimeout(function(){
+    hap('m');
+    document.getElementById('ov').classList.add('hide');
+    document.getElementById('page').classList.add('show');
+    setTimeout(reveal,300);
+    setTimeout(function(){var o=document.getElementById('ov');if(o)o.remove();},700);
+  },1500);
+}
 
 /* slugs для fetch */
 var NAMES_MAP={
@@ -1088,69 +1110,18 @@ function spark(){
 }
 
 /* шеринг панель */
-/* совместимость */
-var COMPAT={
-  'Герой':['Наставник','Поэт'],'Продавец':['Игрок','Артист'],'Стратег':['Философ','Архитектор'],
-  'Историк':['Хранитель','Документалист'],'Наставник':['Герой','Ментор'],'Игрок':['Продавец','Шоумен'],
-  'Командир':['Лидер','Стратег'],'Философ':['Стратег','Созерцатель'],'Поэт':['Герой','Лирик'],
-  'Атлант':['Инженер','Командир'],'Структуралист':['Систематик','Организатор'],'Артист':['Продавец','Дизайнер'],
-  'Законодатель':['Командир','Идеолог'],'Шоумен':['Игрок','Спикер'],'Продюсер':['Режиссер','Генератор'],
-  'Инженер':['Атлант','Структуралист'],'Эстет':['Дизайнер','Артист'],'Декоратор':['Эстет','Дизайнер'],
-  'Визионер':['Новатор','Архитектор'],'Новатор':['Визионер','Генератор'],'Вдохновитель':['Педагог','Наставник'],
-  'Драматург':['Сценарист','Поэт'],'Агент':['Переговорщик','Продавец'],'Символист':['Мистик','Философ'],
-  'Режиссер':['Продюсер','Сценарист'],'Генератор':['Новатор','Продюсер'],'Транслятор':['Спикер','Комментатор'],
-  'Конвертер':['Структуралист','Инженер'],'Теоретик':['Ученый','Философ'],'Методолог':['Систематик','Педагог'],
-  'Созерцатель':['Философ','Мистик'],'Концептуалист':['Визионер','Идеолог'],'Интерпретатор':['Транслятор','Драматург'],
-  'Полемик':['Комментатор','Переговорщик'],'Аналитик':['Стратег','Ученый'],'Оракул':['Мистик','Символист'],
-  'Дизайнер':['Артист','Эстет'],'Идеолог':['Законодатель','Концептуалист'],'Архитектор':['Стратег','Визионер'],
-  'Лидер':['Командир','Наставник'],'Хранитель':['Историк','Куратор'],'Ментор':['Наставник','Вдохновитель'],
-  'Систематик':['Структуралист','Методолог'],'Документалист':['Историк','Аналитик'],'Организатор':['Структуралист','Администратор'],
-  'Инструктор':['Педагог','Наставник'],'Ученый':['Теоретик','Аналитик'],'Педагог':['Инструктор','Вдохновитель'],
-  'Администратор':['Организатор','Систематик'],'Спикер':['Шоумен','Транслятор'],'Сторителлер':['Драматург','Сценарист'],
-  'Переговорщик':['Агент','Полемик'],'Комментатор':['Полемик','Транслятор'],'Презентатор':['Спикер','Шоумен'],
-  'Куратор':['Хранитель','Организатор'],'Прогнозист':['Аналитик','Стратег'],'Мистик':['Оракул','Созерцатель'],
-  'Сценарист':['Режиссер','Драматург'],'Маэстро':['Артист','Продюсер'],'Лирик':['Поэт','Драматург'],
+
+window.pickFeedback=function(el){
+  document.querySelectorAll('.fb-chip').forEach(function(c){c.classList.remove('picked')});
+  el.classList.add('picked');
+  hap('l');
+  try{
+    var today=new Date().toISOString().slice(0,10);
+    var fb=JSON.parse(localStorage.getItem('maru_feedback')||'{}');
+    fb[today]=el.dataset.val;
+    localStorage.setItem('maru_feedback',JSON.stringify(fb));
+  }catch(e){}
 };
-(function(){
-  var pair=COMPAT[D.archetype]||['Стратег','Философ'];
-  var title=document.getElementById('compatTitle');
-  var DAT={
-    'Герой':'Герою','Продавец':'Продавцу','Стратег':'Стратегу','Историк':'Историку',
-    'Наставник':'Наставнику','Игрок':'Игроку','Командир':'Командиру','Философ':'Философу',
-    'Поэт':'Поэту','Атлант':'Атланту','Структуралист':'Структуралисту','Артист':'Артисту',
-    'Законодатель':'Законодателю','Шоумен':'Шоумену','Продюсер':'Продюсеру','Инженер':'Инженеру',
-    'Эстет':'Эстету','Декоратор':'Декоратору','Визионер':'Визионеру','Новатор':'Новатору',
-    'Вдохновитель':'Вдохновителю','Драматург':'Драматургу','Агент':'Агенту','Символист':'Символисту',
-    'Режиссер':'Режиссеру','Генератор':'Генератору','Транслятор':'Транслятору','Конвертер':'Конвертеру',
-    'Теоретик':'Теоретику','Методолог':'Методологу','Созерцатель':'Созерцателю',
-    'Концептуалист':'Концептуалисту','Интерпретатор':'Интерпретатору','Полемик':'Полемику',
-    'Аналитик':'Аналитику','Оракул':'Оракулу','Дизайнер':'Дизайнеру','Идеолог':'Идеологу',
-    'Архитектор':'Архитектору','Лидер':'Лидеру','Хранитель':'Хранителю','Ментор':'Ментору',
-    'Систематик':'Систематику','Документалист':'Документалисту','Организатор':'Организатору',
-    'Инструктор':'Инструктору','Ученый':'Ученому','Педагог':'Педагогу',
-    'Администратор':'Администратору','Спикер':'Спикеру','Сторителлер':'Сторителлеру',
-    'Переговорщик':'Переговорщику','Комментатор':'Комментатору','Презентатор':'Презентатору',
-    'Куратор':'Куратору','Прогнозист':'Прогнозисту','Мистик':'Мистику',
-    'Сценарист':'Сценаристу','Маэстро':'Маэстро','Лирик':'Лирику',
-  };
-  if(title) title.textContent='Кто идеально подходит '+(DAT[D.archetype]||D.archetype);
-  var container=document.getElementById('compatPair');
-  if(!container)return;
-  var slug1=NAMES_MAP[pair[0]]||'';
-  var slug2=NAMES_MAP[pair[1]]||'';
-  container.innerHTML=
-    '<div style="display:flex;align-items:center;gap:8px">'+
-      '<div style="width:28px;height:28px;border-radius:50%;overflow:hidden;border-top:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.45)">'+
-        (slug1?'<img src="photos/'+slug1+'.jpg" style="width:100%;height:100%;object-fit:cover">':'')+'</div>'+
-      '<span style="font-size:12px;font-weight:500;color:var(--t1)">'+pair[0]+'</span>'+
-    '</div>'+
-    '<span style="font-size:10px;color:var(--t3)">и</span>'+
-    '<div style="display:flex;align-items:center;gap:8px">'+
-      '<div style="width:28px;height:28px;border-radius:50%;overflow:hidden;border-top:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.45)">'+
-        (slug2?'<img src="photos/'+slug2+'.jpg" style="width:100%;height:100%;object-fit:cover">':'')+'</div>'+
-      '<span style="font-size:12px;font-weight:500;color:var(--t1)">'+pair[1]+'</span>'+
-    '</div>';
-})();
 
 window.openShare=function(){
   hap('m');
