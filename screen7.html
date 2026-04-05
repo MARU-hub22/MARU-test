@@ -482,8 +482,8 @@ html, body {
 <div class="pw" id="paywall">
   <div class="pw-icon">&#128274;</div>
   <div class="pw-title">3 сообщения использованы</div>
-  <div class="pw-desc">Разблокируйте безлимитный диалог с любым архетипом. Узнайте, почему он так поступает.</div>
-  <button class="pw-btn" id="pwBuy">Разблокировать — 499 ₽/мес</button>
+  <div class="pw-desc">Но есть кое-что мощнее чата. Ежедневная карточка — написанная лично для вашей пары.</div>
+  <button class="pw-btn" id="pwBuy">Узнать свой архетип</button>
   <button class="pw-close" id="pwClose">Вернуться к архетипам</button>
 </div>
 
@@ -1024,7 +1024,7 @@ document.getElementById('pwClose').addEventListener('click', function() {
   closeChat();
 });
 document.getElementById('pwBuy').addEventListener('click', function() {
-  alert('Оплата будет подключена позже');
+  window.location.href = 'screen8.html';
 });
 
 /* ═══ Start ═══ */

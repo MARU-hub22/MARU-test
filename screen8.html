@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>MARU</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  height:100%;background:var(--bg);overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  font-family:'Inter',-apple-system,sans-serif;
+  color:var(--t1);
+}
+
+.screen{
+  position:relative;width:100%;max-width:390px;height:100dvh;margin:0 auto;
+  display:flex;flex-direction:column;
+  padding-top:max(calc(env(safe-area-inset-top,0px) + 8px),24px);
+}
+
+/* ═══ HEADER ═══ */
+.hdr{flex-shrink:0;display:flex;align-items:center;padding:0 24px 8px}
+.hdr-center{flex:1;text-align:center}
+.m-logo{
+  font-size:24px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--bg);
+  text-shadow:-1px -1px 1px rgba(0,0,0,0.2),1px 1px 1px rgba(255,255,255,0.75),0 0 3px rgba(0,0,0,0.04);
+  user-select:none;
+}
+.btn-back{
+  width:44px;height:44px;border-radius:10px;
+  border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);
+  background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
+}
+.btn-back:active{transform:scale(0.9);opacity:0.6}
+.btn-back svg{width:14px;height:14px;stroke:var(--t2);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.hdr-spacer{width:44px;flex-shrink:0}
+
+/* ═══ CONTENT ═══ */
+.content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 24px}
+.content::-webkit-scrollbar{display:none}
+.phase{display:none;opacity:0}
+.phase.active{display:flex;flex-direction:column;animation:phaseIn .4s ease forwards}
+@keyframes phaseIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* ═══ GLASS DRUM ═══ */
+.drum-section{margin-bottom:20px}
+.drum-label{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--t2);margin-bottom:16px;text-align:center}
+.drum-hint{text-align:center;font-size:12px;color:var(--t3);margin-bottom:8px}
+.drum-hint span{font-weight:600;color:var(--t2)}
+.drum-wrap{display:flex;gap:6px;justify-content:center;max-width:320px;margin:0 auto}
+.drum{
+  position:relative;height:160px;overflow:hidden;border-radius:16px;
+  background:rgba(255,255,255,0.18);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:inset 2px 2px 5px rgba(0,0,0,0.08),inset -2px -2px 5px rgba(255,255,255,0.6);
+  border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.05);
+  border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);
+}
+.drum.w-day{width:82px}.drum.w-month{width:144px}.drum.w-year{width:82px}
+.drum.w-lucky{width:100px}.drum.w-color{width:214px}
+
+.drum-list{position:absolute;left:0;right:0;transition:transform 0.3s cubic-bezier(0.23,1,0.32,1)}
+.drum-item{
+  height:36px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:400;color:var(--t3);
+  transition:all 0.25s;user-select:none;cursor:pointer;
+}
+.drum-item.active{font-weight:600;font-size:18px;color:var(--t1)}
+.drum-item.near{color:var(--t2);font-size:16px}
+
+.drum-hl{
+  position:absolute;left:8px;right:8px;top:72px;height:36px;
+  border-radius:10px;background:rgba(255,255,255,0.45);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  box-shadow:inset 1.5px 1.5px 4px rgba(0,0,0,0.07),inset -1.5px -1.5px 4px rgba(255,255,255,0.7);
+  border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.04);
+  border-bottom:1px solid rgba(255,255,255,0.65);border-right:1px solid rgba(255,255,255,0.5);
+  pointer-events:none;
+}
+.drum-fade-t,.drum-fade-b{position:absolute;left:0;right:0;height:50px;pointer-events:none;z-index:2}
+.drum-fade-t{top:0;background:linear-gradient(to bottom,var(--bg) 15%,transparent)}
+.drum-fade-b{bottom:0;background:linear-gradient(to top,var(--bg) 15%,transparent)}
+
+.color-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:10px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,0.15);transition:all 0.25s}
+.drum-item.active .color-dot{width:12px;height:12px}
+.color-row{display:flex;align-items:center;justify-content:center}
+
+/* his card in phase1 — 1:1 screen7 active slide */
+/* screen7: filter on SLIDE CONTAINER, not on img */
+.his-card-p1{
+  width:160px;margin:0 auto 4px;border-radius:20px;
+  background:var(--bg);overflow:hidden;position:relative;
+  box-shadow:0 6px 24px rgba(0,0,0,0.1);
+  filter:sepia(0.15) brightness(1.02);
+}
+.his-card-p1 .p1-img{
+  width:100%;height:0;padding-bottom:120%;
+  position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#e0e0de 0%,#d2d2d0 100%);
+}
+.his-card-p1 .p1-img img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;display:block;
+}
+.his-card-p1 .p1-img::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:55%;
+  background:linear-gradient(to bottom,transparent 0%,var(--bg) 100%);
+  pointer-events:none;
+}
+.his-card-p1 .card-body{padding:0 14px 14px;margin-top:-22px;position:relative;z-index:2}
+.his-card-p1 .card-name{
+  font-size:17px;font-weight:700;color:var(--t1);
+  text-align:center;letter-spacing:-0.02em;line-height:1.2;
+}
+
+/* ═══ CTA — DNA from screen4 ═══ */
+.foot{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:390px;
+  padding:16px 24px calc(env(safe-area-inset-bottom,0px) + 12px);
+  background:linear-gradient(to bottom,rgba(239,239,238,0) 0%,rgba(239,239,238,1) 28%);
+  z-index:10;pointer-events:none;
+}
+.cta-btn{
+  pointer-events:auto;width:100%;height:56px;
+  background:var(--acc);color:#fff;
+  border-top:1px solid rgba(255,255,255,0.35);border-left:1px solid rgba(255,255,255,0.25);
+  border-bottom:1px solid rgba(0,0,0,0.08);border-right:1px solid rgba(0,0,0,0.06);
+  border-radius:var(--r);
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:transform .12s;position:relative;overflow:visible;
+}
+.cta-btn:active{transform:scale(0.98);opacity:.88}
+.cta-btn:focus{outline:none}
+.cta-hint{text-align:center;font-size:11px;color:var(--t3);margin-top:8px;pointer-events:none}
+@keyframes btnPulse{0%{box-shadow:0 0 0 0 rgba(255,111,97,0)}40%{box-shadow:0 0 0 6px rgba(255,111,97,0.3)}100%{box-shadow:0 0 0 0 rgba(255,111,97,0)}}
+.cta-btn.pulse{animation:btnPulse 2.0s ease 0s 1}
+
+/* ═══ ROULETTE ═══ */
+.solo-card{
+  width:180px;margin:24px auto 12px;border-radius:20px;overflow:hidden;position:relative;
+  background:var(--bg);box-shadow:0 6px 24px rgba(0,0,0,0.1);
+  filter:sepia(0.15) brightness(1.02);
+}
+.solo-card .card-img{width:100%;height:0;padding-bottom:120%;position:relative;overflow:hidden}
+.solo-card .card-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.solo-card .card-img::after{content:'';position:absolute;left:0;right:0;bottom:0;height:55%;background:linear-gradient(to bottom,transparent,var(--bg));pointer-events:none}
+.solo-card .card-body{padding:0 12px 12px;margin-top:-22px;position:relative;z-index:2}
+.solo-card .card-name{font-size:17px;font-weight:700;color:var(--t1);text-align:center;letter-spacing:-0.02em}
+
+.roul-status{text-align:center;font-size:13px;color:var(--t2);margin:8px 0 16px;min-height:20px;font-style:italic}
+@keyframes statusPulse{0%,100%{opacity:0.4}50%{opacity:1}}
+.roul-status.alive{animation:statusPulse 1.5s ease infinite}
+.roul-wrap{width:calc(100% + 48px);margin-left:-24px;overflow:hidden;margin-bottom:16px}
+.roul-swiper{overflow:visible !important}
+.roul-slide{
+  width:140px !important;border-radius:20px;overflow:hidden;position:relative;
+  transition:transform .35s,opacity .35s,filter .5s;
+  opacity:0.25;filter:grayscale(1) brightness(1.05);
+  box-shadow:0 2px 16px rgba(0,0,0,0.06);background:var(--bg);
+}
+.roul-slide .card-img{width:100%;height:0;padding-bottom:120%;position:relative;overflow:hidden}
+.roul-slide .card-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.roul-slide .card-img::after{content:'';position:absolute;left:0;right:0;bottom:0;height:55%;background:linear-gradient(to bottom,transparent,var(--bg));pointer-events:none}
+.roul-slide .card-body{padding:0 10px 10px;margin-top:-18px;position:relative;z-index:2}
+.roul-slide .card-name{font-size:13px;font-weight:700;color:var(--t1);text-align:center;opacity:0.5;transition:opacity .3s}
+
+.swiper-slide-active.roul-slide{opacity:1;filter:sepia(0.15) brightness(1.02);transform:scale(1.06);box-shadow:0 6px 24px rgba(0,0,0,0.1)}
+.swiper-slide-active .card-name{opacity:1}
+.swiper-slide-prev.roul-slide,.swiper-slide-next.roul-slide{opacity:0.45;filter:grayscale(0.85) brightness(1.02)}
+
+/* ═══ RESULT ═══ */
+.pair-row{display:flex;gap:12px;justify-content:center;align-items:center;margin:24px 0 12px}
+.pair-card{
+  width:130px;border-radius:20px;overflow:hidden;position:relative;
+  background:var(--bg);box-shadow:0 6px 24px rgba(0,0,0,0.1);
+  filter:sepia(0.15) brightness(1.02);
+}
+.pair-card .card-img{width:100%;height:0;padding-bottom:120%;position:relative;overflow:hidden}
+.pair-card .card-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.pair-card .card-img::after{content:'';position:absolute;left:0;right:0;bottom:0;height:55%;background:linear-gradient(to bottom,transparent,var(--bg));pointer-events:none}
+.pair-card .card-body{padding:0 8px 14px;margin-top:-22px;position:relative;z-index:2}
+.pair-card .card-name{font-size:14px;font-weight:700;color:var(--t1);text-align:center;letter-spacing:-0.02em}
+.pair-x{font-size:18px;font-weight:300;color:var(--t3)}
+.pair-row .pair-card:first-child{opacity:0;transform:translateX(30px);animation:pL .5s .1s ease forwards}
+.pair-row .pair-card:last-child{opacity:0;transform:translateX(-30px);animation:pR .5s .1s ease forwards}
+.pair-row .pair-x{opacity:0;animation:pX .3s .5s ease forwards}
+@keyframes pL{0%{opacity:0;transform:translateX(30px)}60%{opacity:1;transform:translateX(4px)}100%{opacity:1;transform:none}}
+@keyframes pR{0%{opacity:0;transform:translateX(-30px)}60%{opacity:1;transform:translateX(-4px)}100%{opacity:1;transform:none}}
+@keyframes pX{to{opacity:1}}
+
+.res-rare{text-align:center;font-size:12px;color:var(--t3);margin-bottom:24px}
+.res-carousel{width:calc(100% + 48px);margin-left:-24px;overflow:hidden;margin-bottom:24px}
+.res-line{width:40px;height:1px;background:rgba(0,0,0,0.06);margin:0 auto 24px}
+.res-name{text-align:center;font-size:24px;font-weight:700;color:var(--t1);margin-bottom:32px}
+
+/* insight — цитата с вертикальной линией */
+.insight{margin-bottom:0;padding:0 16px 40px}
+.insight-label{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:14px}
+.insight-quote{border-left:2px solid var(--acc);padding-left:18px;font-size:15px;color:var(--t1);line-height:1.75;font-style:italic;font-weight:400}
+
+/* card preview — розовый конверт */
+.card-preview{
+  margin-top:8px;margin-bottom:24px;border-radius:var(--r);overflow:hidden;
+  background:#d4929a;
+}
+.cp-logo{width:72px;height:40px;margin:20px auto 0;background-image:url('splash-logo.png');background-size:277px auto;background-position:center 60%;background-repeat:no-repeat;opacity:0.4}
+.cp-content{padding:14px 24px 24px}
+.cp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.cp-pair{font-size:11px;font-weight:600;color:rgba(255,255,255,0.85)}
+.cp-day{font-size:11px;color:rgba(255,255,255,0.55)}
+.cp-hit{font-size:17px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:10px}
+.cp-body{font-size:14px;color:rgba(255,255,255,0.85);line-height:1.7;margin-bottom:14px}
+.cp-divider{width:40px;height:1px;background:rgba(255,255,255,0.25);margin:0 auto 14px}
+.cp-task{font-size:13px;font-style:italic;line-height:1.6;color:rgba(255,255,255,0.75);margin-bottom:16px}
+.cp-tease{font-size:11px;color:rgba(255,255,255,0.5);font-style:italic;line-height:1.5;text-align:center}
+
+/* hook в карусели — ДНК screen7 */
+.roul-slide .card-hook{font-size:10.5px;font-weight:400;color:var(--t2);line-height:1.5;text-align:center;min-height:32px;opacity:0;transition:opacity .3s}
+.swiper-slide-active .card-hook{opacity:1}
+
+/* ═══ ACCORDIONS — DNA from screen4 ═══ */
+.acc-label{font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--t2);text-align:center;margin-bottom:12px}
+.acc-item{border-top:1px solid rgba(0,0,0,0.05);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.acc-item:first-child{border-top:none}
+.acc-head{display:flex;align-items:center;padding:14px 16px;gap:10px}
+.acc-head:active{opacity:.7}
+.acc-texts{flex:1;min-width:0}
+.acc-title{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:2px}
+.acc-sub{font-size:11px;color:var(--t3)}
+.acc-arr{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;opacity:.4}
+.acc-arr svg{width:16px;height:16px;stroke:var(--t2);stroke-width:1.5;fill:none;stroke-linecap:round;transition:transform .2s}
+.acc-item.open .acc-arr svg{transform:rotate(180deg)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1)}
+.acc-item.open .acc-body{max-height:2000px}
+.acc-body-in{padding:0 16px 14px 16px;font-size:13px;color:var(--t2);line-height:1.65}
+
+.skip-link{display:block;text-align:center;font-size:14px;font-weight:500;color:var(--t2);background:none;border:none;cursor:pointer;padding:16px 0 100px}
+</style>
+</head>
+<body>
+
+<div class="screen">
+  <div class="hdr">
+    <div class="hdr-spacer"></div>
+    <div class="hdr-center"><div class="m-logo">MARU</div></div>
+    <button class="btn-back" id="btnBack"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+  </div>
+
+  <div class="content">
+
+    <!-- PHASE 1a — дата рождения -->
+    <div class="phase active" id="phase1a">
+      <div style="text-align:center;padding-top:16px;margin-bottom:20px">
+        <div class="his-card-p1">
+          <div class="p1-img"><img id="hisMini" src="" alt=""></div>
+          <div class="card-body"><div class="card-name" id="hisMiniName"></div></div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-bottom:8px;padding:0 16px">
+        <div style="font-size:22px;font-weight:700;color:var(--t1);line-height:1.3;letter-spacing:-0.02em">Теперь — про вашу пару</div>
+      </div>
+      <div style="text-align:center;margin-bottom:28px;padding:0 24px">
+        <div style="font-size:14px;color:var(--t2);line-height:1.6">Каждое утро — личная карточка:<br>что он чувствует, как действовать,<br>одно задание на день.</div>
+      </div>
+
+      <div class="drum-label">когда ты родилась</div>
+      <div class="drum-section">
+        <div class="drum-wrap">
+          <div class="drum w-day" id="drDay"><div class="drum-hl"></div><div class="drum-list" id="drDayL"></div><div class="drum-fade-t"></div><div class="drum-fade-b"></div></div>
+          <div class="drum w-month" id="drMon"><div class="drum-hl"></div><div class="drum-list" id="drMonL"></div><div class="drum-fade-t"></div><div class="drum-fade-b"></div></div>
+          <div class="drum w-year" id="drYr"><div class="drum-hl"></div><div class="drum-list" id="drYrL"></div><div class="drum-fade-t"></div><div class="drum-fade-b"></div></div>
+        </div>
+      </div>
+      <div style="flex:1;min-height:16px"></div>
+    </div>
+
+    <!-- PHASE 1b — число + цвет -->
+    <div class="phase" id="phase1b">
+      <div style="text-align:center;padding-top:16px;margin-bottom:20px">
+        <div class="his-card-p1">
+          <div class="p1-img"><img id="hisMini2" src="" alt=""></div>
+          <div class="card-body"><div class="card-name" id="hisMiniName2"></div></div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-bottom:8px;padding:0 16px">
+        <div style="font-size:22px;font-weight:700;color:var(--t1);line-height:1.3;letter-spacing:-0.02em">Почти готово</div>
+      </div>
+      <div style="text-align:center;margin-bottom:28px;padding:0 24px">
+        <div style="font-size:14px;color:var(--t2);line-height:1.6">Выбери число и цвет,<br>чтобы повысить точность до <span id="accuracyVal" style="font-weight:600;color:var(--t1)">93%</span></div>
+      </div>
+
+      <div class="drum-section">
+        <div class="drum-wrap">
+          <div class="drum w-lucky" id="drLucky"><div class="drum-hl"></div><div class="drum-list" id="drLuckyL"></div><div class="drum-fade-t"></div><div class="drum-fade-b"></div></div>
+          <div class="drum w-color" id="drColor"><div class="drum-hl"></div><div class="drum-list" id="drColorL"></div><div class="drum-fade-t"></div><div class="drum-fade-b"></div></div>
+        </div>
+      </div>
+      <div style="flex:1;min-height:16px"></div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase" id="phase2">
+      <div class="solo-card">
+        <div class="card-img"><img id="hisPhoto" src="" alt=""></div>
+        <div class="card-body"><div class="card-name" id="hisName2"></div></div>
+      </div>
+      <div class="roul-status" id="roulStatus">определяем твой архетип...</div>
+      <div class="roul-wrap">
+        <div class="swiper roul-swiper" id="roulSwiper">
+          <div class="swiper-wrapper" id="roulWrap"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 — REVEAL (магия) -->
+    <div class="phase" id="phase3">
+      <div class="pair-row">
+        <div class="pair-card">
+          <div class="card-img"><img id="resHisPhoto" src="" alt=""></div>
+          <div class="card-body"><div class="card-name" id="resHisName"></div></div>
+        </div>
+        <div class="pair-x">×</div>
+        <div class="pair-card">
+          <div class="card-img"><img id="resHerPhoto" src="" alt=""></div>
+          <div class="card-body"><div class="card-name" id="resHerName"></div></div>
+        </div>
+      </div>
+      <div class="res-rare">1 из 930</div>
+
+      <div class="res-carousel">
+        <div class="swiper roul-swiper" id="resSwiper">
+          <div class="swiper-wrapper" id="resWrap"></div>
+        </div>
+      </div>
+
+      <div class="res-line"></div>
+      <div class="res-name" id="herName"></div>
+
+      <div class="insight" id="insightBlock">
+        <div class="insight-label" id="insightLabel"></div>
+        <div class="insight-quote" id="insightQuote"></div>
+      </div>
+    </div>
+
+    <!-- PHASE 4 — КАРТОЧКА + ПОДПИСКА -->
+    <div class="phase" id="phase4">
+      <div class="card-preview" id="cardPreview">
+        <div class="cp-logo"></div>
+        <div class="cp-content">
+          <div class="cp-head">
+            <span class="cp-pair" id="cpPair"></span>
+            <span class="cp-day" id="cpDay"></span>
+          </div>
+          <div class="cp-hit" id="cpHit"></div>
+          <div class="cp-body" id="cpBody"></div>
+          <div class="cp-divider"></div>
+          <div class="cp-task" id="cpTask"></div>
+          <div class="cp-tease">каждый вечер ты расскажешь как прошёл день — завтра карточка это учтёт</div>
+        </div>
+      </div>
+
+      <div class="acc-label" id="accLabel"></div>
+      <div id="accList"></div>
+
+      <button class="skip-link" id="skipLink">Посмотреть все архетипы</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="foot" id="foot">
+  <button class="cta-btn" id="mainCta">Продолжить</button>
+  <div class="cta-hint" id="ctaHint">осталось выбрать число и цвет</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+try{var tg=window.Telegram&&Telegram.WebApp;if(tg){tg.ready();tg.expand();tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee')}}catch(e){}
+
+var MONTHS_NOM=['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'];
+var COLORS=[
+  {hex:'#E85D5D',name:'красный'},{hex:'#F07040',name:'оранжевый'},{hex:'#F0D060',name:'жёлтый'},
+  {hex:'#6BBF6B',name:'зелёный'},{hex:'#5BB8D4',name:'голубой'},{hex:'#5B8BD4',name:'синий'},
+  {hex:'#8B6BBF',name:'фиолетовый'},{hex:'#E8A0B4',name:'розовый'},{hex:'#D4A843',name:'золотой'},
+  {hex:'#C0C0C0',name:'серебристый'},{hex:'#8B8B6B',name:'хаки'},{hex:'#D4C4A8',name:'бежевый'},{hex:'#888888',name:'серый'}
+];
+var HER={1:'Ардена',2:'Бриана',3:'Селеста',4:'Далина',5:'Эвора',6:'Флора',7:'Грейс',8:'Хельга',9:'Ирэн',10:'Джуна',11:'Кира',12:'Лира',13:'Марена',14:'Нора',15:'Оливия',16:'Пьетра',17:'Рейна',18:'Стелла',19:'Теона',20:'Ума',21:'Вера',22:'Вайда',23:'Зена',24:'Юна',25:'Альба',26:'Берта',27:'Клэр',28:'Дора',29:'Эльза',30:'Фрея',31:'Гея'};
+var HER_DESC={1:'Идёт первой. Не оглядывается.',2:'Чувствует других лучше, чем себя.',3:'Творит реальность одним присутствием.',4:'Стабильность — её суперсила.',5:'Свобода важнее безопасности.',6:'Красота и баланс — потребность.',7:'Видит то, что другие не замечают.',8:'Сила и нежность в одном теле.',9:'Понимает людей насквозь.',10:'Корону не снимает даже дома.',11:'Решения принимает сердцем.',12:'Знает больше, чем говорит.',13:'Каждый кризис делает сильнее.',14:'Знает маршрут. Ведёт через шторм.',15:'Притягивает людей и события.',16:'Рушится только изнутри.',17:'Светит другим. Забывает себе.',18:'Показывает ему правду о нём.',19:'Энергия, тепло, центр.',20:'Лечит словом и присутствием.',21:'Знает себе цену.',22:'Строит отношения как проект.',23:'Выбирает каждый день заново.',24:'Чарует без усилий.',25:'Видит на три шага вперёд.',26:'Дом — её территория.',27:'Учит примером. Тихая сила.',28:'Ломает правила. Создаёт свои.',29:'Живёт в двух мирах.',30:'Чем сложнее — тем красивее.',31:'Превращает хаос в порядок.'};
+var PLANETS={0:{n:'воскресенье',p:'солнце'},1:{n:'понедельник',p:'луна'},2:{n:'вторник',p:'марс'},3:{n:'среда',p:'меркурий'},4:{n:'четверг',p:'юпитер'},5:{n:'пятница',p:'венера'},6:{n:'суббота',p:'сатурн'}};
+var CARDS={0:{h:'Кто ты рядом с ним?',b:'Солнце освещает твоё «я» внутри пары. Сегодня — день честности с собой. Стратег чувствует фальшь за километр. Будь собой — это единственное, что его держит рядом. Не подстраивайся. Он это заметит и оценит больше, чем любую игру.',t:'Задание:заметь момент, когда начинаешь подстраиваться — и останови себя'},1:{h:'Сегодня он будет тише.',b:'Луна освещает уязвимость. Стратег в лунный день уходит в себя. Это не холодность — это перезарядка. Не заполняй его тишину словами. Побудь рядом молча. Он запомнит именно это.',t:'Задание:заметь, когда он посмотрит на тебя первый раз — и улыбнись'},2:{h:'Сегодня будет искрить.',b:'Марс поднимает температуру. Стратег под давлением Марса становится резче. Это не агрессия — это сброс напряжения. Одна фраза: «Я на твоей стороне» — скажи спокойно, без нажима. Он остановится.',t:'Задание:заметь, что именно его раздражает — запиши вечером'},3:{h:'Он скажет не то, что думает.',b:'Меркурий выключает прямоту. Стратег в среду говорит обтекаемо, прячет главное. Не верь словам — слушай паузы, следи за взглядом, считывай тон. Правда — между строк.',t:'Задание:заметь самую длинную паузу в разговоре — о чём он молчал?'},4:{h:'Загляни дальше завтра.',b:'Юпитер открывает перспективу. Стратег в четверг способен видеть будущее. Скажи: «Мне нравится, как мы...» — и дай ему увидеть вас через год. Он это запомнит.',t:'Задание:заметь, скажет ли он «потом» или «когда-нибудь» — это ключ'},5:{h:'Он отпустит контроль.',b:'Венера переключает из головы в тело. Стратег в пятницу мягче. Подойди первая. Прикоснись. Он не скажет, но почувствует. Венера — единственный день, когда он не анализирует.',t:'Задание:заметь, когда он прикоснётся первым'},6:{h:'Маски снимаются.',b:'Сатурн убирает роли. Стратег в субботу непривычно честен. Это может быть неуютно — но это настоящий он. Не пугайся. Запомни этот день — так он выглядит без брони.',t:'Задание:заметь, чем он отличается от «рабочего» себя'}};
+var INSIGHTS={
+  'strateg':'Стратег смотрит на тебя как на задачу, которую невозможно решить — и это его держит. Он не уходит от сложных. Но если ты станешь предсказуемой — интерес исчезнет.'
+};
+var ACC_BLOCKS=[
+  {t:'Почему ты выбираешь именно таких',s:'паттерн притяжения',b:'Твой архетип определяет паттерн: кого ты замечаешь, кого пропускаешь, и почему «не те» кажутся магнитом. Это не случайность — это программа, записанная в детстве.'},
+  {t:'Где ты теряешь себя',s:'слепое пятно',b:'Каждый архетип имеет точку растворения — момент, когда ты перестаёшь быть собой и начинаешь быть «для него». Твоя точка — потребность в определённости.'},
+  {t:'Как ты любишь на самом деле',s:'стиль привязанности',b:'Твой стиль — тревожная привязанность с элементами избегания. Ты хочешь близости, но боишься её. Это создаёт цикл: притяжение → страх → отдаление → тоска.'},
+  {t:'Чего ты боишься в паре',s:'главный страх',b:'Главный страх твоего архетипа — быть ненужной. Не брошенной, а именно ненужной. Когда он не спрашивает, не замечает, не ищет — ты разрушаешься.'},
+  {t:'Что он видит, а ты — нет',s:'его взгляд на тебя',b:'Стратег видит в тебе силу, которую ты не замечаешь. Он видит, как ты держишь пространство. Как ты чувствуешь раньше, чем он успевает подумать. Это его пугает и притягивает.'},
+  {t:'Твоя суперсила в паре',s:'уникальная энергия',b:'То, за что он рядом. Не внешность — твоя уникальная энергия, которую невозможно заменить. Ты создаёшь пространство, в котором он может быть настоящим.'},
+  {t:'Ваш сценарий',s:'динамика пары',b:'Стратег и твой архетип создают динамику «кошки-мышки». Он контролирует — ты чувствуешь. Он отдаляется — ты приближаешься. Выход: сломать цикл первой.'}
+];
+var ACCURACY=[87,89,91,88,93,90,92,86,94];
+
+var HER_PHOTO='her_photos/',HIS_PHOTO='photos/';
+var selDay=14,selColor=COLORS[0],phase='1a';
+var hisName='Стратег',hisKey='strateg';
+try{var b1=JSON.parse(localStorage.getItem('maru_block1')||'{}');hisName=b1.archetype||'Стратег';var ad=JSON.parse(localStorage.getItem('maru_archetype_data')||'{}');hisKey=ad.key||ad.id||'strateg'}catch(e){}
+
+document.getElementById('hisMini').src=HIS_PHOTO+hisKey+'.jpg';
+document.getElementById('hisMiniName').textContent=hisName;
+document.getElementById('hisMini2').src=HIS_PHOTO+hisKey+'.jpg';
+document.getElementById('hisMiniName2').textContent=hisName;
+
+/* ═══ DRUM ENGINE ═══ */
+function buildDrum(containerId,listId,items,startIdx,onChange,renderItem){
+  var container=document.getElementById(containerId);
+  var list=document.getElementById(listId);
+  var itemH=36,midSlots=2;
+  var current=startIdx;
+  list.innerHTML='';
+  items.forEach(function(txt,i){
+    var el=document.createElement('div');el.className='drum-item';
+    if(renderItem)el.innerHTML=renderItem(txt,i);else el.textContent=txt;
+    el.dataset.idx=i;list.appendChild(el);
+  });
+  function position(idx,animate){
+    current=Math.max(0,Math.min(items.length-1,idx));
+    var offset=midSlots*itemH-current*itemH;
+    list.style.transition=animate?'transform 0.3s cubic-bezier(0.23,1,0.32,1)':'none';
+    list.style.transform='translateY('+offset+'px)';
+    var all=list.children;
+    for(var i=0;i<all.length;i++){all[i].classList.remove('active','near');if(i===current)all[i].classList.add('active');else if(Math.abs(i-current)===1)all[i].classList.add('near')}
+    if(onChange)onChange(current);
+  }
+  position(current,false);
+  var startY=0,startOff=0,dragging=false,movedY=0;
+  container.addEventListener('touchstart',function(e){dragging=true;startY=e.touches[0].clientY;movedY=0;startOff=midSlots*itemH-current*itemH;list.style.transition='none'},{passive:true});
+  container.addEventListener('touchmove',function(e){if(!dragging)return;movedY=e.touches[0].clientY-startY;list.style.transform='translateY('+(startOff+movedY)+'px)'},{passive:true});
+  container.addEventListener('touchend',function(){if(!dragging)return;dragging=false;position(current+Math.round(-movedY/itemH),true)});
+  container.addEventListener('mousedown',function(e){dragging=true;startY=e.clientY;movedY=0;startOff=midSlots*itemH-current*itemH;list.style.transition='none';e.preventDefault()});
+  window.addEventListener('mousemove',function(e){if(!dragging)return;movedY=e.clientY-startY;list.style.transform='translateY('+(startOff+movedY)+'px)'});
+  window.addEventListener('mouseup',function(){if(!dragging)return;dragging=false;position(current+Math.round(-movedY/itemH),true)});
+  list.addEventListener('click',function(e){var t=e.target.closest('.drum-item');if(t&&t.dataset.idx!==undefined)position(parseInt(t.dataset.idx),true)});
+  container.addEventListener('wheel',function(e){e.preventDefault();position(current+(e.deltaY>0?1:-1),true)},{passive:false});
+}
+
+var days=[];for(var d=1;d<=31;d++)days.push(String(d));
+var years=[];for(var y=2008;y>=1960;y--)years.push(String(y));
+var luckyNums=[];for(var n=1;n<=9;n++)luckyNums.push(String(n));
+var colorNames=COLORS.map(function(c){return c.name});
+
+buildDrum('drDay','drDayL',days,13,function(idx){selDay=idx+1});
+buildDrum('drMon','drMonL',MONTHS_NOM,3);
+buildDrum('drYr','drYrL',years,10);
+buildDrum('drLucky','drLuckyL',luckyNums,4,function(idx){document.getElementById('accuracyVal').textContent=ACCURACY[idx]+'%'});
+buildDrum('drColor','drColorL',colorNames,0,function(idx){selColor=COLORS[idx]},function(name,i){return '<span class="color-row"><span class="color-dot" style="background:'+COLORS[i].hex+'"></span>'+name+'</span>'});
+
+function showPhase(n){document.querySelectorAll('.phase').forEach(function(p){p.classList.remove('active')});document.getElementById('phase'+n).classList.add('active');phase=n;document.querySelector('.content').scrollTop=0;
+var hint=document.getElementById('ctaHint');
+var cta=document.getElementById('mainCta');
+if(n==='1a'){cta.textContent='Продолжить';hint.style.display='block'}
+else if(n==='1b'){cta.textContent='Узнать совместимость';hint.style.display='none'}
+else if(n===3){cta.textContent='Увидеть вашу карточку';hint.style.display='none'}
+else if(n===4){cta.textContent='КАЖДОЕ УТРО — КАРТОЧКА · 999 ₽/МЕС';hint.style.display='none';cta.classList.add('pulse')}
+}
+
+function makeSlideHTML(num){
+  return '<div class="card-img"><img src="'+HER_PHOTO+num+'.jpg" alt=""></div><div class="card-body"><div class="card-name">'+(HER[num]||'')+'</div><div class="card-hook">'+(HER_DESC[num]||'')+'</div></div>';
+}
+
+document.getElementById('mainCta').addEventListener('click',function(){
+  if(phase==='1a'){showPhase('1b');haptic('light')}
+  else if(phase==='1b')startRoulette();
+  else if(phase===3){showPhase(4);haptic('light')}
+  else if(phase===4)alert('Подписка будет подключена позже');
+});
+
+function startRoulette(){
+  try{localStorage.setItem('maru_her_birthday',selDay);localStorage.setItem('maru_her_color',JSON.stringify(selColor))}catch(e){}
+  document.getElementById('hisPhoto').src=HIS_PHOTO+hisKey+'.jpg';
+  document.getElementById('hisName2').textContent=hisName;
+  var rw=document.getElementById('roulWrap');rw.innerHTML='';
+  var order=[];
+  for(var r=0;r<3;r++){var arr=[];for(var k=1;k<=31;k++)arr.push(k);arr.sort(function(){return Math.random()-0.5});order=order.concat(arr)}
+  order.push(selDay);var targetIdx=order.length-1;
+  order.forEach(function(num){var sl=document.createElement('div');sl.className='swiper-slide roul-slide';sl.innerHTML=makeSlideHTML(num);rw.appendChild(sl)});
+  showPhase(2);document.getElementById('foot').style.opacity='0';haptic('medium');
+  document.getElementById('roulStatus').classList.add('alive');
+  var sw=new Swiper('#roulSwiper',{effect:'coverflow',centeredSlides:true,slidesPerView:'auto',speed:80,coverflowEffect:{rotate:0,stretch:40,depth:80,modifier:1.2,slideShadows:false},initialSlide:0,allowTouchMove:false});
+  var cur=0,base=35;
+  function tick(){
+    if(cur>=targetIdx){var rs=document.getElementById('roulStatus');rs.textContent=HER[selDay];rs.classList.remove('alive');haptic('medium');setTimeout(showResult,800);return}
+    cur++;var p=cur/targetIdx;
+    var delay=p<0.6?base:p<0.85?base+(p-0.6)*800:base+200+(p-0.85)*2500;
+    sw.slideNext(Math.max(60,delay*0.7));if(cur%4===0)haptic('light');setTimeout(tick,delay);
+  }
+  setTimeout(tick,300);
+}
+
+var herNameGlobal='';
+function showResult(){
+  var hn=HER[selDay];
+  herNameGlobal=hn;
+  document.getElementById('resHisPhoto').src=HIS_PHOTO+hisKey+'.jpg';
+  document.getElementById('resHisName').textContent=hisName;
+  document.getElementById('resHerPhoto').src=HER_PHOTO+selDay+'.jpg';
+  document.getElementById('resHerName').textContent=hn;
+
+  /* карусель */
+  var rw=document.getElementById('resWrap');rw.innerHTML='';
+  for(var k=1;k<=31;k++){var sl=document.createElement('div');sl.className='swiper-slide roul-slide';sl.innerHTML=makeSlideHTML(k);rw.appendChild(sl)}
+
+  showPhase(3);
+  new Swiper('#resSwiper',{effect:'coverflow',centeredSlides:true,slidesPerView:'auto',loop:true,loopedSlides:31,coverflowEffect:{rotate:0,stretch:40,depth:80,modifier:1.2,slideShadows:false},initialSlide:selDay-1,on:{slideChange:function(){haptic('light')}}});
+
+  document.getElementById('herName').textContent=hn;
+  /* персонализация — выбранный цвет = акцент всего экрана */
+  document.getElementById('herName').style.color=selColor.hex;
+
+  /* insight — цитата */
+  var ins=INSIGHTS[hisKey]||'Он видит в тебе то, что ты не замечаешь. Каждый день — новый шанс понять, что именно.';
+  document.getElementById('insightLabel').textContent='глазами '+hisName;
+  document.getElementById('insightQuote').textContent=ins;
+  document.getElementById('insightQuote').style.borderColor=selColor.hex;
+
+  /* подготовить phase4 */
+  var today=new Date(),pl=PLANETS[today.getDay()],card=CARDS[today.getDay()];
+  document.getElementById('cpPair').textContent=hisName+' × '+hn;
+  /* цвет пары на карточке — белый на розовом */
+  document.getElementById('cpDay').textContent=pl.n+' · '+pl.p;
+  document.getElementById('cpHit').textContent=card.h;
+  document.getElementById('cpBody').textContent=card.b;
+  document.getElementById('cpTask').textContent=card.t;
+  /* задание — белый на розовом, не selColor */
+  document.getElementById('accLabel').textContent='архетип · '+hn;
+  document.querySelector('.acc-label').style.color=selColor.hex;
+  buildAccordions();
+
+  /* "1 из 930" в цвете пары */
+  document.querySelector('.res-rare').style.color=selColor.hex;
+  /* линия-разделитель в цвете */
+  document.querySelector('.res-line').style.background=selColor.hex;document.querySelector('.res-line').style.opacity='0.3';
+
+  document.getElementById('foot').style.opacity='1';
+}
+
+function buildAccordions(){
+  var list=document.getElementById('accList');list.innerHTML='';
+  ACC_BLOCKS.forEach(function(a,i){
+    var el=document.createElement('div');el.className='acc-item'+(i===0?' open':'');el.id='acc8_'+i;
+    el.innerHTML='<div class="acc-head"><div class="acc-texts"><div class="acc-title">'+a.t+'</div><div class="acc-sub">'+a.s+'</div></div><div class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div></div><div class="acc-body"><div class="acc-body-in">'+a.b+'</div></div>';
+    el.addEventListener('click',function(){
+      haptic('light');
+      var was=el.classList.contains('open');
+      document.querySelectorAll('.acc-item').forEach(function(x){x.classList.remove('open')});
+      if(!was)el.classList.add('open');
+    });
+    list.appendChild(el);
+  });
+}
+
+document.getElementById('btnBack').addEventListener('click',function(){window.location.href='screen7.html'});
+document.getElementById('skipLink').addEventListener('click',function(){window.location.href='screen7.html'});
+function haptic(type){try{if(type==='warning')Telegram.WebApp.HapticFeedback.notificationOccurred('warning');else Telegram.WebApp.HapticFeedback.impactOccurred(type)}catch(e){}}
+</script>
+</body>
+</html>
