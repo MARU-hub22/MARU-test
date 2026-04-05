@@ -430,7 +430,7 @@ html,body{
         <div class="price-amount">999</div>
         <div class="price-cur">₽</div>
       </div>
-      <div class="price-desc">Навсегда · без подписок</div>
+      <div class="price-desc">Полный доступ к результатам · навсегда</div>
       <div class="price-tooltip" id="priceTooltip">у психолога от 9 000 ₽</div>
     </div>
 
@@ -558,9 +558,7 @@ window.goBackS5=function(){
 
 /* counter убран */
 
-document.getElementById('ctaBtn').addEventListener('click',function(){
-  setTimeout(function(){goTo('screen6.html');},700);
-});
+/* двойной переход убран — goPay() уже делает goTo */
 })();
 </script>
 </body>

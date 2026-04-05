@@ -315,14 +315,14 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .cta-btn.pulse{animation:btnPulse 2.0s ease 0s 1}
 .cta-note{text-align:center;font-size:10px;color:var(--t3);margin-top:8px;letter-spacing:.04em;}
 .fb-chip{
-  font-family:inherit;font-size:13px;font-weight:500;color:var(--t2);
-  background:transparent;padding:10px 20px;border-radius:12px;cursor:pointer;
-  border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.04);
-  border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);
+  display:block;width:100%;font-family:inherit;font-size:14px;font-weight:400;color:var(--t1);text-align:left;
+  background:transparent;padding:12px 16px;border-radius:12px;cursor:pointer;
+  border-top:1px solid rgba(0,0,0,0.05);border-left:1px solid rgba(0,0,0,0.04);
+  border-bottom:1px solid rgba(255,255,255,0.5);border-right:1px solid rgba(255,255,255,0.4);
   -webkit-tap-highlight-color:transparent;transition:all .2s;
 }
-.fb-chip:active{transform:scale(0.95)}
-.fb-chip.picked{background:var(--acc);color:#fff;border-color:transparent}
+.fb-chip:active{transform:scale(0.98)}
+.fb-chip.picked{background:var(--acc);color:#fff;border-color:transparent;font-weight:500}
 .spark-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
 .spark-svg path{fill:none;stroke:rgba(255,111,97,0.45);stroke-width:0.8;stroke-linecap:round;stroke-dasharray:0 9999;opacity:0}
 @keyframes sparkAnim{0%{stroke-dasharray:0 9999;opacity:0}6%{opacity:1}75%{stroke-dasharray:9999 0;opacity:.75}100%{stroke-dasharray:9999 0;opacity:0}}
@@ -435,15 +435,20 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
       </div>
     </div>
 
-    <!-- Feedback — температура пары -->
-    <div id="feedbackBlock" style="margin-top:40px;text-align:center;padding:0 20px">
-      <div style="font-size:14px;font-weight:500;color:var(--t1);margin-bottom:12px">Сегодня между вами...</div>
-      <div style="display:flex;justify-content:center;gap:8px" id="fbRow">
-        <button class="fb-chip" data-val="warm" onclick="pickFeedback(this)">тепло</button>
-        <button class="fb-chip" data-val="neutral" onclick="pickFeedback(this)">ровно</button>
-        <button class="fb-chip" data-val="cold" onclick="pickFeedback(this)">холодно</button>
+    <!-- Feedback — 5 ситуаций + текст -->
+    <div id="feedbackBlock" style="margin-top:40px;padding:0 20px">
+      <div style="font-size:14px;font-weight:500;color:var(--t1);text-align:center;margin-bottom:14px">Что сегодня между вами?</div>
+      <div style="display:flex;flex-direction:column;gap:6px" id="fbRow">
+        <button class="fb-chip" data-val="close" onclick="pickFeedback(this)">он был рядом</button>
+        <button class="fb-chip" data-val="routine" onclick="pickFeedback(this)">всё как обычно</button>
+        <button class="fb-chip" data-val="distant" onclick="pickFeedback(this)">он ушёл в себя</button>
+        <button class="fb-chip" data-val="conflict" onclick="pickFeedback(this)">мы поссорились</button>
+        <button class="fb-chip" data-val="surprise" onclick="pickFeedback(this)">он удивил меня</button>
       </div>
-      <div style="font-size:11px;color:var(--t3);margin-top:10px;line-height:1.4">Завтрашняя карточка это учтёт</div>
+      <div id="fbComment" style="display:none;margin-top:12px">
+        <textarea id="fbText" rows="2" maxlength="200" placeholder="Расскажи подробнее (необязательно)" style="width:100%;font-family:inherit;font-size:13px;color:var(--t1);background:transparent;border:none;border-top:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(0,0,0,0.06);padding:10px 0;resize:none;outline:none"></textarea>
+      </div>
+      <div id="fbConfirm" style="display:none;text-align:center;font-size:12px;color:var(--t3);margin-top:10px">Сохранено — завтра карточка это учтёт</div>
     </div>
 
     <!-- CTA Основной → screen7 -->
@@ -611,7 +616,7 @@ if(wasHere){
   var ovEl=document.getElementById('ov');if(ovEl)ovEl.remove();
   document.getElementById('page').classList.add('show');
   setTimeout(reveal,100);
-  var cc=document.getElementById('compatCard');if(cc)cc.style.opacity='1';
+  /* compatCard убран — CTA ведёт на screen7 */
 } else {
   try{localStorage.setItem('maru_seen_screen6','1')}catch(e){}
   var pM=document.getElementById('ovMsg');
@@ -1115,12 +1120,26 @@ window.pickFeedback=function(el){
   document.querySelectorAll('.fb-chip').forEach(function(c){c.classList.remove('picked')});
   el.classList.add('picked');
   hap('l');
+  /* показать поле комментария */
+  document.getElementById('fbComment').style.display='block';
+  document.getElementById('fbConfirm').style.display='block';
+  /* сохранить ситуацию */
   try{
     var today=new Date().toISOString().slice(0,10);
     var fb=JSON.parse(localStorage.getItem('maru_feedback')||'{}');
-    fb[today]=el.dataset.val;
+    fb[today]={situation:el.dataset.val,comment:'',ts:Date.now()};
     localStorage.setItem('maru_feedback',JSON.stringify(fb));
   }catch(e){}
+  /* при вводе текста — обновлять comment */
+  var ta=document.getElementById('fbText');
+  ta.oninput=function(){
+    try{
+      var today=new Date().toISOString().slice(0,10);
+      var fb=JSON.parse(localStorage.getItem('maru_feedback')||'{}');
+      if(fb[today])fb[today].comment=ta.value;
+      localStorage.setItem('maru_feedback',JSON.stringify(fb));
+    }catch(e){}
+  };
 };
 
 window.openShare=function(){
