@@ -7,18 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
-:root{
-  --bg:#efefee;
-  --t1:#1a1a1a;
-  --t2:#888;
-  --t3:#aaa;
-  --acc:#FF6F61;
-  --r:16px;
-  --bt:1px solid rgba(0,0,0,0.12);
-  --bl:1px solid rgba(0,0,0,0.08);
-  --bb:1px solid rgba(255,255,255,0.6);
-  --br:1px solid rgba(255,255,255,0.4);
-}
+/* переменные из shared.css — не переопределяем */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
 button{-webkit-appearance:none;appearance:none;outline:none;}
 
@@ -53,7 +42,7 @@ body{
 
 /* ─── ФРАЗА: mb 16px ─── */
 .phrase{
-  font-size:19px;font-weight:600;color:#555;
+  font-size:19px;font-weight:600;color:var(--t2);
   text-align:center;line-height:1.5;
   margin-bottom:0;
 }
