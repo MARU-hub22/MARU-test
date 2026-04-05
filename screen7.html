@@ -156,7 +156,7 @@ html,body{
 .solo-card .card-body{padding:0 12px 12px;margin-top:-22px;position:relative;z-index:2}
 .solo-card .card-name{font-size:17px;font-weight:700;color:var(--t1);text-align:center;letter-spacing:-0.02em}
 
-.roul-status{text-align:center;font-size:13px;color:var(--t2);margin:8px 0 16px;min-height:20px;font-style:italic}
+.roul-status{text-align:center;font-size:13px;color:var(--acc);margin:16px 0 24px;min-height:20px;font-style:italic}
 @keyframes statusPulse{0%,100%{opacity:0.4}50%{opacity:1}}
 .roul-status.alive{animation:statusPulse 1.5s ease infinite}
 .roul-wrap{width:calc(100% + 48px);margin-left:-24px;overflow:hidden;margin-bottom:16px}
@@ -197,55 +197,24 @@ html,body{
 @keyframes pR{0%{opacity:0;transform:translateX(-30px)}60%{opacity:1;transform:translateX(-4px)}100%{opacity:1;transform:none}}
 @keyframes pX{to{opacity:1}}
 
-.res-rare{text-align:center;font-size:12px;color:var(--t3);margin-bottom:24px}
+.res-rare{text-align:center;font-size:13px;font-weight:600;color:var(--t2);margin-bottom:32px}
 .res-carousel{width:calc(100% + 48px);margin-left:-24px;overflow:hidden;margin-bottom:24px}
 .res-line{width:40px;height:1px;background:rgba(0,0,0,0.06);margin:0 auto 24px}
-.res-name{text-align:center;font-size:24px;font-weight:700;color:var(--t1);margin-bottom:32px}
+.res-name{text-align:center;font-size:24px;font-weight:700;color:var(--t1);margin-top:-8px;margin-bottom:28px}
 
 /* insight — цитата с вертикальной линией */
 .insight{margin-bottom:0;padding:0 16px 120px}
 .insight-label{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:14px}
 .insight-quote{border-left:2px solid var(--acc);padding-left:18px;font-size:15px;color:var(--t1);line-height:1.75;font-style:italic;font-weight:400}
 
-/* phase4 intro */
-.p4-title{font-size:17px;font-weight:600;color:var(--t1);text-align:center;margin-bottom:6px}
-.p4-sub{font-size:13px;color:var(--t2);text-align:center;line-height:1.5;margin-bottom:20px}
-.p4-badge{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:12px}
-.p4-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--acc)}
-.p4-badge-text{font-size:11px;font-weight:500;color:var(--t2);letter-spacing:.04em}
-
-/* card preview — розовый конверт */
-.card-preview{
-  margin-bottom:28px;border-radius:var(--r);overflow:hidden;
-  background:#d4929a;
-}
-.cp-content{padding:24px 24px 24px}
-.cp-pair{font-size:11px;font-weight:600;color:rgba(255,255,255,0.85)}
-.cp-hit{font-size:17px;font-weight:700;color:#fff;line-height:1.3;margin:14px 0 10px}
-.cp-body{font-size:14px;color:rgba(255,255,255,0.85);line-height:1.7;margin-bottom:16px}
-.cp-divider{width:40px;height:1px;background:rgba(255,255,255,0.25);margin:0 auto 16px}
-.cp-task{font-size:13px;font-style:italic;line-height:1.6;color:rgba(255,255,255,0.75);margin-bottom:16px}
-.cp-blur{filter:blur(4px);-webkit-filter:blur(4px);user-select:none}
+/* card-preview перенесён в screen8.html */
 
 /* hook в карусели — ДНК screen7 */
 .roul-slide .card-hook{font-size:11px;font-weight:400;color:var(--t2);line-height:1.5;text-align:center;min-height:32px;opacity:0;transition:opacity .3s}
 .swiper-slide-active .card-hook{opacity:1}
 
 /* ═══ ACCORDIONS — DNA from screen4 ═══ */
-.acc-label{font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--t2);text-align:center;margin-bottom:12px}
-.acc-item{border-top:1px solid rgba(0,0,0,0.05);cursor:pointer;-webkit-tap-highlight-color:transparent}
-.acc-item:first-child{border-top:none}
-.acc-head{display:flex;align-items:center;padding:14px 16px;gap:10px}
-.acc-head:active{opacity:.7}
-.acc-texts{flex:1;min-width:0}
-.acc-title{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:2px}
-.acc-sub{font-size:11px;color:var(--t3)}
-.acc-arr{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;opacity:.4}
-.acc-arr svg{width:16px;height:16px;stroke:var(--t2);stroke-width:1.5;fill:none;stroke-linecap:round;transition:transform .2s}
-.acc-item.open .acc-arr svg{transform:rotate(180deg)}
-.acc-body{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1)}
-.acc-item.open .acc-body{max-height:2000px}
-.acc-body-in{padding:0 16px 14px 16px;font-size:13px;color:var(--t2);line-height:1.65}
+/* аккордеоны перенесены — появятся после подписки */
 
 /* skip-link удалён — Phase 4 = только paywall */
 </style>
@@ -340,7 +309,7 @@ html,body{
           <div class="card-body"><div class="card-name" id="resHerName"></div></div>
         </div>
       </div>
-      <div class="res-rare">1 из 930</div>
+      <div class="res-rare"><span style="font-size:11px;font-weight:400;color:var(--t3)">ваша пара · </span>1 из 930</div>
 
       <div class="res-carousel">
         <div class="swiper roul-swiper" id="resSwiper">
@@ -348,62 +317,12 @@ html,body{
         </div>
       </div>
 
-      <div class="res-line"></div>
       <div class="res-name" id="herName"></div>
 
       <div class="insight" id="insightBlock">
         <div class="insight-label" id="insightLabel"></div>
         <div class="insight-quote" id="insightQuote"></div>
       </div>
-
-      <div class="acc-label" id="accLabel"></div>
-      <div id="accList"></div>
-      <div style="height:120px"></div>
-    </div>
-
-    <!-- PHASE 4 — ПОДПИСКА -->
-    <div class="phase" id="phase4">
-      <div style="text-align:center;padding:24px 16px 0">
-        <div style="font-size:17px;font-weight:600;color:var(--t1);line-height:1.4;margin-bottom:6px">Это была твоя первая карточка</div>
-        <div style="font-size:14px;color:var(--t2);line-height:1.5">Завтра у вас другой день.<br>Другое настроение, другие ловушки.</div>
-      </div>
-
-      <div style="text-align:center;margin:20px 0 16px">
-        <div class="p4-badge">
-          <div class="p4-badge-dot"></div>
-          <span class="p4-badge-text" id="cpDay"></span>
-        </div>
-      </div>
-
-      <div class="card-preview" id="cardPreview">
-        <div class="cp-content">
-          <div class="cp-pair" id="cpPair"></div>
-          <div class="cp-hit" id="cpHit"></div>
-          <div class="cp-body cp-blur" id="cpBody"></div>
-        </div>
-      </div>
-
-      <div style="padding:0 24px 24px">
-        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px">
-          <span style="font-size:14px;line-height:1">&#9728;</span>
-          <span style="font-size:13px;color:var(--t2);line-height:1.4">Знай его настроение каждое утро</span>
-        </div>
-        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px">
-          <span style="font-size:14px;line-height:1">&#9790;</span>
-          <span style="font-size:13px;color:var(--t2);line-height:1.4">Вечерний фидбек — карточка учтёт</span>
-        </div>
-        <div style="display:flex;align-items:flex-start;gap:10px">
-          <span style="font-size:14px;line-height:1">&#10022;</span>
-          <span style="font-size:13px;color:var(--t2);line-height:1.4">930 пар — только для вас</span>
-        </div>
-      </div>
-
-      <div style="text-align:center;font-size:12px;color:var(--t3);margin-bottom:20px" id="socialProof"></div>
-
-      <div style="text-align:center;margin-bottom:8px">
-        <span style="font-size:22px;font-weight:700;color:var(--t1)">33 ₽</span><span style="font-size:14px;color:var(--t2)">/день</span>
-      </div>
-      <div style="text-align:center;font-size:12px;color:var(--t3);margin-bottom:24px">999 ₽/мес</div>
 
       <div style="height:120px"></div>
     </div>
@@ -429,20 +348,11 @@ var COLORS=[
 ];
 var HER={1:'Ардена',2:'Бриана',3:'Селеста',4:'Далина',5:'Эвора',6:'Флора',7:'Грейс',8:'Хельга',9:'Ирэн',10:'Джуна',11:'Кира',12:'Лира',13:'Марена',14:'Нора',15:'Оливия',16:'Пьетра',17:'Рейна',18:'Стелла',19:'Теона',20:'Ума',21:'Вера',22:'Вайда',23:'Зена',24:'Юна',25:'Альба',26:'Берта',27:'Клэр',28:'Дора',29:'Эльза',30:'Фрея',31:'Гея'};
 var HER_DESC={1:'Идёт первой. Не оглядывается.',2:'Чувствует других лучше, чем себя.',3:'Творит реальность одним присутствием.',4:'Стабильность — её суперсила.',5:'Свобода важнее безопасности.',6:'Красота и баланс — потребность.',7:'Видит то, что другие не замечают.',8:'Сила и нежность в одном теле.',9:'Понимает людей насквозь.',10:'Корону не снимает даже дома.',11:'Решения принимает сердцем.',12:'Знает больше, чем говорит.',13:'Каждый кризис делает сильнее.',14:'Знает маршрут. Ведёт через шторм.',15:'Притягивает людей и события.',16:'Рушится только изнутри.',17:'Светит другим. Забывает себе.',18:'Показывает ему правду о нём.',19:'Энергия, тепло, центр.',20:'Лечит словом и присутствием.',21:'Знает себе цену.',22:'Строит отношения как проект.',23:'Выбирает каждый день заново.',24:'Чарует без усилий.',25:'Видит на три шага вперёд.',26:'Дом — её территория.',27:'Учит примером. Тихая сила.',28:'Ломает правила. Создаёт свои.',29:'Живёт в двух мирах.',30:'Чем сложнее — тем красивее.',31:'Превращает хаос в порядок.'};
-var PLANETS={0:{n:'воскресенье',p:'солнце'},1:{n:'понедельник',p:'луна'},2:{n:'вторник',p:'марс'},3:{n:'среда',p:'меркурий'},4:{n:'четверг',p:'юпитер'},5:{n:'пятница',p:'венера'},6:{n:'суббота',p:'сатурн'}};
-var CARDS={0:{h:'Кто ты рядом с ним?',b:'Солнце освещает твоё «я» внутри пары. Сегодня — день честности с собой. Стратег чувствует фальшь за километр. Будь собой — это единственное, что его держит рядом. Не подстраивайся. Он это заметит и оценит больше, чем любую игру.',t:'Задание:заметь момент, когда начинаешь подстраиваться — и останови себя'},1:{h:'Сегодня он будет тише.',b:'Луна освещает уязвимость. Стратег в лунный день уходит в себя. Это не холодность — это перезарядка. Не заполняй его тишину словами. Побудь рядом молча. Он запомнит именно это.',t:'Задание:заметь, когда он посмотрит на тебя первый раз — и улыбнись'},2:{h:'Сегодня будет искрить.',b:'Марс поднимает температуру. Стратег под давлением Марса становится резче. Это не агрессия — это сброс напряжения. Одна фраза: «Я на твоей стороне» — скажи спокойно, без нажима. Он остановится.',t:'Задание:заметь, что именно его раздражает — запиши вечером'},3:{h:'Он скажет не то, что думает.',b:'Меркурий выключает прямоту. Стратег в среду говорит обтекаемо, прячет главное. Не верь словам — слушай паузы, следи за взглядом, считывай тон. Правда — между строк.',t:'Задание:заметь самую длинную паузу в разговоре — о чём он молчал?'},4:{h:'Загляни дальше завтра.',b:'Юпитер открывает перспективу. Стратег в четверг способен видеть будущее. Скажи: «Мне нравится, как мы...» — и дай ему увидеть вас через год. Он это запомнит.',t:'Задание:заметь, скажет ли он «потом» или «когда-нибудь» — это ключ'},5:{h:'Он отпустит контроль.',b:'Венера переключает из головы в тело. Стратег в пятницу мягче. Подойди первая. Прикоснись. Он не скажет, но почувствует. Венера — единственный день, когда он не анализирует.',t:'Задание:заметь, когда он прикоснётся первым'},6:{h:'Маски снимаются.',b:'Сатурн убирает роли. Стратег в субботу непривычно честен. Это может быть неуютно — но это настоящий он. Не пугайся. Запомни этот день — так он выглядит без брони.',t:'Задание:заметь, чем он отличается от «рабочего» себя'}};
+/* PLANETS, CARDS, ACC_BLOCKS перенесены в screen8.html */
 var INSIGHTS={
   'strateg':'Стратег смотрит на тебя как на задачу, которую невозможно решить — и это его держит. Он не уходит от сложных. Но если ты станешь предсказуемой — интерес исчезнет.'
 };
-var ACC_BLOCKS=[
-  {t:'Почему ты выбираешь именно таких',s:'паттерн притяжения',b:'Твой архетип определяет паттерн: кого ты замечаешь, кого пропускаешь, и почему «не те» кажутся магнитом. Это не случайность — это программа, записанная в детстве.'},
-  {t:'Где ты теряешь себя',s:'слепое пятно',b:'Каждый архетип имеет точку растворения — момент, когда ты перестаёшь быть собой и начинаешь быть «для него». Твоя точка — потребность в определённости.'},
-  {t:'Как ты любишь на самом деле',s:'стиль привязанности',b:'Твой стиль — тревожная привязанность с элементами избегания. Ты хочешь близости, но боишься её. Это создаёт цикл: притяжение → страх → отдаление → тоска.'},
-  {t:'Чего ты боишься в паре',s:'главный страх',b:'Главный страх твоего архетипа — быть ненужной. Не брошенной, а именно ненужной. Когда он не спрашивает, не замечает, не ищет — ты разрушаешься.'},
-  {t:'Что он видит, а ты — нет',s:'его взгляд на тебя',b:'Стратег видит в тебе силу, которую ты не замечаешь. Он видит, как ты держишь пространство. Как ты чувствуешь раньше, чем он успевает подумать. Это его пугает и притягивает.'},
-  {t:'Твоя суперсила в паре',s:'уникальная энергия',b:'То, за что он рядом. Не внешность — твоя уникальная энергия, которую невозможно заменить. Ты создаёшь пространство, в котором он может быть настоящим.'},
-  {t:'Ваш сценарий',s:'динамика пары',b:'Стратег и твой архетип создают динамику «кошки-мышки». Он контролирует — ты чувствуешь. Он отдаляется — ты приближаешься. Выход: сломать цикл первой.'}
-];
+/* ACC_BLOCKS перенесены в screen8.html */
 var ACCURACY=[87,89,91,88,93,90,92,86,94];
 
 var HER_PHOTO='her_photos/',HIS_PHOTO='photos/';
@@ -508,8 +418,7 @@ function showPhase(n){
   var cta=document.getElementById('mainCta');
   if(n==='1a'){cta.textContent='Продолжить';hint.textContent='осталось выбрать число и цвет';hint.style.display='block'}
   else if(n==='1b'){cta.textContent='Узнать совместимость';hint.style.display='none'}
-  else if(n===3){cta.textContent='Увидеть вашу карточку';hint.style.display='none'}
-  else if(n===4){cta.textContent='Попробовать 3 дня бесплатно';hint.textContent='Затем 999 ₽/мес · отмена в любой момент';hint.style.display='block';cta.classList.add('pulse')}
+  else if(n===3){cta.textContent='Увидеть вашу карточку';hint.style.display='none';cta.classList.add('pulse')}
 }
 
 function makeSlideHTML(num){
@@ -519,8 +428,7 @@ function makeSlideHTML(num){
 document.getElementById('mainCta').addEventListener('click',function(){
   if(phase==='1a'){showPhase('1b');haptic('light')}
   else if(phase==='1b')startRoulette();
-  else if(phase===3){showPhase(4);haptic('light')}
-  else if(phase===4)alert('Подписка будет подключена позже');
+  else if(phase===3){window.location.href='screen8.html'}
 });
 
 function startRoulette(){
@@ -533,7 +441,7 @@ function startRoulette(){
   order.push(selDay);var targetIdx=order.length-1;
   order.forEach(function(num){var sl=document.createElement('div');sl.className='swiper-slide roul-slide';sl.innerHTML=makeSlideHTML(num);rw.appendChild(sl)});
   showPhase(2);document.getElementById('foot').style.opacity='0';haptic('medium');
-  document.getElementById('roulStatus').classList.add('alive');
+  var rsEl=document.getElementById('roulStatus');rsEl.classList.add('alive');rsEl.style.color=selColor.hex;
   var sw=new Swiper('#roulSwiper',{effect:'coverflow',centeredSlides:true,slidesPerView:'auto',speed:80,coverflowEffect:{rotate:0,stretch:40,depth:80,modifier:1.2,slideShadows:false},initialSlide:0,allowTouchMove:false});
   var cur=0,base=35;
   function tick(){
@@ -565,47 +473,23 @@ function showResult(){
 
   /* insight — цитата */
   var ins=INSIGHTS[hisKey]||'Он видит в тебе то, что ты не замечаешь. Каждый день — новый шанс понять, что именно.';
-  document.getElementById('insightLabel').textContent='глазами '+hisName;
+  var TVORI={'Герой':'Героя','Продавец':'Продавца','Стратег':'Стратега','Историк':'Историка','Наставник':'Наставника','Игрок':'Игрока','Командир':'Командира','Философ':'Философа','Поэт':'Поэта','Атлант':'Атланта','Структуралист':'Структуралиста','Артист':'Артиста','Законодатель':'Законодателя','Шоумен':'Шоумена','Инженер':'Инженера','Педагог':'Педагога','Лидер':'Лидера','Архитектор':'Архитектора','Ментор':'Ментора','Ученый':'Учёного'};
+  document.getElementById('insightLabel').textContent='глазами '+(TVORI[hisName]||hisName+'а');
   document.getElementById('insightQuote').textContent=ins;
   document.getElementById('insightQuote').style.borderColor=selColor.hex;
 
   /* подготовить phase4 */
-  var today=new Date(),pl=PLANETS[today.getDay()],card=CARDS[today.getDay()];
-  document.getElementById('cpPair').textContent=hisName+' × '+hn;
-  /* цвет пары на карточке — белый на розовом */
-  document.getElementById('cpDay').textContent=pl.n+' · '+pl.p;
-  document.getElementById('cpHit').textContent=card.h;
-  document.getElementById('cpBody').textContent=card.b;
-  document.getElementById('accLabel').textContent='архетип · '+hn;
-  document.querySelector('.acc-label').style.color=selColor.hex;
-  buildAccordions();
+  /* сохраняем данные для screen8 */
+  try{localStorage.setItem('maru_her_name',hn);localStorage.setItem('maru_her_day',String(selDay))}catch(e){}
 
-  /* "1 из 930" в цвете пары */
-  document.querySelector('.res-rare').style.color=selColor.hex;
-  /* линия-разделитель в цвете */
-  document.querySelector('.res-line').style.background=selColor.hex;document.querySelector('.res-line').style.opacity='0.3';
+  /* данные сохранены для screen8 */
 
-  /* social proof */
-  var sp=document.getElementById('socialProof');
-  if(sp)sp.textContent='2 847 женщин уже получают карточки';
+  /* цвета res-rare заданы в CSS/HTML */
 
   document.getElementById('foot').style.opacity='1';
 }
 
-function buildAccordions(){
-  var list=document.getElementById('accList');list.innerHTML='';
-  ACC_BLOCKS.forEach(function(a,i){
-    var el=document.createElement('div');el.className='acc-item'+(i===0?' open':'');el.id='acc8_'+i;
-    el.innerHTML='<div class="acc-head"><div class="acc-texts"><div class="acc-title">'+a.t+'</div><div class="acc-sub">'+a.s+'</div></div><div class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div></div><div class="acc-body"><div class="acc-body-in">'+a.b+'</div></div>';
-    el.addEventListener('click',function(){
-      haptic('light');
-      var was=el.classList.contains('open');
-      document.querySelectorAll('.acc-item').forEach(function(x){x.classList.remove('open')});
-      if(!was)el.classList.add('open');
-    });
-    list.appendChild(el);
-  });
-}
+/* buildAccordions перенесён в screen8.html */
 
 document.getElementById('btnBack').addEventListener('click',function(){window.location.href='screen6.html'});
 function haptic(type){try{if(type==='warning')Telegram.WebApp.HapticFeedback.notificationOccurred('warning');else Telegram.WebApp.HapticFeedback.impactOccurred(type)}catch(e){}}

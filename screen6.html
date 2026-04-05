@@ -114,7 +114,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .validity-tip.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 
-.sl{display:flex;align-items:center;justify-content:center;gap:8px;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:rgba(0,0,0,0.45);margin-top:32px;margin-bottom:20px;}
+.sl{display:flex;align-items:center;justify-content:center;gap:8px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t1);opacity:0.5;margin-top:32px;margin-bottom:20px;}
 .sl-line{width:1px;height:10px;background:rgba(255,111,97,0.4);flex-shrink:0}
 .sl-hot{color:var(--acc)}
 
@@ -124,7 +124,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 
 /* ══ ИНСАЙТ ══ */
 .ins-wrap{padding:16px}
-.ins-label{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--t2);margin-bottom:12px;}
+.ins-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t1);margin-bottom:12px;opacity:0.5;}
 .ins-row{display:flex;align-items:center;gap:12px}
 .ins-ico{width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .ins-ico svg{width:16px;height:16px;fill:none;stroke:var(--acc);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
@@ -221,11 +221,12 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .acc-head{display:flex;align-items:center;padding:14px 16px;gap:10px;}
 .acc-head:active{opacity:.7}
 .acc-texts{flex:1;min-width:0}
-.acc-title{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acc-title{font-size:14px;font-weight:500;color:var(--t1);margin-bottom:2px}
 .acc-sub{font-size:11px;color:var(--t3)}
-.acc-arr{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;opacity:.4;}
+.acc-arr{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;opacity:.6;}
 .acc-arr svg{width:16px;height:16px;stroke:var(--t2);stroke-width:1.5;fill:none;stroke-linecap:round;transition:transform .2s}
 .acc-item.open .acc-arr svg{transform:rotate(180deg)}
+.acc-item.open .acc-title{font-weight:600}
 .acc-body{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1)}
 .acc-item.open .acc-body{max-height:2000px}
 .acc-body-in{padding:0 16px 14px;font-size:13px;color:var(--t2);line-height:1.65;filter:blur(6px);opacity:0.4;transition:filter .6s ease,opacity .6s ease;}
@@ -314,15 +315,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 }
 .cta-btn.pulse{animation:btnPulse 2.0s ease 0s 1}
 .cta-note{text-align:center;font-size:10px;color:var(--t3);margin-top:8px;letter-spacing:.04em;}
-.fb-chip{
-  display:block;width:100%;font-family:inherit;font-size:14px;font-weight:400;color:var(--t1);text-align:left;
-  background:transparent;padding:12px 16px;border-radius:12px;cursor:pointer;
-  border-top:1px solid rgba(0,0,0,0.05);border-left:1px solid rgba(0,0,0,0.04);
-  border-bottom:1px solid rgba(255,255,255,0.5);border-right:1px solid rgba(255,255,255,0.4);
-  -webkit-tap-highlight-color:transparent;transition:all .2s;
-}
-.fb-chip:active{transform:scale(0.98)}
-.fb-chip.picked{background:var(--acc);color:#fff;border-color:transparent;font-weight:500}
+/* fb-chip убран — feedback в боте и screen8 */
 .spark-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
 .spark-svg path{fill:none;stroke:rgba(255,111,97,0.45);stroke-width:0.8;stroke-linecap:round;stroke-dasharray:0 9999;opacity:0}
 @keyframes sparkAnim{0%{stroke-dasharray:0 9999;opacity:0}6%{opacity:1}75%{stroke-dasharray:9999 0;opacity:.75}100%{stroke-dasharray:9999 0;opacity:0}}
@@ -419,8 +412,8 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 
     <!-- АККОРДЕОНЫ — слоёный пирог -->
     <div style="margin:32px 0 16px;text-align:center;opacity:0;transition:opacity .3s" id="accSl">
-      <span style="font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(0,0,0,0.45)">Полный портрет</span>
-      <div style="font-size:10px;color:var(--t3);margin-top:6px;letter-spacing:.02em">7 блоков · доступ навсегда</div>
+      <span style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t1);opacity:0.5">Полный портрет</span>
+      <div style="font-size:10px;color:var(--t3);margin-top:6px;letter-spacing:.02em">7 блоков</div>
     </div>
     <div class="card" id="c2" style="overflow:visible;border-color:transparent;background:transparent">
       <div id="accList"></div>
@@ -435,30 +428,17 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
       </div>
     </div>
 
-    <!-- Feedback — 5 ситуаций + текст -->
-    <div id="feedbackBlock" style="margin-top:40px;padding:0 20px">
-      <div style="font-size:14px;font-weight:500;color:var(--t1);text-align:center;margin-bottom:14px">Что сегодня между вами?</div>
-      <div style="display:flex;flex-direction:column;gap:6px" id="fbRow">
-        <button class="fb-chip" data-val="close" onclick="pickFeedback(this)">он был рядом</button>
-        <button class="fb-chip" data-val="routine" onclick="pickFeedback(this)">всё как обычно</button>
-        <button class="fb-chip" data-val="distant" onclick="pickFeedback(this)">он ушёл в себя</button>
-        <button class="fb-chip" data-val="conflict" onclick="pickFeedback(this)">мы поссорились</button>
-        <button class="fb-chip" data-val="surprise" onclick="pickFeedback(this)">он удивил меня</button>
-      </div>
-      <div id="fbComment" style="display:none;margin-top:12px">
-        <textarea id="fbText" rows="2" maxlength="200" placeholder="Расскажи подробнее (необязательно)" style="width:100%;font-family:inherit;font-size:13px;color:var(--t1);background:transparent;border:none;border-top:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(0,0,0,0.06);padding:10px 0;resize:none;outline:none"></textarea>
-      </div>
-      <div id="fbConfirm" style="display:none;text-align:center;font-size:12px;color:var(--t3);margin-top:10px">Сохранено — завтра карточка это учтёт</div>
+    <div style="text-align:center;padding:20px 0">
+      <button id="shareBtn" onclick="openShare()" style="background:none;border:none;font-family:inherit;font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;-webkit-tap-highlight-color:transparent;padding:8px 20px">Поделиться результатом</button>
     </div>
 
     <!-- CTA Основной → screen7 -->
     <div style="text-align:center;margin-top:0"><span id="accBadge" style="font-size:10px;letter-spacing:.12em;color:var(--t3);transition:color .3s"></span></div>
     <div class="cta-scroll" id="ctaScroll">
       <button class="cta-btn" id="ctaBtn" onclick="window.location.href='screen7.html'">
-        <span id="ctaTxt">УЗНАТЬ, КАК ДЕЙСТВОВАТЬ</span>
+        <span id="ctaTxt">УЗНАТЬ СЕБЯ</span>
         <svg class="spark-svg" id="sparkSvg"><path id="sparkPath"/></svg>
       </button>
-      <button id="shareBtn" onclick="openShare()" style="display:block;margin:12px auto 0;background:none;border:none;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--t2);cursor:pointer;-webkit-tap-highlight-color:transparent;pointer-events:auto">Поделиться</button>
     </div>
 
   </div>
@@ -1116,31 +1096,7 @@ function spark(){
 
 /* шеринг панель */
 
-window.pickFeedback=function(el){
-  document.querySelectorAll('.fb-chip').forEach(function(c){c.classList.remove('picked')});
-  el.classList.add('picked');
-  hap('l');
-  /* показать поле комментария */
-  document.getElementById('fbComment').style.display='block';
-  document.getElementById('fbConfirm').style.display='block';
-  /* сохранить ситуацию */
-  try{
-    var today=new Date().toISOString().slice(0,10);
-    var fb=JSON.parse(localStorage.getItem('maru_feedback')||'{}');
-    fb[today]={situation:el.dataset.val,comment:'',ts:Date.now()};
-    localStorage.setItem('maru_feedback',JSON.stringify(fb));
-  }catch(e){}
-  /* при вводе текста — обновлять comment */
-  var ta=document.getElementById('fbText');
-  ta.oninput=function(){
-    try{
-      var today=new Date().toISOString().slice(0,10);
-      var fb=JSON.parse(localStorage.getItem('maru_feedback')||'{}');
-      if(fb[today])fb[today].comment=ta.value;
-      localStorage.setItem('maru_feedback',JSON.stringify(fb));
-    }catch(e){}
-  };
-};
+/* feedback убран с screen6 — живёт в push-уведомлении бота вечером */
 
 window.openShare=function(){
   hap('m');

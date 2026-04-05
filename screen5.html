@@ -109,19 +109,28 @@ html,body{
   animation:cardPulse 3s ease-in-out infinite;
 }
 .identity-card .id-lock svg{
-  width:10px;
-  height:10px;
+  width:16px;
+  height:16px;
   stroke:var(--acc);
   stroke-width:2;
   fill:none;
   stroke-linecap:round;
   stroke-linejoin:round;
 }
+@keyframes lockShake{
+  0%{transform:translateX(0)}
+  20%{transform:translateX(-3px)}
+  40%{transform:translateX(3px)}
+  60%{transform:translateX(-2px)}
+  80%{transform:translateX(1px)}
+  100%{transform:translateX(0)}
+}
+.identity-card.shake{animation:lockShake .3s ease}
 .identity-card .id-arch{
-  font-size:11px;
+  font-size:15px;
   font-weight:600;
   color:var(--acc);
-  letter-spacing:.04em;
+  letter-spacing:-.01em;
 }
 .identity-card .id-sep{
   width:1px;
@@ -327,6 +336,7 @@ html,body{
   gap:3px;
 }
 .cta-btn:active{transform:scale(0.98);opacity:.7}
+.cta-btn:focus{outline:none}
 .cta-main{
   font-size:11px;
   font-weight:600;
@@ -411,12 +421,12 @@ html,body{
 
     <div class="manifesto" id="manifesto">
       <div class="manifesto-title">Ты уже чувствуешь — что-то стало понятнее.</div>
-      <div class="manifesto-text">Осталось увидеть целиком. И принять именно своё решение — с уверенностью, а не с тревогой.</div>
+      <div class="manifesto-text">Осталось увидеть целиком — и перестать тревожиться.</div>
     </div>
 
     <!-- sunk cost и counter убраны — чистая иерархия -->
 
-    <div class="identity-card">
+    <div class="identity-card" onclick="shakeCard(this)">
       <div class="id-lock"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
       <div class="id-arch" id="idArch"></div>
       <div class="id-sep"></div>
@@ -444,9 +454,6 @@ html,body{
       <svg class="spark-svg" id="sparkSvg"><path id="sparkPath"/></svg>
     </button>
     <div class="cta-note">999₽ · Безопасная оплата · Доступ сразу</div>
-    <div class="timer-note" id="timerNote" style="opacity:0;transition:opacity .4s;">
-      Результат сохранён на 48 часов. После — нужно проходить заново.
-    </div>
   </div>
 
 </div>
@@ -455,10 +462,18 @@ html,body{
 var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
 if(tg){tg.ready();tg.expand();try{tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee');}catch(e){}}
 
-function hap(t){
+window.shakeCard=function(el){
+  hap('m');
+  el.classList.remove('shake');
+  void el.offsetWidth;
+  el.classList.add('shake');
+  el.addEventListener('animationend',function(){el.classList.remove('shake');},{once:true});
+};
+
+window.hap=function(t){
   try{if(tg)tg.HapticFeedback.impactOccurred(t==='m'?'medium':'light');}catch(e){}
   try{if(navigator.vibrate)navigator.vibrate(t==='m'?14:7);}catch(e){}
-}
+};
 
 /* архетип и имя из screen5 + TG */
 var arch='';
@@ -497,7 +512,7 @@ var mTitle=document.getElementById('manifesto').querySelector('.manifesto-title'
 var mText=document.getElementById('manifesto').querySelector('.manifesto-text');
 if(isReturn&&mTitle&&mText){
   mTitle.textContent='С возвращением. Твой результат всё ещё ждёт.';
-  mText.textContent='Принять именно своё решение — с уверенностью, а не с тревогой.';
+  mText.textContent='Осталось увидеть целиком — и перестать тревожиться.';
 }
 
 /* stagger */
