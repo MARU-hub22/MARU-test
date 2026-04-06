@@ -357,8 +357,8 @@ var ACCURACY=[87,89,91,88,93,90,92,86,94];
 
 var HER_PHOTO='her_photos/',HIS_PHOTO='photos/';
 var selDay=14,selColor=COLORS[0],phase='1a';
-var hisName='Стратег',hisKey='strateg';
-try{var b1=JSON.parse(localStorage.getItem('maru_block1')||'{}');hisName=b1.archetype||'Стратег';var ad=JSON.parse(localStorage.getItem('maru_archetype_data')||'{}');hisKey=ad.key||ad.id||'strateg'}catch(e){}
+var hisName='Режиссер',hisKey='rezhisser';
+try{var b1=JSON.parse(localStorage.getItem('maru_block1')||'{}');hisName=b1.archetype||'Режиссер';var ad=JSON.parse(localStorage.getItem('maru_archetype_data')||'{}');hisKey=ad.key||ad.id||'rezhisser'}catch(e){}
 
 document.getElementById('hisMini').src=HIS_PHOTO+hisKey+'.jpg';
 document.getElementById('hisMiniName').textContent=hisName;

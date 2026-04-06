@@ -424,7 +424,7 @@ function hap(t){
 }
 
 /* данные */
-var D={archetype:'Стратег',scores:{ЗН:32,Ф:28,СМ:18,Э:12,ЗВ:10},gender:'М'};
+var D={archetype:'Режиссер',scores:{СМ:32,Ф:28,ЗН:18,Э:12,ЗВ:10},gender:'М'};
 try{
   var b=JSON.parse(localStorage.getItem('maru_block1')||'{}');
   if(b.archetypeName)D.archetype=b.archetypeName;
@@ -436,10 +436,10 @@ var male=D.gender==='М';
 var ctaEl=document.getElementById('ctaTxt');
 if(ctaEl)ctaEl.textContent='ПОЛУЧИТЬ ПОЛНЫЙ ОТВЕТ';
 var ARCHETYPES_URL='https://cdn.jsdelivr.net/gh/MARU-hub22/maru-data@main/maru_archetypes.json';
-var NAMES_MAP={'Герой':'geroy','Продавец':'prodavets','Стратег':'strateg','Историк':'istorik','Наставник':'nastavnik','Игрок':'igrok','Командир':'komandir','Философ':'filosof','Поэт':'poet','Атлант':'atlant','Структуралист':'strukturalist','Артист':'artist','Законодатель':'zakonodatel','Шоумен':'shoumen','Продюсер':'produser','Инженер':'inzhener','Эстет':'estet','Декоратор':'dekorator','Визионер':'vizioner','Новатор':'novator','Вдохновитель':'vdokhnovitel','Драматург':'dramaturg','Агент':'agent','Символист':'simvolist','Режиссер':'rezhisser','Генератор':'generator','Транслятор':'translyator','Конвертер':'konverter','Теоретик':'teoretik','Методолог':'metodolog','Созерцатель':'sozertatel','Концептуалист':'kontseptualist','Интерпретатор':'interpretator','Полемик':'polemik','Аналитик':'analitik','Оракул':'orakul','Дизайнер':'dizayner','Идеолог':'ideolog','Архитектор':'arkhitektor','Лидер':'lider','Хранитель':'khranitel','Ментор':'mentor','Систематик':'sistematik','Документалист':'dokumentalist','Организатор':'organizator','Инструктор':'instruktor','Ученый':'ucheny','Педагог':'pedagog','Администратор':'administrator','Спикер':'spiker','Сторителлер':'storiteller','Переговорщик':'peregovorshchik','Комментатор':'kommentator','Презентатор':'prezentator','Куратор':'kurator','Прогнозист':'prognozist','Мистик':'mistik','Сценарист':'stenarist','Маэстро':'maestro','Лирик':'lirik'};
+var NAMES_MAP={'Конвертер':'konverter','Методолог':'metodolog','Теоретик':'teoretik','Режиссер':'rezhisser','Транслятор':'translyator','Генератор':'generator','Полемик':'polemik','Аналитик':'analitik','Оракул':'orakul','Созерцатель':'sozertatel','Концептуалист':'kontseptualist','Интерпретатор':'interpretator','Идеолог':'ideolog','Дизайнер':'dizayner','Инструктор':'instruktor','Педагог':'pedagog','Лидер':'lider','Ментор':'mentor','Продавец':'prodavets','Герой':'geroy','Командир':'komandir','Философ':'filosof','Историк':'istorik','Наставник':'nastavnik','Инженер':'inzhener','Декоратор':'dekorator','Законодатель':'zakonodatel','Продюсер':'produser','Драматург':'dramaturg','Агент':'agent'};
 function loadArchetypeData(){
   var slug=NAMES_MAP[D.archetype]; if(!slug)return;
-  try{var c=JSON.parse(localStorage.getItem('maru_archetype_data')||'null');if(c&&c.blocks){applyArch(c);return;}}catch(e){}
+  try{var c=JSON.parse(localStorage.getItem('maru_archetype_data')||'null');if(c&&c.blocks&&c.blocks.description){applyArch(c);return;}else{localStorage.removeItem('maru_archetype_data');}}catch(e){}
   fetch(ARCHETYPES_URL).then(function(r){return r.json();}).then(function(data){
     var arch=data.archetypes&&data.archetypes[slug];
     if(arch){try{localStorage.setItem('maru_archetype_data',JSON.stringify(arch));}catch(e){} applyArch(arch);}
@@ -512,7 +512,7 @@ var curPov=male?'m':'f';
 var counterVal=0;
 var COUNTER_MIN=22126;
 (function(){
-  fetch('https://maru-app-2071c-default-rtdb.firebaseio.com/results.json?shallow=true')
+  fetch('https://maru-app-2071c-default-rtdb.europe-west1.firebasedatabase.app/results.json?shallow=true')
     .then(function(r){return r.json();})
     .then(function(d){
       var real=d?Object.keys(d).length:0;
