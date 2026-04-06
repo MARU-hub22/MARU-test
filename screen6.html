@@ -843,9 +843,8 @@ function loadAndRender(){
     });
   }
 
-  if(cached && cached.blocks){
-    applyData(cached);
-  } else {
+  localStorage.removeItem('maru_archetype_data');
+  {
     fetch(ARCHETYPES_URL)
       .then(function(r){ return r.json(); })
       .then(function(data){
