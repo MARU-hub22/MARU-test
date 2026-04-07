@@ -151,39 +151,29 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .ef-col:nth-child(1) .ef-ico svg{stroke:#4A9EFF;opacity:1}
 .ef-col:nth-child(2) .ef-ico svg{stroke:#7BA8E0;opacity:0.85}
 .ef-col:nth-child(3) .ef-ico svg{stroke:#C48AB0;opacity:0.70}
-.ef-col:nth-child(4) .ef-ico svg{stroke:var(--t2)}
-.ef-col:nth-child(5) .ef-ico svg{stroke:var(--t2)}
 .ef-bar-wrap{
-  width:28px;height:64px;position:relative;
+  width:36px;height:72px;position:relative;
   border-top:1px solid rgba(0,0,0,0.10);border-left:1px solid rgba(0,0,0,0.07);
   border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);
-  border-radius:3px;overflow:hidden;background:rgba(0,0,0,0.04);
+  border-radius:4px;overflow:hidden;background:rgba(0,0,0,0.04);
 }
 .ef-fill{position:absolute;bottom:0;left:0;right:0;height:0%;border-radius:2px 2px 0 0;background:rgba(74,158,255,0.70);}
 .ef-col:nth-child(2) .ef-fill{background:rgba(123,168,224,0.55)}
 .ef-col:nth-child(3) .ef-fill{background:rgba(196,138,176,0.45)}
-.ef-col:nth-child(4) .ef-fill{background:rgba(0,0,0,0.12)}
-.ef-col:nth-child(5) .ef-fill{background:rgba(0,0,0,0.07)}
 
 /* пульсация — heartbeat для доминанты, затухание для остальных */
 @keyframes heartbeat{0%,100%{transform:scaleY(1)}14%{transform:scaleY(1.08)}28%{transform:scaleY(0.97)}42%{transform:scaleY(1.05)}56%{transform:scaleY(1)}}
 @keyframes pulse2{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.04)}}
 @keyframes pulse3{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.03)}}
-@keyframes pulse4{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.02)}}
-@keyframes pulse5{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.01)}}
 
 .ef-col:nth-child(1) .ef-fill{transform-origin:bottom;animation:heartbeat 1.8s ease-in-out infinite}
 .ef-col:nth-child(2) .ef-fill{transform-origin:bottom;animation:pulse2 2.4s ease-in-out infinite}
 .ef-col:nth-child(3) .ef-fill{transform-origin:bottom;animation:pulse3 3.2s ease-in-out infinite}
-.ef-col:nth-child(4) .ef-fill{transform-origin:bottom;animation:pulse4 4.0s ease-in-out infinite}
-.ef-col:nth-child(5) .ef-fill{transform-origin:bottom;animation:pulse5 5.0s ease-in-out infinite}
 
 .ef-name{font-size:9px;letter-spacing:.06em;text-transform:uppercase;text-align:center;margin-top:6px;padding-bottom:4px;}
 .ef-col:nth-child(1) .ef-name{color:rgba(74,158,255,1)}
 .ef-col:nth-child(2) .ef-name{color:rgba(74,158,255,0.75)}
 .ef-col:nth-child(3) .ef-name{color:var(--t2)}
-.ef-col:nth-child(4) .ef-name{color:var(--t2)}
-.ef-col:nth-child(5) .ef-name{color:var(--t2)}
 .ef-hint{text-align:center;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(0,0,0,0.28);padding:14px 0 14px;transition:opacity .2s;}
 @keyframes hintPulse{0%,100%{color:rgba(0,0,0,0.28)}50%{color:var(--acc)}}
 .ef-hint.pulse{animation:hintPulse 1.2s ease 1}
@@ -450,21 +440,6 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
     <div class="share-handle"></div>
     <div class="share-title">ПОДЕЛИТЬСЯ</div>
 
-    <!-- КАРТОЧКА ДЛЯ НЕЁ -->
-    <!-- КАРТОЧКА ДЛЯ НЕЁ / ПАРТНЁРА — объединено -->
-    <div class="share-row">
-      <div class="share-row-head">
-        <div class="share-row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6F61" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-        <div class="share-row-title" style="color:var(--acc)">Отправить ему — пусть узнает себя</div>
-      </div>
-      <div class="share-row-hint">Карточка с его архетипом · пусть увидит себя твоими глазами</div>
-      <div class="share-messengers">
-        <button class="share-msg-btn" onclick="openHerNameModal('tg')"><svg viewBox="0 0 24 24" fill="none"><path d="M22 3L2 11l7 2.5M22 3l-4 18-7-7.5M22 3L9 13.5m0 0V20l3.5-3" stroke-linecap="round" stroke-linejoin="round"/></svg>TG</button>
-        <button class="share-msg-btn" onclick="openHerNameModal('wa')"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>WA</button>
-        <button class="share-msg-btn" onclick="openHerNameModal('vb')"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.13-1.35A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>Viber</button>
-      </div>
-    </div>
-
     <div class="share-row">
       <div class="share-row-head">
         <div class="share-row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
@@ -492,24 +467,33 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 <!-- ПРЕВЬЮ STORIES -->
 <div id="storyPreview" style="position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(44,44,44,0.6);opacity:0;pointer-events:none;transition:opacity .3s;padding:24px" onclick="if(event.target===this)closeStoryPreview()">
   <canvas id="storyCanvas" style="display:none"></canvas>
-  <div id="storyCard" style="width:100%;max-width:280px;background:#e8e8e8;border-radius:16px;padding:24px;text-align:center;font-family:Inter,sans-serif;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45)">
-    <div style="font-size:22px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#e8e8e8;text-shadow:-1px -1px 1px rgba(0,0,0,0.2),1px 1px 1px rgba(255,255,255,0.75),0 0 3px rgba(0,0,0,0.04);margin-bottom:20px" id="storyLogo">MARU</div>
-    <div id="storyArch" style="font-size:20px;font-weight:700;color:#2c2c2c"></div>
-    <div style="font-size:13px;color:#666;margin-top:8px;line-height:1.6">Это то, что заложено во мне природой</div>
-    <div style="margin-top:16px">
-      <div style="font-size:12px;color:#666">t.me/maru_22_bot</div>
-      <div style="font-size:12px;color:#FF6F61;margin-top:4px">t.me/maru_love_maru</div>
+  <div id="storyCard" style="width:100%;max-width:300px;background:#efefee;border-radius:24px;padding:28px 24px 24px;text-align:center;font-family:Inter,sans-serif;overflow:hidden;position:relative">
+
+    <!-- лого сверху -->
+    <div style="font-size:22px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#efefee;text-shadow:-1px -1px 1px rgba(0,0,0,0.15),1px 1px 1px rgba(255,255,255,0.8),0 0 2px rgba(0,0,0,0.03);margin-bottom:24px">MARU</div>
+
+    <!-- фото архетипа -->
+    <div style="width:120px;height:120px;border-radius:50%;margin:0 auto 16px;overflow:hidden;border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.05);border-bottom:1px solid rgba(255,255,255,0.6);border-right:1px solid rgba(255,255,255,0.5)">
+      <img id="storyPhoto" src="" style="width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.12) brightness(1.03)">
     </div>
-    <button id="storyConfirmBtn" style="margin-top:16px;width:100%;height:56px;border-radius:16px;background:transparent;color:#FF6F61;font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);cursor:pointer;-webkit-tap-highlight-color:transparent" onclick="confirmStories()">Отправить в Instagram</button>
+
+    <!-- архетип -->
+    <div id="storyArch" style="font-size:20px;font-weight:700;color:#2c2c2c;letter-spacing:-.01em;line-height:1"></div>
+
+    <!-- ударная фраза -->
+    <div id="storyQuote" style="font-size:14px;font-weight:400;color:rgba(0,0,0,0.45);line-height:1.65;margin-top:14px;padding:0 8px"></div>
+
+    <!-- кнопки -->
+    <button id="storyConfirmBtn" style="margin-top:20px;width:100%;height:52px;border-radius:16px;background:#FF6F61;color:#fff;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent" onclick="confirmStories()">Отправить в Stories</button>
     <div style="margin-top:10px;font-size:11px;color:#999;letter-spacing:.04em;cursor:pointer" onclick="closeStoryPreview()">отмена</div>
   </div>
 </div>
 
 <!-- ПРЕВЬЮ ДРУГУ -->
 <div id="friendPreview" style="position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(44,44,44,0.6);opacity:0;pointer-events:none;transition:opacity .3s;padding:24px" onclick="if(event.target===this)closeFriendPreview()">
-  <div style="width:100%;max-width:320px;background:#e8e8e8;border-radius:16px;padding:24px;text-align:center;font-family:Inter,sans-serif;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45)">
+  <div style="width:100%;max-width:300px;background:#efefee;border-radius:24px;padding:28px 24px 24px;text-align:center;font-family:Inter,sans-serif">
     <div id="friendCard"></div>
-    <button id="friendConfirmBtn" style="margin-top:16px;width:100%;height:56px;border-radius:16px;background:transparent;color:#FF6F61;font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45);cursor:pointer;-webkit-tap-highlight-color:transparent">Отправить</button>
+    <button id="friendConfirmBtn" style="margin-top:20px;width:100%;height:52px;border-radius:16px;background:#FF6F61;color:#fff;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent">Отправить</button>
     <div style="margin-top:10px;font-size:11px;color:#999;letter-spacing:.04em;cursor:pointer" onclick="closeFriendPreview()">отмена</div>
   </div>
 </div>
@@ -739,7 +723,7 @@ clampIns();
 /* живые энергии */
 var fills=[];
 var html='';
-sorted.forEach(function(ev,i){
+sorted.slice(0,3).forEach(function(ev,i){
   var e=ev[0],v=ev[1];
   var fp=Math.round(v/maxSc*100);
   html+='<div class="ef-col" onclick="eDesc(\''+e+'\','+Math.round(v/total*1000)/10+')">'+
@@ -1137,14 +1121,19 @@ window.showFriendPreview=function(via){
   document.getElementById('sharePanel').classList.remove('open');
   var card=document.getElementById('friendCard');
 
+  var photoSlug=NAMES_MAP[D.archetype]||'';
+  var q=STORY_QUOTES[D.archetype]||'Он устроен сложнее,<br>чем ты думала.<br>И проще, чем боялась.';
   card.innerHTML=
-    '<div style="font-size:22px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;'+
-    'color:#e8e8e8;text-shadow:-1px -1px 1px rgba(0,0,0,0.2),1px 1px 1px rgba(255,255,255,0.75),0 0 3px rgba(0,0,0,0.04);'+
-    'margin-bottom:20px;font-family:Inter,sans-serif">MARU</div>'+
-    (uN?'<div style="font-size:13px;color:#999;font-family:Inter,sans-serif;letter-spacing:.02em;margin-bottom:4px">'+uN+'</div>':'')+
-    '<div style="font-size:22px;font-weight:700;color:#2c2c2c;font-family:Inter,sans-serif">'+D.archetype+'</div>'+
-    '<div style="font-size:13px;color:#666;margin-top:10px;line-height:1.65;font-family:Inter,sans-serif">Я прошла тест — теперь понимаю его. Попробуй тоже</div>'+
-    '<div style="margin-top:16px;font-size:11px;color:#999;font-family:Inter,sans-serif;letter-spacing:.02em">t.me/maru_22_bot</div>';
+    '<div style="font-size:22px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;'+
+    'color:#e8e8e8;text-shadow:-1px -1px 1px rgba(0,0,0,0.15),1px 1px 1px rgba(255,255,255,0.8),0 0 2px rgba(0,0,0,0.03);'+
+    'margin-bottom:20px">MARU</div>'+
+    '<div style="width:100px;height:100px;border-radius:50%;margin:0 auto 14px;overflow:hidden;'+
+    'border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.05);'+
+    'border-bottom:1px solid rgba(255,255,255,0.6);border-right:1px solid rgba(255,255,255,0.5)">'+
+    (photoSlug?'<img src="Фото архетипы муж/'+photoSlug+'.jpg" style="width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.12) brightness(1.03)">':'')+
+    '</div>'+
+    '<div style="font-size:20px;font-weight:700;color:#2c2c2c;letter-spacing:-.01em">'+D.archetype+'</div>'+
+    '<div style="font-size:13px;font-weight:400;color:rgba(0,0,0,0.4);line-height:1.65;margin-top:12px;padding:0 4px">'+q.replace(/\n/g,'<br>')+'</div>';
 
   document.getElementById('friendConfirmBtn').onclick=function(){confirmFriend();};
   var modal=document.getElementById('friendPreview');
@@ -1180,114 +1169,106 @@ function shareVia(via,text,url){
 
 /* 3. STORIES — canvas → Instagram intent */
 function drawStoryCanvas(ctx,photoImg){
-  var W=1080,H=1920,S=1080/320;
+  var W=1080,H=1920,S=W/320;
   ctx.clearRect(0,0,W,H);
-  ctx.fillStyle='#e8e8e8';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#efefee';ctx.fillRect(0,0,W,H);
   ctx.textAlign='center';
   var cx=W/2;
 
-  /* ── 1. ЛОГОТИП — идентично карточке Друга: color:#e8e8e8, text-shadow тиснение ── */
+  /* ── 1. ЛОГО сверху ── */
   var logoH=Math.round(22*S);
-  var logoLS=Math.round(22*0.18*S);
   ctx.font='700 '+logoH+'px Inter';
-  var lchars=['M','A','R','U'];
-  var lw=lchars.map(function(c){return ctx.measureText(c).width;});
-  var lt=lw.reduce(function(a,b){return a+b;},0)+logoLS*(lchars.length-1);
-  var lx=cx-lt/2;
-  var ly=Math.round(32*S)+logoH;
-  /* три прохода — сначала все светлые тени, потом все тёмные, потом основной слой */
-  /* проход 1: светлая тень */
-  ctx.fillStyle='rgba(255,255,255,0.60)';
-  lchars.forEach(function(c,i){
-    var hw=lw[i]/2;
-    ctx.fillText(c,lx+hw+1,ly+2);
-    lx+=lw[i]+logoLS;
-  });
-  /* проход 2: тёмная тень */
-  lx=cx-lt/2;
-  ctx.fillStyle='rgba(0,0,0,0.12)';
-  lchars.forEach(function(c,i){
-    var hw=lw[i]/2;
-    ctx.fillText(c,lx+hw-1,ly-1);
-    lx+=lw[i]+logoLS;
-  });
-  /* проход 3: основной чуть темнее фона — тиснение видно */
-  lx=cx-lt/2;
-  ctx.fillStyle='#c8c8c8';
-  lchars.forEach(function(c,i){
-    var hw=lw[i]/2;
-    ctx.fillText(c,lx+hw,ly);
-    lx+=lw[i]+logoLS;
-  });
+  var logoY=Math.round(56*S);
+  ctx.fillStyle='rgba(255,255,255,0.6)';ctx.fillText('MARU',cx+1,logoY+1);
+  ctx.fillStyle='rgba(0,0,0,0.1)';ctx.fillText('MARU',cx-1,logoY-1);
+  ctx.fillStyle='#d8d8d7';ctx.fillText('MARU',cx,logoY);
 
-  /* ── 2. АВАТАР — gap 16px×S под логотипом ── */
-  var avDiam=Math.round(88*S);
+  /* ── 2. ФОТО АРХЕТИПА ── */
+  var avDiam=Math.round(130*S);
   var ar=avDiam/2;
-  var ay=Math.round(H*0.40); /* оптический центр — 40% высоты = 768px */
+  var ay=Math.round(H*0.32);
 
-  /* БЕЗ нимба */
-  /* клип + фото/инициал */
   ctx.save();
   ctx.beginPath();ctx.arc(cx,ay,ar,0,Math.PI*2);ctx.clip();
   if(photoImg){
-    ctx.drawImage(photoImg,cx-ar,ay-ar,avDiam,avDiam);
+    var sz=Math.max(avDiam,avDiam);
+    ctx.drawImage(photoImg,cx-sz/2,ay-sz/2,sz,sz);
   } else {
-    ctx.fillStyle='rgba(0,0,0,0.03)';ctx.fillRect(cx-ar,ay-ar,avDiam,avDiam);
-    ctx.font='300 '+Math.round(28*S)+'px Inter';
-    ctx.fillStyle='rgba(0,0,0,0.22)';
-    ctx.textBaseline='middle';
-    ctx.fillText((uN?uN[0]:D.archetype[0]).toUpperCase(),cx,ay);
-    ctx.textBaseline='alphabetic';
+    ctx.fillStyle='rgba(0,0,0,0.04)';ctx.fillRect(cx-ar,ay-ar,avDiam,avDiam);
+    ctx.font='300 '+Math.round(40*S)+'px Inter';
+    ctx.fillStyle='rgba(0,0,0,0.18)';ctx.textBaseline='middle';
+    ctx.fillText(D.archetype[0],cx,ay);ctx.textBaseline='alphabetic';
   }
   ctx.restore();
+  /* тонкий бордер */
+  ctx.beginPath();ctx.arc(cx,ay,ar,0,Math.PI*2);
+  ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=Math.round(1*S);ctx.stroke();
 
-  /* гравюрный бордер: top rgba(0,0,0,0.08) / bottom rgba(255,255,255,0.55) */
-  var bw=Math.round(1*S);
-  ctx.beginPath();ctx.arc(cx,ay,ar+bw/2,Math.PI*0.75,Math.PI*1.75);
-  ctx.strokeStyle='rgba(0,0,0,0.08)';ctx.lineWidth=bw;ctx.stroke();
-  ctx.beginPath();ctx.arc(cx,ay,ar+bw/2,Math.PI*1.75,Math.PI*0.75);
-  ctx.strokeStyle='rgba(255,255,255,0.55)';ctx.lineWidth=bw;ctx.stroke();
-
-  /* ── 3. АРХЕТИП — под аватаром, gap 16px×S ── */
+  /* ── 3. АРХЕТИП ── */
   var archSize=Math.round(20*S);
-  var archText='Я – '+D.archetype;
   ctx.font='700 '+archSize+'px Inter';
-  while(ctx.measureText(archText).width>W-Math.round(24*S)*2&&archSize>Math.round(12*S)){
-    archSize-=4;ctx.font='700 '+archSize+'px Inter';
-  }
-  var archY=ay+ar+Math.round(16*S)+archSize;
+  var archY=ay+ar+Math.round(28*S);
   ctx.fillStyle='#2c2c2c';
-  ctx.fillText(archText,cx,archY);
+  ctx.fillText(D.archetype,cx,archY);
 
-  /* ── 4. ФРАЗА — gap 8px×S ── */
-  var phraseH=Math.round(13*S);
-  var phraseY=archY+Math.round(8*S)+phraseH+phraseH; /* +1 строка отступ */
-  ctx.font='400 '+phraseH+'px Inter';
-  ctx.fillStyle='#666';
-  ctx.fillText('Это то, что заложено во мне природой',cx,phraseY);
+  /* ── 4. ФРАЗА ── */
+  var q=STORY_QUOTES[D.archetype]||'Он устроен сложнее, чем ты думала.\nИ проще, чем боялась.';
+  var lines=q.split('\n');
+  var lineH=Math.round(15*S);
+  ctx.font='400 '+lineH+'px Inter';
+  ctx.fillStyle='rgba(0,0,0,0.4)';
+  var qY=archY+Math.round(32*S);
+  lines.forEach(function(l,i){
+    ctx.fillText(l.trim(),cx,qY+i*(lineH+Math.round(6*S)));
+  });
 
-  /* ── 5. ССЫЛКИ — прибиты к низу, отступ снизу 32px×S=108 ── */
-  var linkH=Math.round(12*S);
-  var link2Y=H-Math.round(32*S);
-  var link1Y=link2Y-linkH-Math.round(4*S);
-  ctx.font='400 '+linkH+'px Inter';
-  ctx.fillStyle='#666';
-  ctx.fillText('Пройди тест · t.me/maru_22_bot',cx,link1Y);
-  ctx.fillStyle='#FF6F61';
-  ctx.fillText('t.me/maru_love_maru',cx,link2Y);
+  /* canvas canvas path тоже через реальную папку */
 }
 
+
+var STORY_QUOTES={
+  'Режиссер':'Молчит — не потому что злится.\nА потому что строит план,\nв котором ты уже есть.',
+  'Конвертер':'Переводит чувства в действия.\nЕсли он что-то починил —\nэто было «я люблю тебя».',
+  'Методолог':'У него есть система на всё.\nДаже на то, как скучать по тебе.',
+  'Теоретик':'Он знает ответ на любой вопрос.\nКроме одного —\nчто он к тебе чувствует.',
+  'Транслятор':'Говорит одно — имеет в виду другое.\nНе потому что врёт.\nА потому что боится точности.',
+  'Генератор':'Идеи каждую секунду.\nНо рядом с тобой он замирает.\nЭто и есть его признание.',
+  'Полемик':'Спорит — не потому что не согласен.\nА потому что хочет, чтобы ты\nзащитила свою позицию.',
+  'Аналитик':'Разложил тебя на части.\nИ впервые не смог собрать обратно.\nТеперь это называется — чувства.',
+  'Оракул':'Знает, что будет дальше.\nКроме вас двоих.\nИ это его держит.',
+  'Созерцатель':'Смотрит на мир как на фильм.\nНо рядом с тобой\nвпервые хочет быть в кадре.',
+  'Концептуалист':'Живёт в мире идей.\nТы — первая идея,\nкоторую он хочет потрогать.',
+  'Интерпретатор':'Видит смыслы в каждом жесте.\nТвоё молчание для него —\nцелая книга.',
+  'Идеолог':'Построил свой мир на правилах.\nА ты вошла и всё перепутала.\nИ он просто смотрит.',
+  'Дизайнер':'Видит красоту в системе.\nТы — единственное, что он\nне может упорядочить.',
+  'Инструктор':'Знает, как надо.\nНо рядом с тобой\nвпервые не уверен.',
+  'Педагог':'Учит весь мир.\nНо рядом с тобой —\nсам становится учеником.',
+  'Лидер':'Ведёт за собой всех.\nНо за тобой —\nпошёл бы сам.',
+  'Ментор':'Даёт советы всем.\nНо о тебе —\nдумает молча.',
+  'Продавец':'Убеждает весь мир.\nНо тебя —\nпросто слушает.',
+  'Герой':'Спасает всех.\nНо от тебя —\nне хочет спасаться.',
+  'Командир':'Контролирует всё.\nНо рядом с тобой —\nотпускает.',
+  'Философ':'Ищет смысл во всём.\nТы — единственный ответ,\nкоторый он не ставит под вопрос.',
+  'Историк':'Помнит всё.\nНо момент, когда встретил тебя —\nпомнит по секундам.',
+  'Наставник':'Показывает путь другим.\nНо свой путь —\nвидит только рядом с тобой.',
+  'Инженер':'Чинит всё вокруг.\nНо то, что ты делаешь с ним —\nне подлежит ремонту.',
+  'Декоратор':'Создаёт красоту.\nНо рядом с тобой —\nзабывает создавать.',
+  'Законодатель':'Пишет правила для всех.\nДля тебя —\nготов нарушить свои.',
+  'Продюсер':'Запускает проекты.\nНо ты — единственный проект,\nгде он не контролирует финал.',
+  'Драматург':'Пишет сценарии.\nНо ваш —\nдописывает каждый день.',
+  'Агент':'Договаривается со всеми.\nНо с тобой —\nне может договориться с собой.'
+};
 
 window.shareStories=function(){
   hap('m');
   document.getElementById('sharePanel').classList.remove('open');
 
-  /* заполняем HTML превью */
-  var avEl=uP
-    ?('<div style="width:72px;height:72px;border-radius:50%;margin:0 auto;overflow:hidden;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45)"><img src="'+uP+'" style="width:100%;height:100%;object-fit:cover;display:block"></div>')
-    :('<div style="width:72px;height:72px;border-radius:50%;margin:0 auto;overflow:hidden;border-top:1px solid rgba(0,0,0,0.08);border-left:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45)"><svg viewBox="0 0 200 200" width="72" height="72"><rect width="200" height="200" fill="#d0d0d0"/><circle cx="100" cy="80" r="30" fill="#b8b8b8"/><ellipse cx="100" cy="160" rx="50" ry="35" fill="#b8b8b8"/></svg></div>');
-  document.getElementById('storyAv').innerHTML=avEl;
-  document.getElementById('storyArch').textContent='Я \u2013 '+D.archetype;
+  /* фото архетипа */
+  var photoSlug=NAMES_MAP[D.archetype]||'';
+  if(photoSlug) document.getElementById('storyPhoto').src='Фото архетипы муж/'+photoSlug+'.jpg';
+  document.getElementById('storyArch').textContent=D.archetype;
+  var q=STORY_QUOTES[D.archetype]||'Он устроен сложнее,\nчем ты думала.\nИ проще, чем боялась.';
+  document.getElementById('storyQuote').innerHTML=q.replace(/\n/g,'<br>');
 
   /* показываем модалку */
   document.getElementById('storyPreview').style.opacity='1';
@@ -1307,8 +1288,10 @@ window.shareStories=function(){
     }
     document.fonts.ready.then(function(){tryDraw(0);}).catch(function(){tryDraw(0);});
   }
-  if(uP){var img=new Image();img.crossOrigin='anonymous';img.onload=function(){render(img);};img.onerror=function(){render(null);};img.src=uP;}
-  else{render(null);}
+  var archImg=new Image();archImg.crossOrigin='anonymous';
+  archImg.onload=function(){render(archImg);};
+  archImg.onerror=function(){render(null);};
+  archImg.src=photoSlug?'Фото архетипы муж/'+photoSlug+'.jpg':'';
 };
 window.closeStoryPreview=function(){
   var modal=document.getElementById('storyPreview');
