@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>MARU</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -23,17 +23,26 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 24px}
 .content::-webkit-scrollbar{display:none}
 
-/* карточка */
-.card{margin:20px 0;border-radius:var(--r);overflow:hidden;background:#d4929a}
-.card-inner{padding:24px}
-.card-echo{font-size:10px;color:rgba(255,255,255,0.6);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.card-echo-dot{width:5px;height:5px;border-radius:50%}
-.card-pair{font-size:13px;font-weight:600;color:rgba(255,255,255,0.85);margin-bottom:4px}
-.card-day{font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:16px}
-.card-h{font-size:20px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:12px}
-.card-b{font-size:15px;color:rgba(255,255,255,0.85);line-height:1.7;margin-bottom:16px}
-.card-line{width:40px;height:1px;background:rgba(255,255,255,0.25);margin:0 auto 14px}
-.card-t{font-size:14px;font-style:italic;color:rgba(255,255,255,0.7);line-height:1.6}
+/* ═══ DARK CARD V2 ═══ */
+.card{margin:20px 0;border-radius:20px;overflow:hidden;position:relative}
+.card-photo{position:absolute;inset:0;z-index:0}
+.card-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.card-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0.15) 25%,rgba(0,0,0,0.55) 50%,rgba(0,0,0,0.88) 100%)}
+.card-noise{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0.04;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px}
+.card-glow{position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:0 2px 2px 0;z-index:3}
+.card-glow::after{content:'';position:absolute;left:-6px;top:0;bottom:0;width:16px;border-radius:0 6px 6px 0;background:inherit;filter:blur(12px);opacity:0.45}
+.card-inner{position:relative;z-index:2;min-height:480px;display:flex;flex-direction:column;padding:24px}
+.card-title{font-size:24px;font-weight:700;color:#fff;line-height:1.25;margin-top:24px;margin-bottom:14px}
+.card-glass{padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.07);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border:1px solid rgba(255,255,255,0.1);margin-bottom:14px}
+.card-pair{font-size:15px;font-weight:700}
+.card-pair-x{font-weight:300;color:rgba(255,255,255,0.3);text-shadow:none}
+.card-planet{font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.card-echo{font-size:11px;color:rgba(255,255,255,0.35);display:flex;align-items:center;gap:5px;margin-top:8px}
+.card-echo-dot{width:4px;height:4px;border-radius:50%;opacity:0.7}
+.card-h{font-size:24px;font-weight:700;color:#fff;line-height:1.25}
+.card-b{font-size:14px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:12px}
+.card-line{width:40px;height:1px;background:rgba(255,255,255,0.1);margin-bottom:12px}
+.card-t{font-size:13px;font-style:italic;color:rgba(255,255,255,0.4);line-height:1.55}
 
 /* секция */
 .section{text-align:center;padding:0 8px;margin-bottom:24px}
@@ -62,9 +71,11 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 
 /* аккордеоны */
 .acc-label{font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--acc);text-align:center;margin-bottom:12px}
-.acc-item{border-top:1px solid rgba(0,0,0,0.05);cursor:pointer;-webkit-tap-highlight-color:transparent}
-.acc-item:first-child{border-top:none}
+.acc-item{border-top:none;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-bottom:6px}
+.acc-item:first-child{margin-top:0}
 .acc-head{display:flex;align-items:center;padding:14px 16px;gap:10px}
+.acc-dot{width:5px;height:5px;border-radius:50%;background:var(--acc);opacity:0.3;flex-shrink:0;transition:opacity .2s}
+.acc-item.open .acc-dot{opacity:1}
 .acc-head:active{opacity:.7}
 .acc-texts{flex:1;min-width:0}
 .acc-title{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:2px}
@@ -116,11 +127,17 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
         <div class="section-text">Осталось действовать правильно — каждый день.</div>
       </div>
 
-      <div class="card">
+      <div class="card" id="paywallCard">
+        <div class="card-photo"><img id="cardPhotoImg" src="" alt=""></div>
+        <div class="card-noise"></div>
+        <div class="card-glow" id="cardGlow"></div>
         <div class="card-inner">
-          <div class="card-pair" id="cardPair"></div>
-          <div class="card-day" id="cardDay"></div>
-          <div class="card-h" id="cardH"></div>
+          <div class="card-title" id="cardH"></div>
+          <div style="flex:1"></div>
+          <div class="card-glass" id="cardGlass">
+            <div class="card-pair" id="cardPair"></div>
+            <div class="card-planet" id="cardDay"></div>
+          </div>
           <div style="filter:blur(5px);-webkit-filter:blur(5px);user-select:none;pointer-events:none">
             <div class="card-b" id="cardB"></div>
             <div class="card-line"></div>
@@ -134,18 +151,27 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
         <div style="font-size:14px;color:var(--t2);line-height:1.5">Завтра — другая. 365 дней в году.</div>
       </div>
 
-      <div style="padding:0 20px 28px">
-        <div style="padding:14px 0;border-top:1px solid rgba(0,0,0,0.05)">
-          <div style="font-size:14px;font-weight:500;color:var(--t1);margin-bottom:4px">Знай, что он чувствует</div>
-          <div style="font-size:13px;color:var(--t2);line-height:1.5">Каждое утро — новая карточка с его настроением и заданием на день</div>
+      <div style="padding:0 20px 28px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6F61" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <div>
+            <div style="font-size:14px;font-weight:500;color:var(--t1);margin-bottom:4px">Знай, что он чувствует</div>
+            <div style="font-size:13px;color:var(--t2);line-height:1.5">Каждое утро — новая карточка с его настроением и заданием на день</div>
+          </div>
         </div>
-        <div style="padding:14px 0;border-top:1px solid rgba(0,0,0,0.05)">
-          <div style="font-size:14px;font-weight:500;color:var(--t1);margin-bottom:4px">Пойми себя в этой паре</div>
-          <div style="font-size:13px;color:var(--t2);line-height:1.5">Полный разбор твоего архетипа — страхи, сила, сценарий пары</div>
+        <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6F61" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <div>
+            <div style="font-size:14px;font-weight:500;color:var(--t1);margin-bottom:4px">Пойми себя в этой паре</div>
+            <div style="font-size:13px;color:var(--t2);line-height:1.5">Полный разбор твоего архетипа — страхи, сила, сценарий пары</div>
+          </div>
         </div>
-        <div style="padding:14px 0;border-top:1px solid rgba(0,0,0,0.05)">
-          <div style="font-size:14px;font-weight:500;color:var(--t1);margin-bottom:4px">Спроси его напрямую</div>
-          <div style="font-size:13px;color:var(--t2);line-height:1.5">Чат с его архетипом — он ответит в характере</div>
+        <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6F61" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <div>
+            <div style="font-size:14px;font-weight:500;color:var(--t1);margin-bottom:4px">Спроси его напрямую</div>
+            <div style="font-size:13px;color:var(--t2);line-height:1.5">Чат с его архетипом — он ответит в характере</div>
+          </div>
         </div>
       </div>
 
@@ -162,15 +188,21 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 
       <!-- TAB 1: Карточка + feedback -->
       <div class="tab-content active" id="tabCard">
-        <div class="card" style="margin-top:16px">
+        <div class="card" id="dailyCard" style="margin-top:16px">
+          <div class="card-photo"><img id="dailyPhotoImg" src="" alt=""></div>
+          <div class="card-noise"></div>
+          <div class="card-glow" id="dailyGlow"></div>
           <div class="card-inner">
-            <div class="card-echo" id="cardEcho" style="display:none">
-              <span class="card-echo-dot" id="echoDot"></span>
-              <span id="echoText"></span>
+            <div class="card-title" id="dailyH"></div>
+            <div style="flex:1"></div>
+            <div class="card-glass" id="dailyGlass">
+              <div class="card-pair" id="dailyPair"></div>
+              <div class="card-planet" id="dailyDay"></div>
+              <div class="card-echo" id="cardEcho" style="display:none">
+                <span class="card-echo-dot" id="echoDot"></span>
+                <span id="echoText"></span>
+              </div>
             </div>
-            <div class="card-pair" id="dailyPair"></div>
-            <div class="card-day" id="dailyDay"></div>
-            <div class="card-h" id="dailyH"></div>
             <div class="card-b" id="dailyB"></div>
             <div class="card-line"></div>
             <div class="card-t" id="dailyT"></div>
@@ -223,7 +255,15 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 <script>
 try{var tg=window.Telegram&&Telegram.WebApp;if(tg){tg.ready();tg.expand();tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee')}}catch(e){}
 
-var PLANETS={0:{n:'воскресенье',p:'солнце'},1:{n:'понедельник',p:'луна'},2:{n:'вторник',p:'марс'},3:{n:'среда',p:'меркурий'},4:{n:'четверг',p:'юпитер'},5:{n:'пятница',p:'венера'},6:{n:'суббота',p:'сатурн'}};
+var PLANETS={
+  0:{p:'солнце',clr:'#FFA64D',br:0.45,pos:'center 25%'},
+  1:{p:'луна',clr:'#7EB8DA',br:0.35,pos:'center 30%'},
+  2:{p:'марс',clr:'#FF4D6A',br:0.30,pos:'center 15%'},
+  3:{p:'меркурий',clr:'#4A9EFF',br:0.40,pos:'center 20%'},
+  4:{p:'юпитер',clr:'#A78BFA',br:0.38,pos:'center 35%'},
+  5:{p:'венера',clr:'#FF8FAB',br:0.45,pos:'center 28%'},
+  6:{p:'сатурн',clr:'#D4A76A',br:0.32,pos:'center 22%'}
+};
 var CARDS={
   0:{h:'Кто ты рядом с ним?',b:'Солнце освещает твоё «я» внутри пары. Сегодня — день честности с собой. Будь собой — это единственное, что его держит рядом.',t:'Задание: заметь момент, когда начинаешь подстраиваться — и останови себя'},
   1:{h:'Сегодня он будет тише.',b:'Луна освещает уязвимость. Он уходит в себя. Это не холодность — это перезарядка. Побудь рядом молча.',t:'Задание: заметь, когда он посмотрит на тебя первый раз — и улыбнись'},
@@ -243,12 +283,25 @@ var ACC_BLOCKS=[
   {t:'Ваш сценарий',s:'динамика пары',b:'Ваши архетипы создают уникальную динамику. Он контролирует — ты чувствуешь. Он отдаляется — ты приближаешься. Выход: сломать цикл первой.'}
 ];
 
-var hisName='Режиссер',herName='Нора';
+var NAMES_MAP={'Конвертер':'konverter','Методолог':'metodolog','Теоретик':'teoretik','Режиссер':'rezhisser','Транслятор':'translyator','Генератор':'generator','Полемик':'polemik','Аналитик':'analitik','Оракул':'orakul','Созерцатель':'sozertatel','Концептуалист':'kontseptualist','Интерпретатор':'interpretator','Идеолог':'ideolog','Дизайнер':'dizayner','Инструктор':'instruktor','Педагог':'pedagog','Лидер':'lider','Ментор':'mentor','Продавец':'prodavets','Герой':'geroy','Командир':'komandir','Философ':'filosof','Историк':'istorik','Наставник':'nastavnik','Инженер':'inzhener','Декоратор':'dekorator','Законодатель':'zakonodatel','Продюсер':'produser','Драматург':'dramaturg','Агент':'agent'};
+
+var hisName='Режиссер',herName='Нора',hisSlug='rezhisser';
 try{
   var b1=JSON.parse(localStorage.getItem('maru_block1')||'{}');
-  hisName=b1.archetype||'Режиссер';
+  hisName=b1.archetypeName||b1.archetype||'Режиссер';
   herName=localStorage.getItem('maru_her_name')||'Нора';
+  hisSlug=NAMES_MAP[hisName]||'rezhisser';
 }catch(e){}
+
+/* заполнение фото и цветов карточки */
+function fillCard(photoId,glowId,glassId,pairId){
+  var img=document.getElementById(photoId);
+  if(img){img.src='photos/'+hisSlug+'.jpg';img.style.filter='brightness('+pl.br+') saturate(0.85)';img.style.objectPosition=pl.pos;}
+  var glow=document.getElementById(glowId);
+  if(glow)glow.style.background=pl.clr;
+  var pair=document.getElementById(pairId);
+  if(pair){pair.style.color=pl.clr;pair.style.textShadow='0 0 14px '+pl.clr;}
+}
 
 /* ?reset в URL сбрасывает подписку для тестирования */
 if(location.search.indexOf('reset')>-1){try{localStorage.removeItem('maru_subscribed')}catch(e){}}
@@ -263,8 +316,9 @@ if(subscribed){
   document.getElementById('modeDaily').style.display='block';
   document.getElementById('foot').style.display='none';
 
-  document.getElementById('dailyPair').textContent=hisName+' × '+herName;
-  document.getElementById('dailyDay').textContent=pl.n+' · '+pl.p;
+  fillCard('dailyPhotoImg','dailyGlow','dailyGlass','dailyPair');
+  document.getElementById('dailyPair').innerHTML=hisName+' <span class="card-pair-x">×</span> '+herName;
+  document.getElementById('dailyDay').textContent=pl.p;
   document.getElementById('dailyH').textContent=card.h;
   document.getElementById('dailyB').textContent=card.b;
   document.getElementById('dailyT').textContent=card.t;
@@ -288,7 +342,7 @@ if(subscribed){
   var list=document.getElementById('accList');
   ACC_BLOCKS.forEach(function(a,i){
     var el=document.createElement('div');el.className='acc-item'+(i===0?' open':'');
-    el.innerHTML='<div class="acc-head"><div class="acc-texts"><div class="acc-title">'+a.t+'</div><div class="acc-sub">'+a.s+'</div></div><div class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div></div><div class="acc-body"><div class="acc-body-in">'+a.b+'</div></div>';
+    el.innerHTML='<div class="acc-head"><div class="acc-dot"></div><div class="acc-texts"><div class="acc-title">'+a.t+'</div><div class="acc-sub">'+a.s+'</div></div><div class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div></div><div class="acc-body"><div class="acc-body-in">'+a.b+'</div></div>';
     el.addEventListener('click',function(){
       var was=el.classList.contains('open');
       document.querySelectorAll('.acc-item').forEach(function(x){x.classList.remove('open')});
@@ -299,8 +353,9 @@ if(subscribed){
 
 } else {
   /* PAYWALL MODE */
-  document.getElementById('cardPair').textContent=hisName+' × '+herName;
-  document.getElementById('cardDay').textContent=pl.n+' · '+pl.p;
+  fillCard('cardPhotoImg','cardGlow','cardGlass','cardPair');
+  document.getElementById('cardPair').innerHTML=hisName+' <span class="card-pair-x">×</span> '+herName;
+  document.getElementById('cardDay').textContent=pl.p;
   document.getElementById('cardH').textContent=card.h;
   document.getElementById('cardB').textContent=card.b;
   document.getElementById('cardT').textContent=card.t;

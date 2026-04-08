@@ -188,8 +188,9 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 
 /* ══ АККОРДЕОНЫ — слоёный пирог ══ */
 .acc-item{
-  border-top:1px solid rgba(0,0,0,0.05);cursor:pointer;-webkit-tap-highlight-color:transparent;
-  opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s,border-bottom-color .4s;
+  border-top:none;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  margin-bottom:8px;
+  opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s;
 }
 @keyframes accHint{0%,100%{border-bottom-color:rgba(0,0,0,0.05)}50%{border-bottom-color:rgba(255,111,97,0.15)}}
 .acc-item:not(.open).vis{animation:accHint 1.2s ease 8s 1}
@@ -206,9 +207,11 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
   100%{border-color:rgba(0,0,0,0.08)}
 }
 .arch-pulse-card.vis{animation:borderPulse 4s ease 0.3s 1}
-.acc-item:first-child{border-top:none}
+.acc-item:first-child{margin-top:0}
 .acc-item.vis{opacity:1;transform:none}
 .acc-head{display:flex;align-items:center;padding:14px 16px;gap:10px;}
+.acc-dot{width:5px;height:5px;border-radius:50%;background:var(--acc);opacity:0.35;flex-shrink:0;transition:opacity .2s}
+.acc-item.open .acc-dot{opacity:1}
 .acc-head:active{opacity:.7}
 .acc-texts{flex:1;min-width:0}
 .acc-title{font-size:14px;font-weight:500;color:var(--t1);margin-bottom:2px}
@@ -357,17 +360,14 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
     <!-- ИНСАЙТ — первым, удар в точку -->
     <div class="card arch-pulse-card" id="c0" style="margin-bottom:12px">
       <div class="ins-wrap">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <div class="ins-label" style="margin-bottom:0">ведущая сила</div>
-          <div id="validityInline" style="display:flex;align-items:center;gap:4px;opacity:0;transition:opacity .4s">
-            <div id="validityDot" style="width:5px;height:5px;border-radius:50%;flex-shrink:0;background:var(--acc)"></div>
-            <span id="validityValue" style="font-size:8px;color:rgba(0,0,0,0.28);letter-spacing:.04em;text-transform:uppercase">Высокая</span>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between">
+          <div>
+            <div class="ins-title" id="insTitle" style="font-size:20px;font-weight:700"></div>
+            <div class="ins-sub" style="font-size:11px;margin-top:4px">то, что им движет</div>
           </div>
-        </div>
-        <div class="ins-row">
-          <div class="ins-body">
-            <div class="ins-title" id="insTitle"></div>
-            <div class="ins-sub">то, что им движет</div>
+          <div id="validityInline" style="display:flex;align-items:center;gap:4px;margin-top:4px;opacity:0;transition:opacity .4s">
+            <div id="validityDot" style="width:5px;height:5px;border-radius:50%;flex-shrink:0;background:var(--acc)"></div>
+            <span id="validityValue" style="font-size:8px;color:rgba(0,0,0,0.28);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap">Высокая</span>
           </div>
         </div>
         <div class="ins-text" id="insText">
@@ -395,15 +395,15 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
         </div>
         <div class="ef-desc-text" id="efDescText"></div>
         <div id="efCompare" style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(0,0,0,0.04);text-align:center">
-          <span onclick="openShare()" style="font-size:9px;letter-spacing:.08em;color:var(--t3);cursor:pointer;-webkit-tap-highlight-color:transparent">Отправь подруге — пусть сравнит со своим</span>
+          <span onclick="openShare()" style="font-size:9px;letter-spacing:.08em;color:var(--t3);cursor:pointer;-webkit-tap-highlight-color:transparent">Отправь подруге</span>
         </div>
       </div>
     </div>
 
     <!-- АККОРДЕОНЫ — слоёный пирог -->
     <div style="margin:32px 0 16px;text-align:center;opacity:0;transition:opacity .3s" id="accSl">
-      <span style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t1);opacity:0.5">Полный портрет</span>
-      <div style="font-size:10px;color:var(--t3);margin-top:6px;letter-spacing:.02em">7 блоков</div>
+      <span style="font-size:14px;font-weight:600;color:var(--t1)">Полный портрет</span>
+      <div style="width:40px;height:1px;background:rgba(0,0,0,0.15);margin:10px auto 0"></div>
     </div>
     <div class="card" id="c2" style="overflow:visible;border-color:transparent;background:transparent">
       <div id="accList"></div>
@@ -418,8 +418,15 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
       </div>
     </div>
 
-    <div style="text-align:center;padding:20px 0">
-      <button id="shareBtn" onclick="openShare()" style="background:none;border:none;font-family:inherit;font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;-webkit-tap-highlight-color:transparent;padding:8px 20px">Поделиться результатом</button>
+    <div style="padding:20px 0" id="shareMiniWrap">
+      <div onclick="openShare()" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:14px;border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);cursor:pointer;-webkit-tap-highlight-color:transparent">
+        <div id="shareMiniPhoto" style="width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;border-top:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(255,255,255,0.5)"><div style="width:100%;height:100%;background:rgba(0,0,0,0.04)"></div></div>
+        <div style="flex:1;min-width:0">
+          <div id="shareMiniName" style="font-size:13px;font-weight:600;color:var(--t1)">Режиссёр</div>
+          <div style="font-size:10px;color:var(--t3);margin-top:1px">Отправить подруге</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+      </div>
     </div>
 
     <!-- CTA Основной → screen7 -->
@@ -467,25 +474,28 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 <!-- ПРЕВЬЮ STORIES -->
 <div id="storyPreview" style="position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(44,44,44,0.6);opacity:0;pointer-events:none;transition:opacity .3s;padding:24px" onclick="if(event.target===this)closeStoryPreview()">
   <canvas id="storyCanvas" style="display:none"></canvas>
-  <div id="storyCard" style="width:100%;max-width:300px;background:#efefee;border-radius:24px;padding:28px 24px 24px;text-align:center;font-family:Inter,sans-serif;overflow:hidden;position:relative">
+  <div style="width:100%;max-width:300px">
+    <!-- контент для рендера -->
+    <div id="storyCard" style="width:100%;background:#efefee;border-radius:24px;padding:28px 24px 24px;text-align:center;font-family:Inter,sans-serif;overflow:hidden">
 
-    <!-- лого сверху -->
-    <div style="font-size:22px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#efefee;text-shadow:-1px -1px 1px rgba(0,0,0,0.15),1px 1px 1px rgba(255,255,255,0.8),0 0 2px rgba(0,0,0,0.03);margin-bottom:24px">MARU</div>
+      <!-- лого сверху -->
+      <div style="font-size:22px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#efefee;text-shadow:-1px -1px 1px rgba(0,0,0,0.15),1px 1px 1px rgba(255,255,255,0.8),0 0 2px rgba(0,0,0,0.03);margin-bottom:24px">MARU</div>
 
-    <!-- фото архетипа -->
-    <div style="width:120px;height:120px;border-radius:50%;margin:0 auto 16px;overflow:hidden;border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.05);border-bottom:1px solid rgba(255,255,255,0.6);border-right:1px solid rgba(255,255,255,0.5)">
-      <img id="storyPhoto" src="" style="width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.12) brightness(1.03)">
+      <!-- фото архетипа -->
+      <div style="width:120px;height:120px;border-radius:50%;margin:0 auto 16px;overflow:hidden;border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.05);border-bottom:1px solid rgba(255,255,255,0.6);border-right:1px solid rgba(255,255,255,0.5)">
+        <img id="storyPhoto" src="" style="width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.12) brightness(1.03)">
+      </div>
+
+      <!-- архетип -->
+      <div id="storyArch" style="font-size:20px;font-weight:700;color:#2c2c2c;letter-spacing:-.01em;line-height:1"></div>
+
+      <!-- ударная фраза -->
+      <div id="storyQuote" style="font-size:14px;font-weight:400;color:rgba(0,0,0,0.45);line-height:1.65;margin-top:14px;padding:0 8px"></div>
+
     </div>
-
-    <!-- архетип -->
-    <div id="storyArch" style="font-size:20px;font-weight:700;color:#2c2c2c;letter-spacing:-.01em;line-height:1"></div>
-
-    <!-- ударная фраза -->
-    <div id="storyQuote" style="font-size:14px;font-weight:400;color:rgba(0,0,0,0.45);line-height:1.65;margin-top:14px;padding:0 8px"></div>
-
-    <!-- кнопки -->
-    <button id="storyConfirmBtn" style="margin-top:20px;width:100%;height:52px;border-radius:16px;background:#FF6F61;color:#fff;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent" onclick="confirmStories()">Отправить в Stories</button>
-    <div style="margin-top:10px;font-size:11px;color:#999;letter-spacing:.04em;cursor:pointer" onclick="closeStoryPreview()">отмена</div>
+    <!-- кнопки ВНЕ рендер-зоны -->
+    <button id="storyConfirmBtn" style="margin-top:16px;width:100%;height:52px;border-radius:16px;background:#FF6F61;color:#fff;font-family:Inter,sans-serif;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent" onclick="confirmStories()">Отправить в Stories</button>
+    <div style="margin-top:10px;font-size:11px;color:#999;letter-spacing:.04em;cursor:pointer;text-align:center" onclick="closeStoryPreview()">отмена</div>
   </div>
 </div>
 
@@ -847,6 +857,7 @@ function buildAccordions(accs){
   accs.forEach(function(a,i){
     ah+='<div class="acc-item" id="acc'+i+'" onclick="tAcc('+i+')">'+
       '<div class="acc-head">'+
+        '<div class="acc-dot"></div>'+
         '<div class="acc-texts">'+
           '<div class="acc-title">'+a.t+'</div>'+
           '<div class="acc-sub">'+a.s+'</div>'+
@@ -1044,6 +1055,10 @@ function revealAccordions(){
 function reveal(){
   setTimeout(function(){document.getElementById('hero').classList.add('vis');animArch();},100);
   setTimeout(function(){startRarity();renderValidity();},300);
+  /* shareMini */
+  var smn=document.getElementById('shareMiniName');if(smn)smn.textContent=D.archetype;
+  var smp=document.getElementById('shareMiniPhoto');
+  if(smp&&slug){smp.innerHTML='<img src="Фото архетипы муж/'+slug+'.jpg" style="width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.12) brightness(1.03)">';}
   setTimeout(function(){document.getElementById('c0').classList.add('vis');},360);
   setTimeout(function(){document.getElementById('c1').classList.add('vis');animBars();},570);
   // аккордеоны — при скролле
@@ -1148,16 +1163,16 @@ window.confirmFriend=function(){
   closeFriendPreview();
   var rid=localStorage.getItem('maru_result_id')||'';
   var appUrl=makeAppLink(rid||'');
-  var text='Привет! Я прошла тест про мужчин — и наконец поняла, почему он так себя ведёт.\n\nПопробуй, серьёзно —\n\n'+appUrl+
-    '\n\nКанал MARU \u25b8 https://t.me/maru_love_maru';
+  var text='Привет! Я прошла тест про мужчин — и наконец поняла, почему он так себя ведёт.\n\nПопробуй — '+appUrl;
   shareVia(_friendVia,text,appUrl);
 };
 
 /* Универсальный роутер мессенджеров */
 function shareVia(via,text,url){
   if(via==='tg'){
-    if(tg&&tg.openTelegramLink)tg.openTelegramLink('https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text));
-    else window.open('https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text),'_blank');
+    var tgUrl='https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text.replace(url,'').trim());
+    if(tg&&tg.openTelegramLink)tg.openTelegramLink(tgUrl);
+    else window.open(tgUrl,'_blank');
   } else if(via==='wa'){
     window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
   } else if(via==='vb'){
