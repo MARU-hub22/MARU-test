@@ -33,7 +33,7 @@ body{
   left:0;right:0;
   font-size:24px;font-weight:700;letter-spacing:.18em;
   color:var(--bg);text-align:center;text-transform:uppercase;
-  text-shadow:-1px -1px 1px rgba(0,0,0,0.2),1px 1px 1px rgba(255,255,255,0.75),0 0 3px rgba(0,0,0,0.04);
+  text-shadow:-1px -1px 2px rgba(0,0,0,0.3),1px 1px 2px rgba(255,255,255,0.85),0 0 4px rgba(0,0,0,0.06);
   z-index:20;
   padding:0;
 }
@@ -45,7 +45,7 @@ body{
   margin-bottom:16px;
 }
 .hero-main{
-  font-size:19px;font-weight:600;color:var(--t2);
+  font-size:19px;font-weight:600;color:var(--t1);
   line-height:1.5;
   letter-spacing:-0.01em;
 }
@@ -54,7 +54,7 @@ body{
 .carousel{
   position:relative;
   width:100%;
-  height:calc(46vh - 24px);
+  height:calc(36vh - 24px);
   overflow:hidden;
   margin-bottom:0;
 }
@@ -76,7 +76,7 @@ body{
   object-position:center 20%;
   filter:grayscale(1);
   opacity:0;
-  transition:opacity 1.2s ease;
+  transition:opacity 0.8s ease;
 }
 .carousel-img.active{
   opacity:1;
@@ -150,11 +150,11 @@ body{
   padding:0 18px 18px;
 }
 .chip{
-  padding:10px 16px;
+  padding:8px 14px;
   border-radius:40px;
   border:1px solid rgba(0,0,0,0.08);
   background:transparent;
-  font-family:inherit;font-size:13px;font-weight:400;color:var(--t2);
+  font-family:inherit;font-size:12px;font-weight:400;color:var(--t2);
   cursor:pointer;
   transition:all .2s ease;
 }
@@ -407,9 +407,10 @@ body{
   var total=imgs.length;
   setInterval(function(){
     imgs[cur].classList.remove('active');
-    cur=(cur+1)%total;
-    imgs[cur].classList.add('active');
-  },3000);
+    var next=(cur+1)%total;
+    setTimeout(function(){imgs[next].classList.add('active');},300);
+    cur=next;
+  },3500);
 })();
 
 function openAo(){hap('l');document.getElementById('ao').classList.add('open');}
