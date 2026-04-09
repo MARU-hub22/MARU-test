@@ -493,38 +493,35 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
       <!-- glow слева -->
       <div id="storyGlow" style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#FFA64D;box-shadow:0 0 24px 4px rgba(255,166,77,0.4)"></div>
 
-      <!-- контент -->
-      <div style="position:relative;z-index:2;height:100%;display:flex;flex-direction:column;padding:20px 22px 24px">
+      <!-- контент: safe zones для Instagram (top/bottom 70px) -->
+      <div style="position:relative;z-index:2;height:100%;display:flex;flex-direction:column;padding:72px 22px 72px">
 
         <!-- ЛОГО MARU -->
-        <div style="font-size:10px;font-weight:700;letter-spacing:.28em;color:rgba(255,255,255,0.55);text-transform:uppercase">MARU</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.28em;color:rgba(255,255,255,0.55);text-transform:uppercase;text-align:center">MARU</div>
 
-        <!-- HOOK: кликбейт -->
-        <div id="storyHook" style="font-size:30px;font-weight:700;color:#fff;line-height:1.08;margin-top:28px;letter-spacing:-0.015em"></div>
+        <!-- CTA по центру, в цвет планеты -->
+        <div style="text-align:center;margin-top:8px">
+          <div id="storyCtaLink" style="font-size:15px;font-weight:600;color:#FFA64D;letter-spacing:.01em;line-height:1">t.me/maru_22_bot</div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.45);letter-spacing:.12em;text-transform:uppercase;margin-top:5px">переходи · узнай своего</div>
+        </div>
+
+        <!-- HOOK: кликбейт (мягче) -->
+        <div id="storyHook" style="font-size:24px;font-weight:600;color:rgba(255,255,255,0.95);line-height:1.1;margin-top:24px;letter-spacing:-0.01em"></div>
 
         <!-- растяжка -->
         <div style="flex:1"></div>
 
-        <!-- GLASS block -->
-        <div style="padding:13px 15px;border-radius:12px;background:rgba(255,255,255,0.07);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.09);margin-bottom:12px">
+        <!-- GLASS block (без backdrop-filter - html2canvas не поддерживает) -->
+        <div style="padding:12px 14px;border-radius:10px;background:rgba(20,20,20,0.55);border:1px solid rgba(255,255,255,0.12);margin-bottom:12px">
           <div style="display:flex;align-items:center;gap:8px">
-            <div id="storyDot" style="width:6px;height:6px;border-radius:50%;background:#FFA64D;box-shadow:0 0 10px #FFA64D"></div>
-            <div id="storyArch" style="font-size:15px;font-weight:700;color:#fff;letter-spacing:-0.01em"></div>
+            <div id="storyDot" style="width:6px;height:6px;border-radius:50%;background:#FFA64D;box-shadow:0 0 8px #FFA64D"></div>
+            <div id="storyArch" style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.95);letter-spacing:-0.005em"></div>
           </div>
-          <div id="storyPlanet" style="font-size:9px;color:rgba(255,255,255,0.42);letter-spacing:.14em;text-transform:uppercase;margin-top:3px;margin-left:14px"></div>
+          <div id="storyPlanet" style="font-size:9px;color:rgba(255,255,255,0.55);letter-spacing:.16em;text-transform:uppercase;margin-top:3px;margin-left:14px"></div>
         </div>
 
         <!-- ЦИТАТА дня -->
-        <div id="storyQuote" style="font-size:12px;color:rgba(255,255,255,0.56);line-height:1.55;margin-bottom:14px"></div>
-
-        <!-- разделитель -->
-        <div style="width:28px;height:1px;background:rgba(255,255,255,0.18);margin-bottom:10px"></div>
-
-        <!-- CTA: бот + приглашение -->
-        <div>
-          <div style="font-size:9px;color:rgba(255,255,255,0.42);letter-spacing:.04em;margin-bottom:2px">переходи · узнай своего</div>
-          <div style="font-size:12px;font-weight:600;color:#fff;letter-spacing:.02em;border-bottom:1px solid rgba(255,255,255,0.35);padding-bottom:2px;display:inline-block">t.me/maru_22_bot</div>
-        </div>
+        <div id="storyQuote" style="font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6"></div>
 
       </div>
 
@@ -1330,13 +1327,13 @@ window.shareStories=function(via){
   var dayIdx=new Date().getDay()%7;
   var day=DAYS[dayIdx];
 
-  /* HOOK — случайная кликбейт-фраза */
+  /* HOOK — случайная кликбейт-фраза (одна строка) */
   var HOOKS=[
-    'Я расшифровала\nего.',
-    'Теперь я\nвижу его.',
-    'Он стал\nпонятен.',
+    'Я его прочла.',
     'Код взломан.',
-    'Я поняла,\nпочему он такой.'
+    'Он попался.',
+    'Теперь я вижу.',
+    'Маска снята.'
   ];
   var hook=HOOKS[Math.floor(Math.random()*HOOKS.length)];
 
@@ -1345,7 +1342,7 @@ window.shareStories=function(via){
   if(photoSlug) document.getElementById('storyPhoto').style.backgroundImage='url(photos/'+photoSlug+'.jpg)';
 
   /* заполнение */
-  document.getElementById('storyHook').innerHTML=hook.replace(/\n/g,'<br>');
+  document.getElementById('storyHook').textContent=hook;
   document.getElementById('storyArch').textContent=D.archetype;
   document.getElementById('storyPlanet').textContent=day.p;
   document.getElementById('storyQuote').textContent=day.b;
@@ -1355,6 +1352,8 @@ window.shareStories=function(via){
   if(glowEl){glowEl.style.background=day.cl;glowEl.style.boxShadow='0 0 24px 4px '+day.cl+'66';}
   var dotEl=document.getElementById('storyDot');
   if(dotEl){dotEl.style.background=day.cl;dotEl.style.boxShadow='0 0 10px '+day.cl;}
+  var ctaEl=document.getElementById('storyCtaLink');
+  if(ctaEl){ctaEl.style.color=day.cl;}
 
   /* показываем модалку */
   document.getElementById('storyPreview').style.opacity='1';
