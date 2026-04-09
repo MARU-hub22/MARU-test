@@ -1319,59 +1319,23 @@ window.closeStoryPreview=function(){
 window.confirmStories=function(){
   hap('m');
   closeStoryPreview();
-  var card=document.getElementById('storyCard');
-  /* грузим html2canvas если нет */
-  function doRender(){
-    html2canvas(card,{
-      scale:3,
-      backgroundColor:'#e8e8e8',
-      useCORS:true,
-      allowTaint:false,
-      logging:false
-    }).then(function(canvas){
-      canvas.toBlob(function(blob){
-        if(!blob)return;
-        if(navigator.canShare){
-          var file=new File([blob],'MARU_'+D.archetype+'.png',{type:'image/png'});
-          if(navigator.canShare({files:[file]})){
-            navigator.share({files:[file]}).catch(function(){fallbackIG(blob);});
-            return;
-          }
-        }
-        fallbackIG(blob);
-      },'image/png');
-    }).catch(function(){fallbackIG(null);});
-  }
-  function fallbackIG(blob){
-    if(!blob){
-      window.location.href='instagram://story-camera';
-      setTimeout(function(){
-        if(document.visibilityState!=='hidden'){
-          alert('Установите Instagram, чтобы поделиться историей');
-        }
-      },1200);
-      return;
-    }
-    var url=URL.createObjectURL(blob);
-    var a=document.createElement('a');
-    a.href='instagram-stories://share?background_image='+encodeURIComponent(url);
-    a.click();
-    setTimeout(function(){
-      if(document.visibilityState!=='hidden'){
-        window.location.href='instagram://story-camera';
+  var slug=NAMES_MAP[D.archetype]||'';
+  var cardUrl='https://maru-test.vercel.app/api/card?slug='+encodeURIComponent(slug)+'&name='+encodeURIComponent(D.archetype)+'&type=story&t='+Date.now();
+
+  fetch(cardUrl).then(function(r){return r.blob();}).then(function(blob){
+    if(!blob)return;
+    if(navigator.canShare){
+      var file=new File([blob],'MARU_'+D.archetype+'.jpg',{type:'image/jpeg'});
+      if(navigator.canShare({files:[file]})){
+        navigator.share({files:[file]}).catch(function(){});
+        return;
       }
-    },1500);
-    setTimeout(function(){URL.revokeObjectURL(url);},5000);
-  }
-  if(window.html2canvas){
-    doRender();
-  } else {
-    var s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload=doRender;
-    s.onerror=function(){fallbackIG(null);};
-    document.head.appendChild(s);
-  }
+    }
+    /* fallback */
+    window.location.href='instagram://story-camera';
+  }).catch(function(){
+    window.location.href='instagram://story-camera';
+  });
 };
 
 /* прогресс скролла + покачивание энергий */
