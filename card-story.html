@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>MARU · Story</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{margin:0;padding:0;width:1080px;height:1920px;background:#1a1a1a;-webkit-font-smoothing:antialiased;font-family:'Inter',-apple-system,sans-serif;color:#fff;overflow:hidden}
+
+.s{position:relative;width:1080px;height:1920px;overflow:hidden}
+.s-bg{position:absolute;inset:0;z-index:0}
+.s-bg img{width:100%;height:100%;object-fit:cover;display:block}
+.s-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0.1) 25%,rgba(0,0,0,0.5) 55%,rgba(0,0,0,0.88) 100%)}
+.s-noise{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0.04;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px}
+.s-glow{position:absolute;left:0;top:0;bottom:0;width:12px;border-radius:0 6px 6px 0;z-index:3}
+.s-glow::after{content:'';position:absolute;left:-18px;top:0;bottom:0;width:48px;border-radius:0 18px 18px 0;background:inherit;filter:blur(36px);opacity:0.45}
+.s-ekg{position:absolute;bottom:0;left:0;right:0;height:96px;z-index:1;overflow:hidden;opacity:0.1}
+.s-ekg svg{width:100%;height:100%}
+.s-ekg path{fill:none;stroke-width:4.5;stroke-linecap:round}
+
+.inner{position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;padding:72px 72px 120px}
+.title{font-size:72px;font-weight:700;line-height:1.25;margin-top:72px;margin-bottom:42px}
+.glass{padding:36px 48px;border-radius:36px;background:rgba(255,255,255,0.07);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border:3px solid rgba(255,255,255,0.1);margin-bottom:42px}
+.pair{font-size:45px;font-weight:700}
+.pair-x{font-weight:300;color:rgba(255,255,255,0.3);text-shadow:none}
+.planet{font-size:30px;color:rgba(255,255,255,0.4);letter-spacing:.1em;text-transform:uppercase;margin-top:6px}
+.body{font-size:42px;color:rgba(255,255,255,0.6);line-height:1.6}
+</style>
+</head>
+<body>
+<div id="w"></div>
+<script>
+(function(){
+  var params=new URLSearchParams(window.location.search);
+  var slug=params.get('slug')||'rezhisser';
+  var day=parseInt(params.get('day')||'0',10);
+
+  var SLUG_TO_NAME={konverter:'Конвертер',metodolog:'Методолог',teoretik:'Теоретик',rezhisser:'Режиссер',translyator:'Транслятор',generator:'Генератор',polemik:'Полемик',analitik:'Аналитик',orakul:'Оракул',sozertatel:'Созерцатель',kontseptualist:'Концептуалист',interpretator:'Интерпретатор',ideolog:'Идеолог',dizayner:'Дизайнер',instruktor:'Инструктор',pedagog:'Педагог',lider:'Лидер',mentor:'Ментор',prodavets:'Продавец',geroy:'Герой',komandir:'Командир',filosof:'Философ',istorik:'Историк',nastavnik:'Наставник',inzhener:'Инженер',dekorator:'Декоратор',zakonodatel:'Законодатель',produser:'Продюсер',dramaturg:'Драматург',agent:'Агент'};
+
+  var his=params.get('name')||SLUG_TO_NAME[slug]||'Режиссер';
+  var her=params.get('her')||'';
+  var img='photos/'+slug+'.jpg';
+
+  var D=[
+    {p:'солнце',cl:'#FFA64D',br:0.45,cr:'center 25%',t:'Кто ты рядом с ним?',b:'Солнце освещает твоё «я» внутри пары. Сегодня — день честности с собой. Будь собой — это единственное, что его держит рядом.',ek:'M0,18 L80,18 L90,10 L100,24 L110,16 L140,18 L260,18 L270,10 L280,24 L290,16 L400,18'},
+    {p:'луна',cl:'#7EB8DA',br:0.35,cr:'center 30%',t:'Сегодня он будет тише.',b:'Луна освещает уязвимость. Он уходит в себя. Это не холодность — это перезарядка. Побудь рядом молча.',ek:'M0,20 L100,20 L110,12 L120,24 L130,18 L200,20 L300,20 L310,12 L320,24 L330,18 L400,20'},
+    {p:'марс',cl:'#FF4D6A',br:0.30,cr:'center 15%',t:'Сегодня будет искрить.',b:'Марс поднимает температуру. Он становится резче. Одна фраза: «Я на твоей стороне» — скажи спокойно.',ek:'M0,16 L40,16 L50,4 L55,28 L65,8 L70,24 L80,6 L85,26 L95,14 L120,16 L200,16 L210,4 L215,28 L225,8 L230,24 L260,16 L400,16'},
+    {p:'меркурий',cl:'#4A9EFF',br:0.40,cr:'center 20%',t:'Он скажет не то, что думает.',b:'Меркурий выключает прямоту. Не верь словам — слушай паузы, считывай тон. Правда — между строк.',ek:'M0,20 L60,20 L70,8 L80,28 L90,12 L100,22 L110,18 L140,20 L200,20 L210,6 L220,26 L230,10 L240,24 L260,20 L400,20'},
+    {p:'юпитер',cl:'#A78BFA',br:0.38,cr:'center 35%',t:'Загляни дальше завтра.',b:'Юпитер открывает перспективу. Скажи: «Мне нравится, как мы...» — и дай ему увидеть вас через год.',ek:'M0,18 L120,18 L130,8 L140,26 L150,14 L200,18 L320,18 L330,8 L340,26 L350,14 L400,18'},
+    {p:'венера',cl:'#FF8FAB',br:0.45,cr:'center 28%',t:'Он отпустит контроль.',b:'Венера переключает из головы в тело. Он сегодня мягче. Подойди первая. Прикоснись.',ek:'M0,18 L80,18 L90,10 L100,24 L110,14 L120,20 L160,18 L280,18 L290,10 L300,24 L310,14 L320,20 L400,18'},
+    {p:'сатурн',cl:'#D4A76A',br:0.32,cr:'center 22%',t:'Маски снимаются.',b:'Сатурн убирает роли. Он непривычно честен. Не пугайся — так он выглядит без брони.',ek:'M0,20 L100,20 L110,8 L120,26 L130,16 L180,20 L300,20 L310,8 L320,26 L330,16 L380,20 L400,20'}
+  ];
+
+  var d=D[day%7];
+  var pairHtml=her?(his+' <span class="pair-x">×</span> '+her):his;
+
+  document.getElementById('w').innerHTML=
+  '<div class="s">'+
+    '<div class="s-bg"><img src="'+img+'" style="filter:brightness('+d.br+') saturate(0.85);object-position:'+d.cr+'"></div>'+
+    '<div class="s-noise"></div>'+
+    '<div class="s-glow" style="background:'+d.cl+'"></div>'+
+    '<div class="s-ekg"><svg viewBox="0 0 400 28" preserveAspectRatio="none"><path d="'+d.ek+'" stroke="'+d.cl+'"/></svg></div>'+
+    '<div class="inner">'+
+      '<div class="title">'+d.t+'</div>'+
+      '<div style="flex:1"></div>'+
+      '<div class="glass">'+
+        '<div class="pair" style="color:'+d.cl+';text-shadow:0 0 14px '+d.cl+'">'+pairHtml+'</div>'+
+        '<div class="planet">'+d.p+'</div>'+
+      '</div>'+
+      '<div class="body">'+d.b+'</div>'+
+    '</div>'+
+  '</div>';
+
+  window._ready=true;
+})();
+</script>
+</body>
+</html>
