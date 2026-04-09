@@ -1301,7 +1301,7 @@ window.shareStories=function(){
 
   /* фото архетипа */
   var photoSlug=NAMES_MAP[D.archetype]||'';
-  if(photoSlug) document.getElementById('storyPhoto').src='https://cdn.jsdelivr.net/gh/MARU-hub22/MARU-test@main/photos/'+photoSlug+'.jpg';
+  if(photoSlug) document.getElementById('storyPhoto').src='photos/'+photoSlug+'.jpg';
   document.getElementById('storyArch').textContent=D.archetype;
   document.getElementById('storyArch').style.color=day.cl;
   document.getElementById('storyArch').style.textShadow='0 0 14px '+day.cl;
@@ -1331,7 +1331,7 @@ window.shareStories=function(){
   var archImg=new Image();archImg.crossOrigin='anonymous';
   archImg.onload=function(){render(archImg);};
   archImg.onerror=function(){render(null);};
-  archImg.src=photoSlug?'https://cdn.jsdelivr.net/gh/MARU-hub22/MARU-test@main/photos/'+photoSlug+'.jpg':'';
+  archImg.src=photoSlug?'photos/'+photoSlug+'.jpg':'';
 };
 window.closeStoryPreview=function(){
   var modal=document.getElementById('storyPreview');
@@ -1343,23 +1343,23 @@ window.confirmStories=function(){
   var card=document.getElementById('storyCard');
   function doRender(){
     html2canvas(card,{
-      scale:3,
+      scale:2,
       backgroundColor:'#111',
-      useCORS:true,
-      allowTaint:false,
+      useCORS:false,
+      allowTaint:true,
       logging:false
     }).then(function(canvas){
       canvas.toBlob(function(blob){
         if(!blob)return;
         if(navigator.canShare){
-          var file=new File([blob],'MARU_'+D.archetype+'.png',{type:'image/png'});
+          var file=new File([blob],'MARU_'+D.archetype+'.jpg',{type:'image/jpeg'});
           if(navigator.canShare({files:[file]})){
             navigator.share({files:[file]}).catch(function(){fallbackIG(blob);});
             return;
           }
         }
         fallbackIG(blob);
-      },'image/png');
+      },'image/jpeg',0.92);
     }).catch(function(){fallbackIG(null);});
   }
   function fallbackIG(blob){
