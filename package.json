@@ -2,6 +2,6 @@
   "private": true,
   "dependencies": {
     "puppeteer-core": "^23.0.0",
-    "@sparticuz/chromium-min": "^131.0.0"
+    "@sparticuz/chromium-min": "^143.0.0"
   }
 }
