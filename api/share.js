@@ -19,7 +19,7 @@ export default async function handler(req) {
   const base = url.origin;
   // cache-buster: Telegram/WhatsApp hard-cache OG images by URL.
   // Bump version whenever card template changes so preview refreshes.
-  const CARD_VERSION = 'v14';
+  const CARD_VERSION = 'v15';
   const cardImg = `${base}/api/card?slug=${encodeURIComponent(slug)}&name=${encodeURIComponent(name)}&type=friend&${CARD_VERSION}`;
   const botLink = 'https://t.me/maru_22_bot/maru' + (rid ? '?startapp=' + rid : '');
 
