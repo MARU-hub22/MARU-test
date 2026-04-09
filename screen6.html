@@ -482,7 +482,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
     <div id="storyCard" style="width:270px;height:480px;border-radius:20px;overflow:hidden;position:relative;font-family:Inter,sans-serif">
 
       <!-- фото на весь фон -->
-      <img id="storyPhoto" src="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:brightness(0.4) saturate(0.85)">
+      <div id="storyPhoto" style="position:absolute;inset:0;background-size:cover;background-position:center 20%;filter:brightness(0.4) saturate(0.85)"></div>
       <!-- gradient overlay -->
       <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0.1) 25%,rgba(0,0,0,0.5) 55%,rgba(0,0,0,0.88) 100%)"></div>
       <!-- glow -->
@@ -1301,7 +1301,7 @@ window.shareStories=function(){
 
   /* фото архетипа */
   var photoSlug=NAMES_MAP[D.archetype]||'';
-  if(photoSlug) document.getElementById('storyPhoto').src='photos/'+photoSlug+'.jpg';
+  if(photoSlug) document.getElementById('storyPhoto').style.backgroundImage='url(photos/'+photoSlug+'.jpg)';
   document.getElementById('storyArch').textContent=D.archetype;
   document.getElementById('storyArch').style.color=day.cl;
   document.getElementById('storyArch').style.textShadow='0 0 14px '+day.cl;
