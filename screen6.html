@@ -280,6 +280,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .share-msg-btn.tg svg{stroke:#2AABEE}
 .share-msg-btn.wa svg{stroke:#25D366}
 .share-msg-btn.vb svg{stroke:#7360F2}
+.share-msg-btn.ig svg{stroke:#E1306C}
 
 .cta-scroll{
   position:fixed;
@@ -463,12 +464,16 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
       </div>
     </div>
 
-    <div class="share-row" style="cursor:pointer" onclick="shareStories()">
+    <div class="share-row">
       <div class="share-row-head">
-        <div class="share-row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
-        <div class="share-row-title">Поделиться в Stories</div>
+        <div class="share-row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg></div>
+        <div class="share-row-title">Опубликовать историю</div>
       </div>
-      <div class="share-row-hint">Посмотреть карточку и отправить</div>
+      <div class="share-row-hint">Подругам будет интересно — покажи им</div>
+      <div class="share-messengers">
+        <button class="share-msg-btn ig" onclick="shareStories('ig')"><svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" stroke-linecap="round" stroke-linejoin="round"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Instagram</button>
+        <button class="share-msg-btn tg" onclick="shareStories('tg')"><svg viewBox="0 0 24 24" fill="none"><path d="M22 3L2 11l7 2.5M22 3l-4 18-7-7.5M22 3L9 13.5m0 0V20l3.5-3" stroke-linecap="round" stroke-linejoin="round"/></svg>Telegram</button>
+      </div>
     </div>
 
   </div>
@@ -1282,8 +1287,10 @@ var STORY_QUOTES={
   'Агент':'Договаривается со всеми.\nНо с тобой —\nне может договориться с собой.'
 };
 
-window.shareStories=function(){
+var _storyVia='ig';
+window.shareStories=function(via){
   hap('m');
+  _storyVia=via||'ig';
   document.getElementById('sharePanel').classList.remove('open');
 
   /* данные дня */
@@ -1340,6 +1347,19 @@ window.closeStoryPreview=function(){
 window.confirmStories=function(){
   hap('m');
   closeStoryPreview();
+
+  /* Telegram Stories — серверная карточка + widget_link */
+  if(_storyVia==='tg' && tg && tg.shareToStory){
+    var slug=NAMES_MAP[D.archetype]||'';
+    var cardUrl='https://maru-test.vercel.app/api/card?slug='+encodeURIComponent(slug)+'&name='+encodeURIComponent(D.archetype)+'&type=story&t='+Date.now();
+    tg.shareToStory(cardUrl,{
+      text:'MARU · '+D.archetype,
+      widget_link:{url:'https://t.me/maru_22_bot/maru',name:'Пройти тест'}
+    });
+    return;
+  }
+
+  /* Instagram Stories — html2canvas + navigator.share */
   var card=document.getElementById('storyCard');
   function doRender(){
     html2canvas(card,{
