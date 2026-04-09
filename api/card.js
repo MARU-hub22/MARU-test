@@ -39,7 +39,9 @@ export default async function handler(req, res) {
     await page.close();
 
     res.setHeader('Content-Type', 'image/jpeg');
-    res.status(200).send(screenshot);
+    res.setHeader('Content-Length', screenshot.length);
+    res.status(200);
+    res.end(screenshot);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
