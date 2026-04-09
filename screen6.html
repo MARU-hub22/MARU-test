@@ -92,8 +92,8 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .validity-dot.high{background:var(--acc)}
 .validity-dot.medium{background:#C9962A}
 .validity-dot.low{background:var(--t3)}
-.validity-label{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--t3);}
-.validity-value{font-size:13px;font-weight:500;color:var(--t3);}
+.validity-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--t3);}
+.validity-value{font-size:13px;font-weight:500;color:var(--t2);}
 .validity-tip-btn{
   font-size:10px;color:var(--acc);letter-spacing:.06em;
   background:transparent;border:none;cursor:pointer;
@@ -170,11 +170,11 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .ef-col:nth-child(2) .ef-fill{transform-origin:bottom;animation:pulse2 2.4s ease-in-out infinite}
 .ef-col:nth-child(3) .ef-fill{transform-origin:bottom;animation:pulse3 3.2s ease-in-out infinite}
 
-.ef-name{font-size:9px;letter-spacing:.06em;text-transform:uppercase;text-align:center;margin-top:6px;padding-bottom:4px;}
+.ef-name{font-size:10px;letter-spacing:.06em;text-transform:uppercase;text-align:center;margin-top:6px;padding-bottom:4px;}
 .ef-col:nth-child(1) .ef-name{color:rgba(74,158,255,1)}
 .ef-col:nth-child(2) .ef-name{color:rgba(74,158,255,0.75)}
 .ef-col:nth-child(3) .ef-name{color:var(--t2)}
-.ef-hint{text-align:center;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(0,0,0,0.28);padding:14px 0 14px;transition:opacity .2s;}
+.ef-hint{text-align:center;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(0,0,0,0.28);padding:14px 0 14px;transition:opacity .2s;}
 @keyframes hintPulse{0%,100%{color:rgba(0,0,0,0.28)}50%{color:var(--acc)}}
 .ef-hint.pulse{animation:hintPulse 1.2s ease 1}
 .ef-desc{margin:0 16px 16px;padding:10px 14px;border-radius:10px;border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);display:none;}
@@ -214,8 +214,8 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .acc-item.open .acc-dot{opacity:1}
 .acc-head:active{opacity:.7}
 .acc-texts{flex:1;min-width:0}
-.acc-title{font-size:14px;font-weight:500;color:var(--t1);margin-bottom:2px}
-.acc-sub{font-size:11px;color:var(--t3)}
+.acc-title{font-size:15px;font-weight:500;color:var(--t1);margin-bottom:2px}
+.acc-sub{font-size:12px;color:var(--t3)}
 .acc-arr{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;opacity:.6;}
 .acc-arr svg{width:16px;height:16px;stroke:var(--t2);stroke-width:1.5;fill:none;stroke-linecap:round;transition:transform .2s}
 .acc-item.open .acc-arr svg{transform:rotate(180deg)}
@@ -243,15 +243,15 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .share-handle{width:32px;height:3px;border-radius:2px;background:rgba(0,0,0,0.15);margin:0 auto 16px;}
 .share-title{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--t1);text-align:center;margin-bottom:16px;}
 .share-row{
-  padding:16px;border-radius:12px;
+  padding:16px 16px 16px 12px;border-radius:12px;
   border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);
   margin-bottom:8px;-webkit-tap-highlight-color:transparent;
 }
 .share-row-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:4px;}
-.share-row-ico{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
-.share-row-ico svg{width:16px;height:16px;stroke:var(--t3);stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
-.share-row-title{font-size:13px;font-weight:500;color:var(--t1)}
-.share-row-hint{font-size:11px;color:var(--t3);margin-bottom:8px;padding-left:26px}
+.share-row-ico{width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:0px;}
+.share-row-ico svg{width:20px;height:20px;stroke:var(--t1);stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.share-row-title{font-size:15px;font-weight:600;color:var(--t1)}
+.share-row-hint{font-size:11px;color:var(--t3);margin-bottom:8px;padding-left:38px}
 .share-preview{
   padding:10px 0 0;display:flex;align-items:center;gap:10px;
 }
@@ -276,7 +276,10 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
   cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .1s,opacity .1s;
 }
 .share-msg-btn:active{transform:scale(0.96);opacity:.7}
-.share-msg-btn svg{width:16px;height:16px;flex-shrink:0;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;stroke:rgba(0,0,0,0.35)}
+.share-msg-btn svg{width:18px;height:18px;flex-shrink:0;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.share-msg-btn.tg svg{stroke:#2AABEE}
+.share-msg-btn.wa svg{stroke:#25D366}
+.share-msg-btn.vb svg{stroke:#7360F2}
 
 .cta-scroll{
   position:fixed;
@@ -367,7 +370,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
           </div>
           <div id="validityInline" style="display:flex;align-items:center;gap:4px;margin-top:4px;opacity:0;transition:opacity .4s">
             <div id="validityDot" style="width:5px;height:5px;border-radius:50%;flex-shrink:0;background:var(--acc)"></div>
-            <span id="validityValue" style="font-size:8px;color:rgba(0,0,0,0.28);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap">Высокая</span>
+            <span id="validityValue" style="font-size:10px;color:rgba(0,0,0,0.28);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap">Высокая</span>
           </div>
         </div>
         <div class="ins-text" id="insText">
@@ -454,9 +457,9 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
       </div>
       <div class="share-row-hint">Я расшифровала его — теперь понимаю. Попробуй тоже</div>
       <div class="share-messengers">
-        <button class="share-msg-btn" onclick="showFriendPreview('tg')"><svg viewBox="0 0 24 24" fill="none"><path d="M22 3L2 11l7 2.5M22 3l-4 18-7-7.5M22 3L9 13.5m0 0V20l3.5-3" stroke-linecap="round" stroke-linejoin="round"/></svg>TG</button>
-        <button class="share-msg-btn" onclick="showFriendPreview('wa')"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>WA</button>
-        <button class="share-msg-btn" onclick="showFriendPreview('vb')"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.13-1.35A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>Viber</button>
+        <button class="share-msg-btn tg" onclick="showFriendPreview('tg')"><svg viewBox="0 0 24 24" fill="none"><path d="M22 3L2 11l7 2.5M22 3l-4 18-7-7.5M22 3L9 13.5m0 0V20l3.5-3" stroke-linecap="round" stroke-linejoin="round"/></svg>TG</button>
+        <button class="share-msg-btn wa" onclick="showFriendPreview('wa')"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>WA</button>
+        <button class="share-msg-btn vb" onclick="showFriendPreview('vb')"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.13-1.35A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>Viber</button>
       </div>
     </div>
 
@@ -1171,7 +1174,7 @@ window.confirmFriend=function(){
 /* Универсальный роутер мессенджеров */
 function shareVia(via,text,url){
   if(via==='tg'){
-    var tgUrl='https://t.me/share/url?url=&text='+encodeURIComponent(text);
+    var tgUrl='https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text.replace(url,'').trim());
     if(tg&&tg.openTelegramLink)tg.openTelegramLink(tgUrl);
     else window.open(tgUrl,'_blank');
   } else if(via==='wa'){
@@ -1317,6 +1320,7 @@ window.confirmStories=function(){
   hap('m');
   closeStoryPreview();
   var card=document.getElementById('storyCard');
+  /* грузим html2canvas если нет */
   function doRender(){
     html2canvas(card,{
       scale:3,
