@@ -477,9 +477,9 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 <!-- ПРЕВЬЮ STORIES -->
 <div id="storyPreview" style="position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(44,44,44,0.6);opacity:0;pointer-events:none;transition:opacity .3s;padding:24px" onclick="if(event.target===this)closeStoryPreview()">
   <canvas id="storyCanvas" style="display:none"></canvas>
-  <div style="width:100%;max-width:300px">
-    <!-- контент для рендера -->
-    <div id="storyCard" style="width:100%;aspect-ratio:9/16;border-radius:20px;overflow:hidden;position:relative;font-family:Inter,sans-serif">
+  <div style="width:100%;max-width:270px;margin:0 auto">
+    <!-- контент для рендера: 270×480 = 9:16, scale 4 = 1080×1920 -->
+    <div id="storyCard" style="width:270px;height:480px;border-radius:20px;overflow:hidden;position:relative;font-family:Inter,sans-serif">
 
       <!-- фото на весь фон -->
       <img id="storyPhoto" src="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:brightness(0.4) saturate(0.85)">
@@ -1343,7 +1343,7 @@ window.confirmStories=function(){
   var card=document.getElementById('storyCard');
   function doRender(){
     html2canvas(card,{
-      scale:2,
+      scale:4,
       backgroundColor:'#111',
       useCORS:false,
       allowTaint:true,
