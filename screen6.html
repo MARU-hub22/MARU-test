@@ -479,21 +479,25 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
   <canvas id="storyCanvas" style="display:none"></canvas>
   <div style="width:100%;max-width:300px">
     <!-- контент для рендера -->
-    <div id="storyCard" style="width:100%;background:#efefee;border-radius:24px;padding:28px 24px 24px;text-align:center;font-family:Inter,sans-serif;overflow:hidden">
+    <div id="storyCard" style="width:100%;aspect-ratio:9/16;border-radius:20px;overflow:hidden;position:relative;font-family:Inter,sans-serif">
 
-      <!-- лого сверху -->
-      <div style="font-size:22px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#efefee;text-shadow:-1px -1px 1px rgba(0,0,0,0.15),1px 1px 1px rgba(255,255,255,0.8),0 0 2px rgba(0,0,0,0.03);margin-bottom:24px">MARU</div>
+      <!-- фото на весь фон -->
+      <img id="storyPhoto" src="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:brightness(0.4) saturate(0.85)">
+      <!-- gradient overlay -->
+      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0.1) 25%,rgba(0,0,0,0.5) 55%,rgba(0,0,0,0.88) 100%)"></div>
+      <!-- glow -->
+      <div id="storyGlow" style="position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:0 2px 2px 0;background:#FFA64D"></div>
 
-      <!-- фото архетипа -->
-      <div style="width:120px;height:120px;border-radius:50%;margin:0 auto 16px;overflow:hidden;border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.05);border-bottom:1px solid rgba(255,255,255,0.6);border-right:1px solid rgba(255,255,255,0.5)">
-        <img id="storyPhoto" src="" style="width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.12) brightness(1.03)">
+      <!-- контент -->
+      <div style="position:relative;z-index:2;height:100%;display:flex;flex-direction:column;padding:24px 24px 40px">
+        <div style="font-size:24px;font-weight:700;color:#fff;line-height:1.25;margin-top:24px;margin-bottom:14px" id="storyTitle"></div>
+        <div style="flex:1"></div>
+        <div style="padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.07);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);margin-bottom:14px">
+          <div id="storyArch" style="font-size:15px;font-weight:700;color:#FFA64D;text-shadow:0 0 14px rgba(255,164,77,0.5)"></div>
+          <div id="storyPlanet" style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:.1em;text-transform:uppercase;margin-top:2px"></div>
+        </div>
+        <div id="storyQuote" style="font-size:14px;color:rgba(255,255,255,0.6);line-height:1.6"></div>
       </div>
-
-      <!-- архетип -->
-      <div id="storyArch" style="font-size:20px;font-weight:700;color:#2c2c2c;letter-spacing:-.01em;line-height:1"></div>
-
-      <!-- ударная фраза -->
-      <div id="storyQuote" style="font-size:14px;font-weight:400;color:rgba(0,0,0,0.45);line-height:1.65;margin-top:14px;padding:0 8px"></div>
 
     </div>
     <!-- кнопки ВНЕ рендер-зоны -->
@@ -1282,12 +1286,29 @@ window.shareStories=function(){
   hap('m');
   document.getElementById('sharePanel').classList.remove('open');
 
+  /* данные дня */
+  var DAYS=[
+    {p:'солнце',cl:'#FFA64D',t:'Кто ты рядом с ним?',b:'Солнце освещает твоё «я» внутри пары. Сегодня — день честности с собой.'},
+    {p:'луна',cl:'#7EB8DA',t:'Сегодня он будет тише.',b:'Луна освещает уязвимость. Он уходит в себя. Это не холодность — это перезарядка.'},
+    {p:'марс',cl:'#FF4D6A',t:'Сегодня будет искрить.',b:'Марс поднимает температуру. Он становится резче. Скажи: «Я на твоей стороне».'},
+    {p:'меркурий',cl:'#4A9EFF',t:'Он скажет не то, что думает.',b:'Меркурий выключает прямоту. Не верь словам — слушай паузы.'},
+    {p:'юпитер',cl:'#A78BFA',t:'Загляни дальше завтра.',b:'Юпитер открывает перспективу. Дай ему увидеть вас через год.'},
+    {p:'венера',cl:'#FF8FAB',t:'Он отпустит контроль.',b:'Венера переключает из головы в тело. Он сегодня мягче. Подойди первая.'},
+    {p:'сатурн',cl:'#D4A76A',t:'Маски снимаются.',b:'Сатурн убирает роли. Он непривычно честен. Не пугайся.'}
+  ];
+  var dayIdx=new Date().getDay()%7;
+  var day=DAYS[dayIdx];
+
   /* фото архетипа */
   var photoSlug=NAMES_MAP[D.archetype]||'';
   if(photoSlug) document.getElementById('storyPhoto').src='https://cdn.jsdelivr.net/gh/MARU-hub22/MARU-test@main/photos/'+photoSlug+'.jpg';
   document.getElementById('storyArch').textContent=D.archetype;
-  var q=STORY_QUOTES[D.archetype]||'Он устроен сложнее,\nчем ты думала.\nИ проще, чем боялась.';
-  document.getElementById('storyQuote').innerHTML=q.replace(/\n/g,'<br>');
+  document.getElementById('storyArch').style.color=day.cl;
+  document.getElementById('storyArch').style.textShadow='0 0 14px '+day.cl;
+  var titleEl=document.getElementById('storyTitle');if(titleEl)titleEl.textContent=day.t;
+  var planetEl=document.getElementById('storyPlanet');if(planetEl)planetEl.textContent=day.p;
+  var glowEl=document.getElementById('storyGlow');if(glowEl)glowEl.style.background=day.cl;
+  document.getElementById('storyQuote').textContent=day.b;
 
   /* показываем модалку */
   document.getElementById('storyPreview').style.opacity='1';
@@ -1319,23 +1340,58 @@ window.closeStoryPreview=function(){
 window.confirmStories=function(){
   hap('m');
   closeStoryPreview();
-  var slug=NAMES_MAP[D.archetype]||'';
-  var cardUrl='https://maru-test.vercel.app/api/card?slug='+encodeURIComponent(slug)+'&name='+encodeURIComponent(D.archetype)+'&type=story&t='+Date.now();
-
-  fetch(cardUrl).then(function(r){return r.blob();}).then(function(blob){
-    if(!blob)return;
-    if(navigator.canShare){
-      var file=new File([blob],'MARU_'+D.archetype+'.jpg',{type:'image/jpeg'});
-      if(navigator.canShare({files:[file]})){
-        navigator.share({files:[file]}).catch(function(){});
-        return;
-      }
+  var card=document.getElementById('storyCard');
+  function doRender(){
+    html2canvas(card,{
+      scale:3,
+      backgroundColor:'#111',
+      useCORS:true,
+      allowTaint:false,
+      logging:false
+    }).then(function(canvas){
+      canvas.toBlob(function(blob){
+        if(!blob)return;
+        if(navigator.canShare){
+          var file=new File([blob],'MARU_'+D.archetype+'.png',{type:'image/png'});
+          if(navigator.canShare({files:[file]})){
+            navigator.share({files:[file]}).catch(function(){fallbackIG(blob);});
+            return;
+          }
+        }
+        fallbackIG(blob);
+      },'image/png');
+    }).catch(function(){fallbackIG(null);});
+  }
+  function fallbackIG(blob){
+    if(!blob){
+      window.location.href='instagram://story-camera';
+      setTimeout(function(){
+        if(document.visibilityState!=='hidden'){
+          alert('Установите Instagram, чтобы поделиться историей');
+        }
+      },1200);
+      return;
     }
-    /* fallback */
-    window.location.href='instagram://story-camera';
-  }).catch(function(){
-    window.location.href='instagram://story-camera';
-  });
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href='instagram-stories://share?background_image='+encodeURIComponent(url);
+    a.click();
+    setTimeout(function(){
+      if(document.visibilityState!=='hidden'){
+        window.location.href='instagram://story-camera';
+      }
+    },1500);
+    setTimeout(function(){URL.revokeObjectURL(url);},5000);
+  }
+  if(window.html2canvas){
+    doRender();
+  } else {
+    var s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    s.onload=doRender;
+    s.onerror=function(){fallbackIG(null);};
+    document.head.appendChild(s);
+  }
 };
 
 /* прогресс скролла + покачивание энергий */
