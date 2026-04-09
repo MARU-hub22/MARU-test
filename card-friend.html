@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MARU · Friend</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{margin:0;padding:0;width:1080px;height:1080px;background:#DA979E;-webkit-font-smoothing:antialiased;font-family:'Inter',-apple-system,sans-serif;overflow:hidden}
+
+.card{position:relative;width:1080px;height:1080px;overflow:hidden}
+.card-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+.inner{position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 90px}
+
+.photo-wrap{width:320px;height:320px;border-radius:50%;overflow:hidden;border:4px solid rgba(255,255,255,0.25);box-shadow:0 18px 48px rgba(0,0,0,0.15);margin-bottom:40px;background:rgba(0,0,0,0.04)}
+.photo-wrap img{width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.08) brightness(1.02)}
+
+.archetype{font-size:64px;font-weight:700;color:rgba(44,20,26,0.92);letter-spacing:-0.01em;text-align:center;line-height:1}
+.divider{width:48px;height:2px;background:rgba(44,20,26,0.2);margin:28px 0}
+.quote{font-size:30px;font-weight:400;color:rgba(44,20,26,0.7);line-height:1.5;text-align:center;max-width:820px}
+</style>
+</head>
+<body>
+<div class="card">
+  <img class="card-bg" id="bg" src="friend-bg.jpg">
+  <div class="inner">
+    <div class="photo-wrap"><img id="photo" src="" alt=""></div>
+    <div class="archetype" id="arch"></div>
+    <div class="divider"></div>
+    <div class="quote" id="quote"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var QUOTES={
+    'Конвертер':'Переводит чувства в действия. Если он что-то починил — это было «я люблю тебя».',
+    'Методолог':'У него есть система на всё. Даже на то, как скучать по тебе.',
+    'Теоретик':'Он знает ответ на любой вопрос. Кроме одного — что он к тебе чувствует.',
+    'Режиссер':'Молчит — не потому что злится. А потому что строит план, в котором ты уже есть.',
+    'Транслятор':'Говорит одно — имеет в виду другое. Не потому что врёт. А потому что боится точности.',
+    'Генератор':'Идеи каждую секунду. Но рядом с тобой он замирает. Это и есть его признание.',
+    'Полемик':'Спорит — не потому что не согласен. А потому что хочет, чтобы ты защитила свою позицию.',
+    'Аналитик':'Разложил тебя на части. И впервые не смог собрать обратно.',
+    'Оракул':'Знает, что будет дальше. Кроме вас двоих. И это его держит.',
+    'Созерцатель':'Смотрит на мир как на фильм. Но рядом с тобой впервые хочет быть в кадре.',
+    'Концептуалист':'Живёт в мире идей. Ты — первая идея, которую он хочет потрогать.',
+    'Интерпретатор':'Видит смыслы в каждом жесте. Твоё молчание для него — целая книга.',
+    'Идеолог':'Построил свой мир на правилах. А ты вошла и всё перепутала.',
+    'Дизайнер':'Видит красоту в системе. Ты — единственное, что он не может упорядочить.',
+    'Инструктор':'Знает, как надо. Но рядом с тобой впервые не уверен.',
+    'Педагог':'Учит весь мир. Но рядом с тобой — сам становится учеником.',
+    'Лидер':'Ведёт за собой всех. Но за тобой — пошёл бы сам.',
+    'Ментор':'Даёт советы всем. Но о тебе — думает молча.',
+    'Продавец':'Убеждает весь мир. Но тебя — просто слушает.',
+    'Герой':'Спасает всех. Но от тебя — не хочет спасаться.',
+    'Командир':'Контролирует всё. Но рядом с тобой — отпускает.',
+    'Философ':'Ищет смысл во всём. Ты — единственный ответ, который он не ставит под вопрос.',
+    'Историк':'Помнит всё. Но момент, когда встретил тебя — помнит по секундам.',
+    'Наставник':'Показывает путь другим. Но свой путь — видит только рядом с тобой.',
+    'Инженер':'Чинит всё вокруг. Но то, что ты делаешь с ним — не подлежит ремонту.',
+    'Декоратор':'Создаёт красоту. Но рядом с тобой — забывает создавать.',
+    'Законодатель':'Пишет правила для всех. Для тебя — готов нарушить свои.',
+    'Продюсер':'Запускает проекты. Но ты — единственный проект, где он не контролирует финал.',
+    'Драматург':'Пишет сценарии. Но ваш — дописывает каждый день.',
+    'Агент':'Договаривается со всеми. Но с тобой — не может договориться с собой.'
+  };
+
+  var params=new URLSearchParams(window.location.search);
+  var slug=params.get('slug')||'rezhisser';
+  var SLUG_TO_NAME={konverter:'Конвертер',metodolog:'Методолог',teoretik:'Теоретик',rezhisser:'Режиссер',translyator:'Транслятор',generator:'Генератор',polemik:'Полемик',analitik:'Аналитик',orakul:'Оракул',sozertatel:'Созерцатель',kontseptualist:'Концептуалист',interpretator:'Интерпретатор',ideolog:'Идеолог',dizayner:'Дизайнер',instruktor:'Инструктор',pedagog:'Педагог',lider:'Лидер',mentor:'Ментор',prodavets:'Продавец',geroy:'Герой',komandir:'Командир',filosof:'Философ',istorik:'Историк',nastavnik:'Наставник',inzhener:'Инженер',dekorator:'Декоратор',zakonodatel:'Законодатель',produser:'Продюсер',dramaturg:'Драматург',agent:'Агент'};
+  var name=params.get('name')||SLUG_TO_NAME[slug]||'Режиссер';
+  var quote=params.get('quote')||QUOTES[name]||'';
+
+  document.getElementById('photo').src='photos/'+slug+'.jpg';
+  document.getElementById('arch').textContent=name;
+  document.getElementById('quote').textContent=quote;
+
+  /* дождаться загрузки картинок */
+  var imgs=document.querySelectorAll('img');
+  var loaded=0;
+  imgs.forEach(function(img){
+    if(img.complete){loaded++;}
+    else{
+      img.onload=img.onerror=function(){loaded++;if(loaded===imgs.length){window._ready=true;}};
+    }
+  });
+  if(loaded===imgs.length)window._ready=true;
+})();
+</script>
+</body>
+</html>

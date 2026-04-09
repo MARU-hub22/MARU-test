@@ -23,12 +23,15 @@ export default async function handler(req, res) {
   const { slug = 'rezhisser', name = '', her = '', day = '0', type = 'story' } = req.query;
 
   const base = `https://${req.headers.host}`;
-  const pageUrl = `${base}/card-story.html?slug=${encodeURIComponent(slug)}&name=${encodeURIComponent(name)}&her=${encodeURIComponent(her)}&day=${day}`;
+  const template = type === 'friend' ? 'card-friend.html' : 'card-story.html';
+  const pageUrl = `${base}/${template}?slug=${encodeURIComponent(slug)}&name=${encodeURIComponent(name)}&her=${encodeURIComponent(her)}&day=${day}`;
+  const W = type === 'friend' ? 1080 : 1080;
+  const H = type === 'friend' ? 1080 : 1920;
 
   try {
     const browser = await getBrowser();
     const page = await browser.newPage();
-    await page.setViewport({ width: 1080, height: 1920, deviceScaleFactor: 1 });
+    await page.setViewport({ width: W, height: H, deviceScaleFactor: 1 });
     await page.goto(pageUrl, { waitUntil: 'networkidle0', timeout: 15000 });
     await page.waitForFunction('window._ready === true', { timeout: 5000 });
 

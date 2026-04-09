@@ -27,8 +27,8 @@ export default async function handler(req) {
 <meta property="og:title" content="${name} — MARU">
 <meta property="og:description" content="Я прошла тест про мужчин — и наконец поняла, почему он так себя ведёт. Попробуй тоже">
 <meta property="og:image" content="${cardImg}">
-<meta property="og:image:width" content="600">
-<meta property="og:image:height" content="600">
+<meta property="og:image:width" content="1080">
+<meta property="og:image:height" content="1080">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="${cardImg}">
