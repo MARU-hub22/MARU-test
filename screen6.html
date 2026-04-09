@@ -1318,11 +1318,11 @@ window.confirmStories=function(){
   closeStoryPreview();
   var slug=NAMES_MAP[D.archetype]||'';
   var cardUrl='https://maru-test.vercel.app/api/card?slug='+encodeURIComponent(slug)+'&name='+encodeURIComponent(D.archetype)+'&type=story&t='+Date.now();
-  if(tg&&tg.shareToStory){
-    tg.shareToStory(cardUrl,{text:'MARU · '+D.archetype,widget_link:{url:'https://t.me/maru_22_bot/maru',name:'Пройти тест'}});
+  var sharePageUrl='https://maru-test.vercel.app/story-share.html?url='+encodeURIComponent(cardUrl)+'&name='+encodeURIComponent(D.archetype);
+  if(tg&&tg.openLink){
+    tg.openLink(sharePageUrl);
   } else {
-    if(tg&&tg.openLink) tg.openLink(cardUrl);
-    else window.open(cardUrl,'_blank');
+    window.open(sharePageUrl,'_blank');
   }
 };
 
