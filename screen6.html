@@ -1058,7 +1058,7 @@ function reveal(){
   /* shareMini */
   var smn=document.getElementById('shareMiniName');if(smn)smn.textContent=D.archetype;
   var smp=document.getElementById('shareMiniPhoto');
-  if(smp&&slug){smp.innerHTML='<img src="Фото архетипы муж/'+slug+'.jpg" style="width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.12) brightness(1.03)">';}
+  if(smp&&slug){smp.innerHTML='<img src="https://cdn.jsdelivr.net/gh/MARU-hub22/MARU-test@main/photos/'+slug+'.jpg" style="width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.12) brightness(1.03)">';}
   setTimeout(function(){document.getElementById('c0').classList.add('vis');},360);
   setTimeout(function(){document.getElementById('c1').classList.add('vis');animBars();},570);
   // аккордеоны — при скролле
@@ -1145,7 +1145,7 @@ window.showFriendPreview=function(via){
     '<div style="width:100px;height:100px;border-radius:50%;margin:0 auto 14px;overflow:hidden;'+
     'border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.05);'+
     'border-bottom:1px solid rgba(255,255,255,0.6);border-right:1px solid rgba(255,255,255,0.5)">'+
-    (photoSlug?'<img src="Фото архетипы муж/'+photoSlug+'.jpg" style="width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.12) brightness(1.03)">':'')+
+    (photoSlug?'<img src="https://cdn.jsdelivr.net/gh/MARU-hub22/MARU-test@main/photos/'+photoSlug+'.jpg" style="width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.12) brightness(1.03)">':'')+
     '</div>'+
     '<div style="font-size:20px;font-weight:700;color:#2c2c2c;letter-spacing:-.01em">'+D.archetype+'</div>'+
     '<div style="font-size:13px;font-weight:400;color:rgba(0,0,0,0.4);line-height:1.65;margin-top:12px;padding:0 4px">'+q.replace(/\n/g,'<br>')+'</div>';
@@ -1162,15 +1162,16 @@ window.confirmFriend=function(){
   hap('m');
   closeFriendPreview();
   var rid=localStorage.getItem('maru_result_id')||'';
-  var appUrl=makeAppLink(rid||'');
-  var text='Привет! Я прошла тест про мужчин — и наконец поняла, почему он так себя ведёт.\n\nПопробуй — '+appUrl;
-  shareVia(_friendVia,text,appUrl);
+  var slug=NAMES_MAP[D.archetype]||'';
+  var shareUrl='https://maru-test.vercel.app/s/'+encodeURIComponent(slug);
+  var text='Привет! Я прошла тест про мужчин — и наконец поняла, почему он так себя ведёт.\n\nПопробуй тоже\n'+shareUrl;
+  shareVia(_friendVia,text,shareUrl);
 };
 
 /* Универсальный роутер мессенджеров */
 function shareVia(via,text,url){
   if(via==='tg'){
-    var tgUrl='https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text.replace(url,'').trim());
+    var tgUrl='https://t.me/share/url?url=&text='+encodeURIComponent(text);
     if(tg&&tg.openTelegramLink)tg.openTelegramLink(tgUrl);
     else window.open(tgUrl,'_blank');
   } else if(via==='wa'){
@@ -1280,7 +1281,7 @@ window.shareStories=function(){
 
   /* фото архетипа */
   var photoSlug=NAMES_MAP[D.archetype]||'';
-  if(photoSlug) document.getElementById('storyPhoto').src='Фото архетипы муж/'+photoSlug+'.jpg';
+  if(photoSlug) document.getElementById('storyPhoto').src='https://cdn.jsdelivr.net/gh/MARU-hub22/MARU-test@main/photos/'+photoSlug+'.jpg';
   document.getElementById('storyArch').textContent=D.archetype;
   var q=STORY_QUOTES[D.archetype]||'Он устроен сложнее,\nчем ты думала.\nИ проще, чем боялась.';
   document.getElementById('storyQuote').innerHTML=q.replace(/\n/g,'<br>');
@@ -1306,7 +1307,7 @@ window.shareStories=function(){
   var archImg=new Image();archImg.crossOrigin='anonymous';
   archImg.onload=function(){render(archImg);};
   archImg.onerror=function(){render(null);};
-  archImg.src=photoSlug?'Фото архетипы муж/'+photoSlug+'.jpg':'';
+  archImg.src=photoSlug?'https://cdn.jsdelivr.net/gh/MARU-hub22/MARU-test@main/photos/'+photoSlug+'.jpg':'';
 };
 window.closeStoryPreview=function(){
   var modal=document.getElementById('storyPreview');
@@ -1315,58 +1316,13 @@ window.closeStoryPreview=function(){
 window.confirmStories=function(){
   hap('m');
   closeStoryPreview();
-  var card=document.getElementById('storyCard');
-  /* грузим html2canvas если нет */
-  function doRender(){
-    html2canvas(card,{
-      scale:3,
-      backgroundColor:'#e8e8e8',
-      useCORS:true,
-      allowTaint:false,
-      logging:false
-    }).then(function(canvas){
-      canvas.toBlob(function(blob){
-        if(!blob)return;
-        if(navigator.canShare){
-          var file=new File([blob],'MARU_'+D.archetype+'.png',{type:'image/png'});
-          if(navigator.canShare({files:[file]})){
-            navigator.share({files:[file]}).catch(function(){fallbackIG(blob);});
-            return;
-          }
-        }
-        fallbackIG(blob);
-      },'image/png');
-    }).catch(function(){fallbackIG(null);});
-  }
-  function fallbackIG(blob){
-    if(!blob){
-      window.location.href='instagram://story-camera';
-      setTimeout(function(){
-        if(document.visibilityState!=='hidden'){
-          alert('Установите Instagram, чтобы поделиться историей');
-        }
-      },1200);
-      return;
-    }
-    var url=URL.createObjectURL(blob);
-    var a=document.createElement('a');
-    a.href='instagram-stories://share?background_image='+encodeURIComponent(url);
-    a.click();
-    setTimeout(function(){
-      if(document.visibilityState!=='hidden'){
-        window.location.href='instagram://story-camera';
-      }
-    },1500);
-    setTimeout(function(){URL.revokeObjectURL(url);},5000);
-  }
-  if(window.html2canvas){
-    doRender();
+  var slug=NAMES_MAP[D.archetype]||'';
+  var cardUrl='https://maru-test.vercel.app/api/card?slug='+encodeURIComponent(slug)+'&name='+encodeURIComponent(D.archetype)+'&type=story&t='+Date.now();
+  if(tg&&tg.shareToStory){
+    tg.shareToStory(cardUrl,{text:'MARU · '+D.archetype,widget_link:{url:'https://t.me/maru_22_bot/maru',name:'Пройти тест'}});
   } else {
-    var s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload=doRender;
-    s.onerror=function(){fallbackIG(null);};
-    document.head.appendChild(s);
+    if(tg&&tg.openLink) tg.openLink(cardUrl);
+    else window.open(cardUrl,'_blank');
   }
 };
 
