@@ -32,10 +32,10 @@ export default async function handler(req, res) {
     await page.goto(pageUrl, { waitUntil: 'networkidle0', timeout: 15000 });
     await page.waitForFunction('window._ready === true', { timeout: 5000 });
 
-    const screenshot = await page.screenshot({ type: 'png', fullPage: false });
+    const screenshot = await page.screenshot({ type: 'jpeg', quality: 90, fullPage: false });
     await page.close();
 
-    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Content-Type', 'image/jpeg');
     res.status(200).send(screenshot);
   } catch (e) {
     res.status(500).json({ error: e.message });
