@@ -1196,7 +1196,7 @@ window.confirmFriend=function(){
   closeFriendPreview();
   var rid=localStorage.getItem('maru_result_id')||'';
   var slug=NAMES_MAP[D.archetype]||'';
-  var shareUrl='https://maru-test.vercel.app/s/'+encodeURIComponent(slug);
+  var shareUrl='https://maru-test.vercel.app/s/'+encodeURIComponent(slug)+'?v=13';
   var text='Привет! Я прошла тест про мужчин — и наконец поняла, почему он так себя ведёт.\n\nПопробуй тоже\n'+shareUrl;
   shareVia(_friendVia,text,shareUrl);
 };
