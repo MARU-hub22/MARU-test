@@ -24,6 +24,10 @@ Thumbs.db
 .show-user.png
 .verify-*.png
 
+# Промежуточные генерации карточек
+friend-card-*.png
+friend-card-*.jpg
+
 # node
 node_modules/
 .env
