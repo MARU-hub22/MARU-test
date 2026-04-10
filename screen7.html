@@ -337,7 +337,7 @@ html,body{
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-try{var tg=window.Telegram&&Telegram.WebApp;if(tg){tg.ready();tg.expand();tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee')}}catch(e){}
+try{var tg=window.Telegram&&Telegram.WebApp;if(tg){tg.ready();tg.expand();try{tg.disableVerticalSwipes&&tg.disableVerticalSwipes()}catch(e){}tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee')}}catch(e){}
 
 var MONTHS_NOM=['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'];
 var COLORS=[

@@ -469,7 +469,7 @@ html, body {
 /* ═══ Telegram ═══ */
 try {
   var tg = window.Telegram && Telegram.WebApp;
-  if (tg) { tg.ready(); tg.expand(); tg.setBackgroundColor('#efefee'); tg.setHeaderColor('#efefee'); }
+  if (tg) { tg.ready(); tg.expand(); try{tg.disableVerticalSwipes&&tg.disableVerticalSwipes()}catch(e){} tg.setBackgroundColor('#efefee'); tg.setHeaderColor('#efefee'); }
 } catch(e) {}
 
 /* ═══ Config ═══ */

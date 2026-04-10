@@ -631,7 +631,7 @@
 
 <script>
   const tg = window.Telegram?.WebApp;
-  if (tg) { tg.ready(); tg.expand(); try{tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee');}catch(e){} }
+  if (tg) { tg.ready(); tg.expand(); try{tg.disableVerticalSwipes&&tg.disableVerticalSwipes();}catch(e){} try{tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee');}catch(e){} }
 
   function hap(t) {
     try { tg?.HapticFeedback?.impactOccurred(t === 'm' ? 'medium' : 'light'); } catch(e) {}

@@ -253,7 +253,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 </div>
 
 <script>
-try{var tg=window.Telegram&&Telegram.WebApp;if(tg){tg.ready();tg.expand();tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee')}}catch(e){}
+try{var tg=window.Telegram&&Telegram.WebApp;if(tg){tg.ready();tg.expand();try{tg.disableVerticalSwipes&&tg.disableVerticalSwipes()}catch(e){}tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee')}}catch(e){}
 
 var PLANETS={
   0:{p:'солнце',clr:'#FFA64D',br:0.45,pos:'center 25%'},
@@ -384,7 +384,7 @@ if(subscribed){
   fbPosition(fbCurrent,false);
   var startY=0,startOff=0,dragging=false,movedY=0;
   fbContainer.addEventListener('touchstart',function(e){dragging=true;startY=e.touches[0].clientY;movedY=0;startOff=midSlots*itemH-fbCurrent*itemH;fbList.style.transition='none'},{passive:true});
-  fbContainer.addEventListener('touchmove',function(e){if(!dragging)return;movedY=e.touches[0].clientY-startY;fbList.style.transform='translateY('+(startOff+movedY)+'px)'},{passive:true});
+  fbContainer.addEventListener('touchmove',function(e){if(!dragging)return;e.preventDefault();movedY=e.touches[0].clientY-startY;fbList.style.transform='translateY('+(startOff+movedY)+'px)'},{passive:false});
   fbContainer.addEventListener('touchend',function(){if(!dragging)return;dragging=false;fbPosition(fbCurrent+Math.round(-movedY/itemH),true)});
   fbContainer.addEventListener('mousedown',function(e){dragging=true;startY=e.clientY;movedY=0;startOff=midSlots*itemH-fbCurrent*itemH;fbList.style.transition='none';e.preventDefault()});
   window.addEventListener('mousemove',function(e){if(!dragging)return;movedY=e.clientY-startY;fbList.style.transform='translateY('+(startOff+movedY)+'px)'});

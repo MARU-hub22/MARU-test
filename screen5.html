@@ -460,7 +460,7 @@ html,body{
 <script>
 (function(){
 var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
-if(tg){tg.ready();tg.expand();try{tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee');}catch(e){}}
+if(tg){tg.ready();tg.expand();try{tg.disableVerticalSwipes&&tg.disableVerticalSwipes();}catch(e){}try{tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee');}catch(e){}}
 
 window.shakeCard=function(el){
   hap('m');

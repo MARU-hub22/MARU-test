@@ -398,7 +398,7 @@ body{
 </div>
 
 <script>
-(function(){var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;if(tg){tg.ready();tg.expand();try{tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee');}catch(e){}}})();
+(function(){var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;if(tg){tg.ready();tg.expand();try{tg.disableVerticalSwipes&&tg.disableVerticalSwipes();}catch(e){}try{tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee');}catch(e){}}})();
 
 /* ─── Карусель crossfade ─── */
 (function(){

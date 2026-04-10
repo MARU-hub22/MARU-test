@@ -544,7 +544,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 <script>
 (function(){
 var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
-if(tg){tg.ready();tg.expand();try{tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee');}catch(e){}}
+if(tg){tg.ready();tg.expand();try{tg.disableVerticalSwipes&&tg.disableVerticalSwipes();}catch(e){}try{tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee');}catch(e){}}
 function hap(t){try{if(tg)tg.HapticFeedback.impactOccurred(t==='m'?'medium':'light');}catch(e){}try{if(navigator.vibrate)navigator.vibrate(t==='m'?14:7);}catch(e){}}
 
 /* ── Ссылка на мини-апп — short name из BotFather ── */

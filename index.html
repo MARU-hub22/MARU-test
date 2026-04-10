@@ -85,6 +85,7 @@ body{font-family:'Inter',sans-serif;background:#d48d93}
   if(window.Telegram&&window.Telegram.WebApp){
     tg=window.Telegram.WebApp;
     tg.ready();tg.expand();
+    try{tg.disableVerticalSwipes&&tg.disableVerticalSwipes();}catch(e){}
   }
 
   if(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.start_param){

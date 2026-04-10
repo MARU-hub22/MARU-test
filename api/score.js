@@ -2,7 +2,7 @@
 // Векторы: Ан / Кж / Зр / Ор / Зв
 // Алгоритм: нормализация 1/n, приоритет Кж→Ан→Зр→Ор→Зв, A2 (Зв→1), A3 (Ор≠1)
 
-import data from './_data/maru_data.json' assert { type: 'json' };
+import data from './_data/maru_data.json' with { type: 'json' };
 
 const VECTORS = ['Ан', 'Кж', 'Зр', 'Ор', 'Зв'];
 const TIE_PRIORITY = ['Кж', 'Ан', 'Зр', 'Ор', 'Зв'];
