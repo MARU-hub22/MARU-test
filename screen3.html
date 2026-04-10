@@ -733,7 +733,9 @@
   // ─── CDN загрузка ───
   async function loadData() {
     try {
-      const res = await fetch('https://cdn.jsdelivr.net/gh/MARU-hub22/maru-data@main/maru_data.json');
+      // raw.githubusercontent — без CDN-кэша, всегда свежий
+      const url = 'https://raw.githubusercontent.com/MARU-hub22/maru-data/main/maru_data.json?t=' + Date.now();
+      const res = await fetch(url, { cache: 'no-store' });
       const data = await res.json();
       QUESTIONS = data.questions.slice(0, TOTAL_Q);
       SCORING = data.scoring;
@@ -1134,11 +1136,22 @@
       });
     }
 
+    // legacy маппинг для screen4-9 которые ещё работают со старыми именами Ф/ЗН/СМ/Э/ЗВ
+    // соответствие: Ан=ЗН, Кж=Ф, Зр=Э, Ор=ЗВ, Зв=СМ
+    const NEW_TO_OLD = { 'Ан':'ЗН', 'Кж':'Ф', 'Зр':'Э', 'Ор':'ЗВ', 'Зв':'СМ' };
+    const scoresLegacy = {};
+    for (const v in scores) scoresLegacy[NEW_TO_OLD[v]] = scores[v];
+    const top3Legacy = top3.map(v => NEW_TO_OLD[v]);
+    const combinationLegacy = top3Legacy.join('-');
+
     const result = {
       archetypeName: archetypeName,
       combination: combination,
-      scores: scores,
-      top3: top3,
+      combinationLegacy: combinationLegacy,
+      scores: scoresLegacy,        // отдаём в старом формате чтобы screen4 не падал
+      scoresNew: scores,           // новый формат рядом
+      top3: top3Legacy,            // top3 в старом формате
+      top3New: top3,               // и новый
       gender: gender,
       validity: validity,
       mismatches: mismatches,
