@@ -479,24 +479,36 @@
     margin-bottom: 0;
     max-width: 280px;
     text-wrap: balance;
+    transition: filter 0.7s ease-out, transform 0.7s ease-out, opacity 0.7s ease-out;
   }
   .ov-text strong { font-weight: 500; font-style: italic; }
+  .ov-text.dimmed {
+    filter: blur(4px);
+    transform: scale(0.94);
+    opacity: 0.4;
+  }
 
-  /* подсказка про мульти-выбор — мельче, тише, отдельным блоком */
+  /* подсказка про мульти-выбор — единый голос с .ov-text, фокус-шифт */
   .ov-multi-hint {
-    margin-top: 24px;
-    font-family: 'Inter', -apple-system, sans-serif;
-    font-size: 11px;
+    margin-top: 32px;
+    font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 15px;
+    font-style: italic;
     font-weight: 400;
-    color: var(--t3);
+    color: rgba(44, 44, 44, 0.35);
     text-align: center;
-    letter-spacing: 0.01em;
-    max-width: 260px;
+    letter-spacing: 0.005em;
+    max-width: 280px;
     line-height: 1.45;
     opacity: 0;
-    transition: opacity 0.6s ease;
+    transform: scale(0.95);
+    transition: opacity 0.6s ease-out, transform 1.6s ease-out, color 2s ease-out;
   }
-  .ov-multi-hint.show { opacity: 0.85; }
+  .ov-multi-hint.show {
+    opacity: 1;
+    transform: scale(1.05);
+    color: rgba(44, 44, 44, 0.92);
+  }
 
   /* ─── ИНФОГРАФИКА ─── */
   .ov-infograph {
@@ -598,7 +610,7 @@
     <div class="ov-text">
       <span class="ov-typed" id="ov1Typed"></span><svg class="ov-heart-inline" id="ov1Heart" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path pathLength="100" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="#2c2c2c" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
     </div>
-    <div class="ov-multi-hint" id="ov1MultiHint">Можно выбрать два варианта, если оба про него</div>
+    <div class="ov-multi-hint" id="ov1MultiHint">можно выбрать один или 2 варианта если оба про него</div>
   </div>
 </div>
 
@@ -651,7 +663,9 @@
       const typed = document.getElementById('ov1Typed');
       const heart = document.getElementById('ov1Heart');
       const multiHint = document.getElementById('ov1MultiHint');
+      const ovText = document.querySelector('#ov1 .ov-text');
       if (multiHint) multiHint.classList.remove('show');
+      if (ovText) ovText.classList.remove('dimmed');
       if (typed) {
         // СБРОС: чистим текст и снимаем класс draw чтобы сердце снова было «не нарисовано»
         typed.innerHTML = '';
@@ -661,13 +675,16 @@
           handwrite('Сейчас ты ответишь за него. Так, как ты его видишь. Это и есть твоя правда', typed, 48, function() {
             // ПОСЛЕ последней буквы — рисуем сердце по контуру
             if (heart) setTimeout(function() { heart.classList.add('draw'); }, 200);
-            // потом показываем подсказку про мульти-выбор
-            if (multiHint) setTimeout(function() { multiHint.classList.add('show'); }, 800);
+            // фокус-шифт: главный текст в blur, подсказка приближается и темнеет
+            setTimeout(function() {
+              if (ovText) ovText.classList.add('dimmed');
+              if (multiHint) multiHint.classList.add('show');
+            }, 800);
           });
         }, 350);
       }
-      // ov1: handwrite ~3.4s + сердце 1.3s + hint 0.6s = ~5.5s + 2s hold = 7.5s
-      setTimeout(function() { closeOverlay(id); }, 7500);
+      // ov1: handwrite ~3.4s + сердце 1.3s + focus-shift 0.8s + hold 4s = ~9.5s
+      setTimeout(function() { closeOverlay(id); }, 9500);
     } else {
       setTimeout(function() { closeOverlay(id); }, 3000);
     }
@@ -992,6 +1009,35 @@
       updateNextVisibility();
 
       wrap.style.opacity = '1'; wrap.style.transform = 'translateY(0)';
+
+      // молчаливое демо мульти-выбора на Q1 (один раз ever)
+      if (idx === 0) {
+        var demoShown = false;
+        try { demoShown = localStorage.getItem('maru_demo_q1_shown') === '1'; } catch(e) {}
+        if (!demoShown) {
+          wrap.style.pointerEvents = 'none';
+          setTimeout(function() {
+            var cs = wrap.querySelectorAll('.card');
+            if (cs.length >= 4) {
+              cs[0].classList.add('selected');
+              setTimeout(function() {
+                cs[0].classList.remove('selected');
+                setTimeout(function() {
+                  cs[3].classList.add('selected');
+                  setTimeout(function() {
+                    cs[3].classList.remove('selected');
+                    wrap.style.pointerEvents = '';
+                    try { localStorage.setItem('maru_demo_q1_shown', '1'); } catch(e) {}
+                  }, 400);
+                }, 150);
+              }, 400);
+            } else {
+              wrap.style.pointerEvents = '';
+            }
+          }, 600);
+        }
+      }
+
       // echo-callbacks на ключевых вопросах (Q1, Q15, Q29)
       if (idx === 0)       setTimeout(() => showQEcho(1),  700);
       else if (idx === 14) setTimeout(() => showQEcho(15), 700);
