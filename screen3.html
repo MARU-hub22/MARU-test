@@ -7,6 +7,7 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
   :root {
@@ -36,45 +37,119 @@
     gap: 12px;
   }
 
-  .ring-wrap {
+  .heart-wrap {
     position: relative;
-    width: 44px;
-    height: 44px;
+    width: 26px;
+    height: 26px;
     flex-shrink: 0;
-  }
-  .ring-wrap svg { transform: rotate(-90deg); display: block; }
-  .ring-track { fill: none; stroke: rgba(0,0,0,0.1); stroke-width: 3; }
-  .ring-fill {
-    fill: none;
-    stroke: var(--acc);
-    stroke-width: 3;
-    stroke-linecap: round;
-    transition: stroke-dashoffset 0.4s ease, stroke 0.15s ease;
-  }
-  @keyframes ringElectric{
-    0%{stroke:#2979FF;filter:drop-shadow(0 0 6px rgba(41,121,255,0.9))}
-    80%{stroke:#2979FF;filter:drop-shadow(0 0 4px rgba(41,121,255,0.7))}
-    100%{stroke:#2979FF;filter:drop-shadow(0 0 2px rgba(41,121,255,0.3))}
-  }
-  .ring-fill.electric{animation:ringElectric 2s ease forwards}
-  .ring-pct.electric{color:#2979FF!important;transition:color 0.15s ease}
-  .ring-pct {
-    position: absolute;
-    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--acc);
-    letter-spacing: -0.02em;
+  }
+  .heart-ghost {
+    transition: opacity 0.5s ease;
+  }
+  .heart-svg { display: block; overflow: visible; transform: translateY(2px); }
+  .heart-fill-path {
+    transition: fill 0.5s ease;
+  }
+  #heartClipRect {
+    transition: y 0.45s cubic-bezier(0.22,1,0.36,1), height 0.45s cubic-bezier(0.22,1,0.36,1);
+  }
+  .heart-wrap.pulse {
+    animation: heartPulse 0.5s ease;
+  }
+  @keyframes heartPulse {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.12); }
+    100% { transform: scale(1); }
   }
 
-  .q-count {
+  .block-title {
     flex: 1;
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 26px;
     color: var(--t3);
+    font-weight: 500;
+    letter-spacing: 0;
+    transition: opacity 0.2s ease;
+  }
+  .block-title.fade-out { opacity: 0; }
+
+  .save-hint {
+    padding: 0 var(--sp3);
+    margin-top: -4px;
+    margin-bottom: 6px;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #E63946;
+    letter-spacing: -0.005em;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+  .save-hint.show { opacity: 1; }
+
+  .block-insert {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--sp3);
+    font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 17px;
+    font-style: italic;
     font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: 0.005em;
+    color: rgba(44, 44, 44, 0.85);
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 100;
+    transition: opacity 0.4s ease;
+  }
+  .block-insert.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .block-insert .bi-line1,
+  .block-insert .bi-line2 {
+    max-width: 280px;
+    margin: 0 auto;
+    text-wrap: balance;
+  }
+  .block-insert .bi-line2 {
+    margin-top: 4px;
+  }
+  /* плавное появление каждой буквы — handwriting эффект */
+  .block-insert .ch,
+  .ov-typed .ch {
+    display: inline;
+    opacity: 0;
+    transition: opacity 0.28s ease;
+  }
+  .block-insert .ch.on,
+  .ov-typed .ch.on {
+    opacity: 1;
+  }
+  .block-insert .caret {
+    display: inline-block;
+    margin-left: 2px;
+    color: var(--t1);
+    font-style: normal;
+    font-weight: 400;
+    animation: caretBlink 0.9s steps(2) infinite;
+  }
+  @keyframes caretBlink {
+    0%, 50%   { opacity: 1; }
+    51%, 100% { opacity: 0; }
   }
 
   .btn-back {
@@ -111,14 +186,29 @@
   }
   .q-text.fade-out { opacity: 0; transform: translateY(-4px); }
   .q-text.fade-in { animation: fadeInUp 0.28s cubic-bezier(0.22,1,0.36,1) forwards; }
-  .q-hint {
-    padding: 0 var(--sp3) 8px;
-    font-size: 11px; font-style: italic;
-    color: var(--acc); letter-spacing: .01em;
-    min-height: 0; opacity: 0;
-    transition: opacity .4s ease, min-height .3s ease;
+  .q-text.hidden { display: none; }
+
+  /* echo-callback — наклонная красная строка над первым ответом */
+  .q-echo {
+    padding: 0 var(--sp3);
+    font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #E63946;
+    letter-spacing: 0;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.5s ease, max-height 0.4s ease, padding 0.4s ease;
+    pointer-events: none;
   }
-  .q-hint.show { opacity: 1; min-height: 18px; }
+  .q-echo.show {
+    opacity: 1;
+    max-height: 80px;
+    padding: 0 var(--sp3) 12px;
+  }
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -191,9 +281,9 @@
   .card.selected .radio { border-color: rgba(255,111,97,0.45); }
 
   .ans-text {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 400;
-    line-height: 1.55;
+    line-height: 1.5;
     color: var(--t2);
     flex: 1;
   }
@@ -239,6 +329,44 @@
     transform: translateY(0) scale(1);
   }
 
+  /* inline-сердце внутри .ov-text — рисуется по контуру как ручкой */
+  .ov-heart-inline {
+    display: inline-block;
+    vertical-align: -2px;
+    margin-left: 6px;
+    transform-origin: center;
+  }
+  .ov-heart-inline path {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 1.1s cubic-bezier(0.5, 0, 0.2, 1);
+  }
+  .ov-heart-inline.draw path {
+    stroke-dashoffset: 0;
+  }
+  .ov-heart-inline.draw {
+    animation: ovHeartPulseSoft 1.8s ease-in-out 1.3s infinite;
+  }
+  @keyframes ovHeartPulseSoft {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.08); }
+  }
+
+  /* старое блочное сердце — оставлено для совместимости (не используется) */
+  .ov-heart {
+    width: 30px;
+    height: 30px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    animation: ovHeartPulse 1.6s ease-in-out infinite;
+  }
+  .ov-heart svg { display: block; }
+  @keyframes ovHeartPulse {
+    0%, 100% { transform: scale(1);    opacity: 1; }
+    50%      { transform: scale(1.10); opacity: 0.85; }
+  }
+
   /* иконка */
   .ov-icon {
     width: 56px;
@@ -280,16 +408,38 @@
     margin-bottom: 16px;
   }
 
-  .ov-text {
-    font-size: 15px;
-    font-weight: 400;
-    line-height: 1.7;
-    color: var(--t1);
+  /* гравюра MARU — letterpress, усиленный */
+  .ov-brand {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--bg);
+    text-shadow:
+      -1.5px -1.5px 1.5px rgba(0,0,0,0.28),
+      1.5px 1.5px 1.5px rgba(255,255,255,0.85),
+      0 0 3px rgba(0,0,0,0.06);
+    user-select: none;
     text-align: center;
-    letter-spacing: -0.005em;
-    margin-bottom: 6px;
+    padding: 6px 0;
+    margin-bottom: 32px;
   }
-  .ov-text strong { font-weight: 600; }
+
+  .ov-text {
+    font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 17px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.35;
+    color: rgba(44, 44, 44, 0.85);
+    text-align: center;
+    letter-spacing: 0.005em;
+    margin-bottom: 0;
+    max-width: 280px;
+    text-wrap: balance;
+  }
+  .ov-text strong { font-weight: 500; font-style: italic; }
 
   /* ─── ИНФОГРАФИКА ─── */
   .ov-infograph {
@@ -379,6 +529,7 @@
     text-align: center;
     letter-spacing: 0.02em;
   }
+
 </style>
 </head>
 <body>
@@ -386,56 +537,36 @@
 <!-- ─── ОВЕРЛЕЙ 1: СТАРТ ─── -->
 <div class="overlay" id="ov1">
   <div class="overlay-card">
-    <div class="ov-icon">
-      <svg viewBox="0 0 24 24"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
-    </div>
+    <div class="ov-brand">MARU</div>
     <div class="ov-text">
-      Отвечай честно — первая реакция самая точная. Правильных ответов нет. <strong>Есть только твоя ясность.</strong>
-    </div>
-  </div>
-</div>
-
-<!-- ─── ОВЕРЛЕЙ 2: СЕРЕДИНА (Q22) ─── -->
-<div class="overlay" id="ov2">
-  <div class="overlay-card">
-    <div class="ov-icon">
-      <svg viewBox="0 0 24 24"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
-    </div>
-    <div class="ov-text">
-      Половина пути. Скоро ты перестанешь гадать — <strong>и начнёшь понимать.</strong>
-    </div>
-  </div>
-</div>
-
-<!-- ─── ОВЕРЛЕЙ 3: ФИНИШ (Q38) ─── -->
-<div class="overlay" id="ov3">
-  <div class="overlay-card">
-    <div class="ov-icon">
-      <svg viewBox="0 0 24 24"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
-    </div>
-    <div class="ov-text">
-      Финишная прямая. Через пару минут у тебя будет то, <strong>что ты давно искала — ясность.</strong>
+      <span class="ov-typed" id="ov1Typed"></span><svg class="ov-heart-inline" id="ov1Heart" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path pathLength="100" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="#2c2c2c" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
     </div>
   </div>
 </div>
 
 <div class="header">
-  <div class="ring-wrap">
-    <svg width="44" height="44" viewBox="0 0 44 44">
-      <circle class="ring-track" cx="22" cy="22" r="19"/>
-      <circle class="ring-fill" id="ringFill" cx="22" cy="22" r="19"
-        stroke-dasharray="119.38" stroke-dashoffset="119.38"/>
+  <div class="heart-wrap">
+    <svg class="heart-svg" viewBox="0 0 24 24" width="26" height="26">
+      <defs>
+        <clipPath id="heartClip">
+          <rect id="heartClipRect" x="0" y="24" width="24" height="0"/>
+        </clipPath>
+      </defs>
+      <path class="heart-ghost" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#E63946" opacity="0.13"/>
+      <path class="heart-fill-path" id="heartFillPath" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#E63946" clip-path="url(#heartClip)"/>
     </svg>
-    <div class="ring-pct" id="ringPct">1%</div>
   </div>
-  <div class="q-count" id="qCount">1 из 44</div>
+  <div class="block-title" id="blockTitle">Блок 1 · Кто он</div>
   <button class="btn-back" onclick="goBack()">
     <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
   </button>
 </div>
 
+<div class="save-hint" id="saveHint">Ответы сохраняются автоматически.</div>
+
 <div class="q-text" id="qText"></div>
-<div class="q-hint" id="qHint"></div>
+<div class="block-insert" id="blockInsert"></div>
+<div class="q-echo" id="qEcho"></div>
 
 <div class="answers" id="answers"></div>
 
@@ -449,9 +580,36 @@
   }
 
   function showOverlay(id) {
+    // прячем save-hint и q-echo чтобы не пересекались с overlay
+    const _sh = document.getElementById('saveHint');
+    if (_sh) _sh.classList.remove('show');
+    const _qe = document.getElementById('qEcho');
+    if (_qe) _qe.classList.remove('show');
+
     document.getElementById(id).classList.add('show');
     hap('l');
-    setTimeout(function() { closeOverlay(id); }, 4000);
+    if (id === 'ov1') {
+      const typed = document.getElementById('ov1Typed');
+      const heart = document.getElementById('ov1Heart');
+      if (typed) {
+        // СБРОС: чистим текст и снимаем класс draw чтобы сердце снова было «не нарисовано»
+        typed.innerHTML = '';
+        if (heart) heart.classList.remove('draw');
+        // запускаем handwrite после короткой паузы (чтобы overlay-card успел проявиться)
+        setTimeout(function() {
+          handwrite('Сейчас ты ответишь за него. Так, как ты его видишь. Это и есть твоя правда', typed, 48, function() {
+            // ПОСЛЕ последней буквы — рисуем сердце по контуру (1.1s drawing)
+            if (heart) {
+              setTimeout(function() { heart.classList.add('draw'); }, 200);
+            }
+          });
+        }, 350);
+      }
+      // ov1 закрываем дольше — даём время прочесть весь handwrite + сердце нарисовалось + пауза
+      setTimeout(function() { closeOverlay(id); }, 12000);
+    } else {
+      setTimeout(function() { closeOverlay(id); }, 4000);
+    }
   }
 
   function closeOverlay(id) {
@@ -462,20 +620,61 @@
     else if (id === 'ov1') { renderQ(0); }
   }
 
-  let overlayActive = false, pendingNext = null, ov2Shown = false, ov3Shown = false;
+  let overlayActive = false, pendingNext = null;
   let QUESTIONS = [];
   let SCORING = {};
   let ARCHETYPES_MAP = {};
   let current = 0;
   let userAnswers = {}; // idx → answerIndex
   let timestamps = {};  // idx → timestamp ms
+  let idleTimer = null;
+  let insertActive = false;
+
+  // ─── СТРУКТУРА ТЕСТА v2: 5 блоков × 7 = 35 вопросов ───
+  const TOTAL_Q = 35;
+  const BLOCKS = [
+    { title: 'Кто он',         from: 0,  to: 6  },
+    { title: 'Деньги',         from: 7,  to: 13 },
+    { title: 'Почему молчит',  from: 14, to: 20 },
+    { title: 'Что скрывает',   from: 21, to: 27 },
+    { title: 'Любит ли он',    from: 28, to: 34 },
+  ];
+  // inline-вставки: ключ = индекс ПЕРВОГО вопроса нового блока
+  const BLOCK_INSERTS = {
+    7:  ['Я знаю, какой он с другими.',   'Но почему со мной он часто считает?'],
+    14: ['С деньгами всё ясно.',          'А почему он молчит именно когда мне больно?'],
+    21: ['Я знаю, когда он замолкает.',   'Но страшнее то, что он за этим прячет.'],
+    28: ['Все вопросы вели к одному.',    'Любит ли он меня… или я просто удобная?'],
+  };
+
+  function getCurrentBlock(idx) {
+    for (let i = 0; i < BLOCKS.length; i++) {
+      if (idx >= BLOCKS[i].from && idx <= BLOCKS[i].to) return i;
+    }
+    return BLOCKS.length - 1;
+  }
+  function isBlockLastTwo(idx) {
+    const bIdx = getCurrentBlock(idx);
+    // финальный блок (5 «Любит ли он») — без goal-gradient, финал должен быть красным как кульминация
+    if (bIdx === BLOCKS.length - 1) return false;
+    const b = BLOCKS[bIdx];
+    return idx >= b.to - 1; // последние 2 вопроса блока
+  }
+  function applyEndowedProgress(idx) {
+    // Q1, Q2, Q3 показывают фиксированно 3/35 (endowed progress)
+    if (idx <= 2) return (3 / TOTAL_Q) * 100;
+    return ((idx + 1) / TOTAL_Q) * 100;
+  }
+  // ─── ЦВЕТА СЕРДЦА ───
+  const HEART_COLOR_BASE = '#E63946';   // яркий карминный — обычные вопросы
+  const HEART_COLOR_GOAL = '#2979FF';   // электрик — последние 2 в блоке (goal-gradient)
 
   // ─── CDN загрузка ───
   async function loadData() {
     try {
       const res = await fetch('https://cdn.jsdelivr.net/gh/MARU-hub22/maru-data@main/maru_data.json');
       const data = await res.json();
-      QUESTIONS = data.questions.slice(0, 44);
+      QUESTIONS = data.questions.slice(0, TOTAL_Q);
       SCORING = data.scoring;
       ARCHETYPES_MAP = data.archetypes_map;
       overlayActive = true;
@@ -485,14 +684,170 @@
     }
   }
 
-  function updateRing(idx) {
-    const total = QUESTIONS.length || 44;
-    const pct = Math.max(1, Math.round(((idx + 1) / total) * 100));
-    const c = 2 * Math.PI * 19;
-    document.getElementById('ringFill').setAttribute('stroke-dasharray', c);
-    document.getElementById('ringFill').setAttribute('stroke-dashoffset', c - (pct / 100) * c);
-    document.getElementById('ringPct').textContent = pct + '%';
-    document.getElementById('qCount').textContent = (idx + 1) + ' из ' + total;
+  function updateHeart(idx) {
+    const pct = applyEndowedProgress(idx);
+    const rect = document.getElementById('heartClipRect');
+    const fillH = (24 * pct) / 100;
+    rect.setAttribute('y', 24 - fillH);
+    rect.setAttribute('height', fillH);
+
+    const fillPath = document.getElementById('heartFillPath');
+    const ghost = document.querySelector('.heart-ghost');
+    const goal = isBlockLastTwo(idx);
+    const color = goal ? HEART_COLOR_GOAL : HEART_COLOR_BASE;
+    fillPath.setAttribute('fill', color);
+    if (ghost) {
+      // на goal-gradient ghost тоже подкрашивается в электрик
+      ghost.setAttribute('fill', color);
+    }
+  }
+
+  function updateBlockTitle(idx) {
+    const bIdx = getCurrentBlock(idx);
+    const el = document.getElementById('blockTitle');
+    const newText = 'Блок ' + (bIdx + 1) + ' · ' + BLOCKS[bIdx].title;
+    if (el.textContent === newText) return;
+    el.classList.add('fade-out');
+    setTimeout(() => {
+      el.textContent = newText;
+      el.classList.remove('fade-out');
+    }, 200);
+  }
+
+  // ─── INLINE-ВСТАВКА МЕЖДУ БЛОКАМИ ───
+  function shouldShowInsert(nextIdx) {
+    if (!BLOCK_INSERTS[nextIdx]) return false;
+    try {
+      const seen = JSON.parse(localStorage.getItem('maru_seen_block_transitions') || '[]');
+      if (seen.indexOf(nextIdx) !== -1) return false;
+    } catch(e) {}
+    return true;
+  }
+  function markInsertSeen(nextIdx) {
+    try {
+      const seen = JSON.parse(localStorage.getItem('maru_seen_block_transitions') || '[]');
+      if (seen.indexOf(nextIdx) === -1) seen.push(nextIdx);
+      localStorage.setItem('maru_seen_block_transitions', JSON.stringify(seen));
+    } catch(e) {}
+  }
+  // handwrite — каждая буква проявляется через opacity transition (как чернила)
+  // пробелы оставляем обычными, чтобы браузер мог переносить по словам
+  function handwrite(text, el, speed, cb) {
+    el.innerHTML = '';
+    const spans = [];
+    for (let k = 0; k < text.length; k++) {
+      if (text[k] === ' ') {
+        // обычный пробел текстовым узлом — браузер сможет перенести строку здесь
+        el.appendChild(document.createTextNode(' '));
+        continue;
+      }
+      const span = document.createElement('span');
+      span.className = 'ch';
+      span.textContent = text[k];
+      el.appendChild(span);
+      spans.push(span);
+    }
+    let i = 0;
+    function step() {
+      if (i < spans.length) {
+        spans[i].classList.add('on');
+        i++;
+        setTimeout(step, speed);
+      } else if (cb) cb();
+    }
+    step();
+  }
+
+  function showBlockInsert(nextIdx, callback) {
+    const lines = BLOCK_INSERTS[nextIdx];
+    if (!lines) { callback(); return; }
+    insertActive = true;
+    markInsertSeen(nextIdx);
+
+    // прячем save-hint и q-echo чтобы не пересекались с вставкой
+    const sh = document.getElementById('saveHint');
+    if (sh) sh.classList.remove('show');
+    const qe = document.getElementById('qEcho');
+    if (qe) qe.classList.remove('show');
+
+    const insertEl = document.getElementById('blockInsert');
+
+    // подготовка контейнера и показ full-screen overlay
+    insertEl.innerHTML = '<div class="bi-line1" id="biL1"></div><div class="bi-line2" id="biL2"></div>';
+    insertEl.classList.add('show');
+    hap('m');
+
+    const l1 = document.getElementById('biL1');
+    const l2 = document.getElementById('biL2');
+
+    // печатаем строку 1, пауза, печатаем строку 2, ждём, fade-out
+    setTimeout(() => {
+      handwrite(lines[0], l1, 50, () => {
+        setTimeout(() => {
+          handwrite(lines[1], l2, 50, () => {
+            setTimeout(() => {
+              insertEl.classList.remove('show');
+              setTimeout(() => {
+                insertActive = false;
+                callback();
+              }, 450);
+            }, 4500);
+          });
+        }, 600);
+      });
+    }, 200);
+  }
+
+  // ─── REAL FLOW ECHO (на Q1, Q15, Q29) ───
+  // в реальном flow используем ТОЛЬКО значение из localStorage, без тестового fallback
+  function getRealEchoState() {
+    try { return localStorage.getItem('maru_her_state') || null; }
+    catch(e) { return null; }
+  }
+  function showQEcho(previewKey) {
+    const state = getRealEchoState();
+    if (!state) return; // если на screen1 ничего не выбрано — echo не показываем (тишина лучше фальши)
+    const fn = ECHO_PREVIEWS[previewKey];
+    if (!fn) return;
+    const lines = fn(state);
+    const echoEl = document.getElementById('qEcho');
+    const wrap = document.getElementById('answers');
+    if (!echoEl || !wrap) return;
+
+    // прячем save-hint и убиваем idle timer чтобы он не показал save-hint поверх echo
+    const sh = document.getElementById('saveHint');
+    if (sh) sh.classList.remove('show');
+    if (idleTimer) clearTimeout(idleTimer);
+
+    echoEl.innerHTML = lines[0] + '<br>' + lines[1];
+    echoEl.classList.add('show');
+
+    // снимаем при первом клике на любую карточку ответа
+    const hide = function() {
+      echoEl.classList.remove('show');
+      wrap.removeEventListener('click', hide, true);
+    };
+    wrap.addEventListener('click', hide, true);
+  }
+
+  // ─── IDLE TIMER + SAVE HINT ───
+  function resetIdleTimer() {
+    if (idleTimer) clearTimeout(idleTimer);
+    try {
+      if (localStorage.getItem('maru_save_hinted') === '1') return;
+    } catch(e) {}
+    idleTimer = setTimeout(showSaveHint, 30000);
+  }
+  function showSaveHint() {
+    // guard: только одна доп фраза на экран — никогда не пересекаемся с echo / insert / overlay
+    const echoEl = document.getElementById('qEcho');
+    if (echoEl && echoEl.classList.contains('show')) return;
+    if (insertActive) return;
+    if (overlayActive) return;
+    const el = document.getElementById('saveHint');
+    el.classList.add('show');
+    try { localStorage.setItem('maru_save_hinted', '1'); } catch(e) {}
+    setTimeout(() => el.classList.remove('show'), 4000);
   }
 
   function renderQ(idx) {
@@ -504,24 +859,10 @@
     if (backBtn) backBtn.style.visibility = idx > 0 ? 'visible' : 'hidden';
 
     const q = QUESTIONS[idx];
-    updateRing(idx);
+    updateHeart(idx);
+    updateBlockTitle(idx);
+    resetIdleTimer();
     timestamps[idx] = Date.now();
-
-    /* микро-инсайты */
-    var hintEl = document.getElementById('qHint');
-    var herState='';
-    try{herState=localStorage.getItem('maru_her_state')||'';}catch(e){}
-    var HINTS = {
-      7: herState ? 'Ты написала: «'+herState+'». Скоро ты поймёшь, что с этим делать' : 'Скоро ты поймёшь, что с этим делать',
-      15: 'Ещё немного — и ты будешь знать, как себя вести',
-      30: 'Почти всё. Ответ, который ты искала — уже близко'
-    };
-    if (HINTS[idx]) {
-      hintEl.textContent = HINTS[idx];
-      hintEl.classList.add('show');
-    } else {
-      hintEl.classList.remove('show');
-    }
 
     const qEl = document.getElementById('qText');
     qEl.classList.remove('fade-in'); qEl.classList.add('fade-out');
@@ -542,34 +883,27 @@
         card.innerHTML = '<div class="radio"><div class="radio-dot"></div></div><div class="ans-text">' + a.text + '</div>';
         card.onclick = () => {
           hap('l');
+          resetIdleTimer();
           wrap.querySelectorAll('.card').forEach(c => c.classList.remove('selected','dimmed'));
           card.classList.add('selected');
           userAnswers[idx] = i;
           /* сохранение прогресса */
           try{localStorage.setItem('maru_progress',JSON.stringify({current:idx,userAnswers:userAnswers}));}catch(e){}
-          /* электрический синий если ответ быстрее 3 сек */
-          var elapsed = Date.now() - (timestamps[idx] || Date.now());
-          if(elapsed < 3000){
-            var rf = document.getElementById('ringFill');
-            var rp = document.getElementById('ringPct');
-            rf.classList.remove('electric'); void rf.offsetWidth;
-            rf.classList.add('electric');
-            rp.classList.add('electric');
-            rf.addEventListener('animationend', function(){
-              rf.classList.remove('electric');
-              rp.classList.remove('electric');
-            }, {once:true});
+          /* пульс сердца на конце блока */
+          var b = BLOCKS[getCurrentBlock(idx)];
+          if (idx === b.to) {
+            var hw = document.querySelector('.heart-wrap');
+            hw.classList.remove('pulse'); void hw.offsetWidth;
+            hw.classList.add('pulse');
+            hap('m');
           }
           setTimeout(() => {
             wrap.querySelectorAll('.card').forEach(c => { if (!c.classList.contains('selected')) c.classList.add('dimmed'); });
           }, 80);
           setTimeout(() => {
             const next = idx + 1;
-            // оверлей Q23 (середина)
-            if (next === 22 && !ov2Shown) {
-              ov2Shown = true; overlayActive = true; pendingNext = next; showOverlay('ov2');
-            } else if (next === 38 && !ov3Shown) {
-              ov3Shown = true; overlayActive = true; pendingNext = next; showOverlay('ov3');
+            if (shouldShowInsert(next)) {
+              showBlockInsert(next, () => renderQ(next));
             } else {
               renderQ(next);
             }
@@ -578,6 +912,10 @@
         wrap.appendChild(card);
       });
       wrap.style.opacity = '1'; wrap.style.transform = 'translateY(0)';
+      // echo-callbacks на ключевых вопросах (Q1, Q15, Q29) — после появления ответов
+      if (idx === 0)       setTimeout(() => showQEcho(1),  700);
+      else if (idx === 14) setTimeout(() => showQEcho(15), 700);
+      else if (idx === 28) setTimeout(() => showQEcho(29), 700);
     }, 200);
   }
 
@@ -588,7 +926,7 @@
 
   // ─── СКОРИНГ ───
   function finishTest() {
-    const gender = localStorage.getItem('maru_gender') || 'М';
+    const gender = 'F'; // тест v2 — только для женщин
     const energies = { 'Ф':0, 'ЗН':0, 'СМ':0, 'Э':0, 'ЗВ':0 };
     const total = QUESTIONS.length;
 
@@ -726,6 +1064,27 @@
     setTimeout(() => { window.location.href = 'screen4.html'; }, 260);
   }
 
+  // имя юзера из Telegram WebApp — только если оно «нормальное»
+  // (буквы латиницы/кириллицы, дефис, пробел; 2..20 символов)
+  function getUserName() {
+    try {
+      const fn = tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name;
+      if (!fn) return null;
+      if (/^[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z\s\-]{1,19}$/.test(fn.trim())) {
+        return fn.trim();
+      }
+      return null;
+    } catch(e) { return null; }
+  }
+  const ECHO_PREVIEWS = {
+    1:  function(s){
+          const name = getUserName();
+          const greet = name ? (name + ', «') : '«';
+          return [greet + s + '» — твои слова.', 'Сейчас разберёмся, что с этим делать.'];
+        },
+    15: function(s){ return ['Помнишь, ты написала «' + s + '»?', 'Молчание — часть этого.']; },
+    29: function(s){ return ['Ты пришла со словами «' + s + '».', 'Остался последний блок. Самый важный.']; }
+  };
   // ─── СТАРТ ───
   loadData();
 </script>
