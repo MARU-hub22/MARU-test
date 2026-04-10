@@ -1,0 +1,33 @@
+# OS / редактор
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*~
+
+# Бэкапы
+*.bak
+*.bak.*
+.backup/
+
+# Временные скрины и пробы (с точкой в начале — отладочные)
+.v*.jpg
+.v*.png
+.probe-*.png
+.preview-*.jpg
+.final-*.png
+.final-*.jpg
+.final.jpg
+.result-*.png
+.result-*.jpg
+.show-user.png
+.verify-*.png
+
+# node
+node_modules/
+.env
+.env.local
+
+# Vercel
+.vercel
