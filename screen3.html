@@ -683,8 +683,6 @@
 
   let overlayActive = false, pendingNext = null;
   let QUESTIONS = [];
-  let SCORING = {};
-  let ARCHETYPES_MAP = {};
   let current = 0;
   let userAnswers = {}; // idx → массив выбранных indices (1..2 элемента)
   let timestamps = {};  // idx → timestamp ms
@@ -730,16 +728,14 @@
   const HEART_COLOR_BASE = '#E63946';   // яркий карминный — обычные вопросы
   const HEART_COLOR_GOAL = '#2979FF';   // электрик — последние 2 в блоке (goal-gradient)
 
-  // ─── CDN загрузка ───
+  // ─── ЗАГРУЗКА ВОПРОСОВ (публичный JSON без энергий и скоринга) ───
   async function loadData() {
     try {
-      // raw.githubusercontent — без CDN-кэша, всегда свежий
-      const url = 'https://raw.githubusercontent.com/MARU-hub22/maru-data/main/maru_data.json?t=' + Date.now();
+      const url = 'https://maru-hub22.github.io/MARU-test/maru_questions_public.json?t=' + Date.now();
       const res = await fetch(url, { cache: 'no-store' });
       const data = await res.json();
       QUESTIONS = data.questions.slice(0, TOTAL_Q);
-      SCORING = data.scoring;
-      ARCHETYPES_MAP = data.archetypes_map;
+      // SCORING и ARCHETYPES_MAP больше не нужны на клиенте — всё на сервере
       overlayActive = true;
       setTimeout(() => showOverlay('ov1'), 300);
     } catch(e) {
@@ -1034,132 +1030,64 @@
     if (current > 0) { current--; renderQ(current); }
   }
 
-  // ─── СКОРИНГ (v3: векторы Ан/Кж/Зр/Ор/Зв + мульти-выбор + A2/A3) ───
-  function finishTest() {
-    const gender = 'F';
-    const VECTORS = ['Ан','Кж','Зр','Ор','Зв'];
-    const energies = { 'Ан':0, 'Кж':0, 'Зр':0, 'Ор':0, 'Зв':0 };
+  // ─── СКОРИНГ ВЫНЕСЕН НА СЕРВЕР (api/score.js на Vercel) ───
+  // Клиент только собирает индексы выбранных ответов и timestamps,
+  // отправляет на сервер, получает готовый результат.
+  async function finishTest() {
     const total = QUESTIONS.length;
 
-    // подсчёт с НОРМАЛИЗАЦИЕЙ: каждый вопрос = 1 единица, делится поровну между выбранными
-    // userAnswers[i] = массив индексов (1 или 2 элемента)
+    // массив выбранных индексов: [[2], [1,3], [0], ...] — длина = 35
+    const answers = [];
     for (let i = 0; i < total; i++) {
       const sel = userAnswers[i];
-      if (sel && sel.length > 0) {
-        const weight = 1 / sel.length;  // 1.0 или 0.5
-        sel.forEach(ansIdx => {
-          const energy = QUESTIONS[i].answers[ansIdx].energy;
-          if (energies[energy] !== undefined) energies[energy] += weight;
-        });
-      }
+      answers.push(Array.isArray(sel) ? sel : (sel != null ? [sel] : []));
     }
 
-    // проценты (всего 35 единиц = 100%)
-    const scores = {};
-    for (const e of VECTORS) {
-      scores[e] = Math.round((energies[e] / total) * 100 * 10) / 10;
-    }
+    // timestamps в виде массива
+    const ts = [];
+    for (let i = 0; i < total; i++) ts.push(timestamps[i] || Date.now());
 
-    // ─── РАНЖИРОВАНИЕ ───
-    // Шаг 1+2: сортировка по убыванию + tie-break Кж→Ан→Зр→Ор→Зв
-    const TIE_PRIORITY = ['Кж','Ан','Зр','Ор','Зв'];
-    const sorted = VECTORS.slice().sort((a, b) => {
-      if (energies[b] !== energies[a]) return energies[b] - energies[a];
-      return TIE_PRIORITY.indexOf(a) - TIE_PRIORITY.indexOf(b);
-    });
-
-    // Шаг 3: top3
-    let top3 = sorted.slice(0, 3);
-
-    // Шаг 4: A2 — Зв (Звуковой) при наличии в top3 ВСЕГДА на 1-й позиции
-    if (top3.includes('Зв')) {
-      top3 = ['Зв', ...top3.filter(x => x !== 'Зв')];
-    }
-
-    // Шаг 5: A3 — Ор (Оральный) НИКОГДА не на 1-й. Если top3[0]==Ор → swap с top3[1]
-    if (top3[0] === 'Ор') {
-      [top3[0], top3[1]] = [top3[1], top3[0]];
-    }
-
-    const combination = top3.join('-');
-    const archetypeName = ARCHETYPES_MAP[combination] || 'Неизвестный';
-
-    // ─── КОНТРОЛЬНЫЕ ПАРЫ ───
-    let mismatches = 0;
-    if (SCORING.control_pairs && SCORING.control_pairs.length) {
-      SCORING.control_pairs.forEach(pair => {
-        if (pair.q1 > QUESTIONS.length || pair.q2 > QUESTIONS.length) return;
-        const s1 = userAnswers[pair.q1 - 1];
-        const s2 = userAnswers[pair.q2 - 1];
-        if (s1 && s2 && s1.length && s2.length) {
-          // берём первый (главный) выбор из каждого
-          const e1 = QUESTIONS[pair.q1 - 1].answers[s1[0]].energy;
-          const e2 = QUESTIONS[pair.q2 - 1].answers[s2[0]].energy;
-          if (e1 !== e2) mismatches++;
-        }
-      });
-    }
-
-    // timestamp валидация
-    let fastAnswers = 0;
-    for (let i = 0; i < total; i++) {
-      const ts = timestamps[i];
-      const nextTs = timestamps[i + 1] || Date.now();
-      if ((nextTs - ts) < 2000) fastAnswers++;
-    }
-
-    let validity = 'high';
-    if (mismatches > 5 || fastAnswers > 10) validity = 'low';
-    else if (mismatches > 3 || fastAnswers > 5) validity = 'medium';
-
-    // время ответов
+    // время ответов для лога
     const answerTimes = [];
     for (let i = 0; i < total; i++) {
-      const ts = timestamps[i];
+      const t = timestamps[i];
       const nextTs = timestamps[i + 1] || Date.now();
-      answerTimes.push(Math.round((nextTs - ts) / 1000 * 10) / 10);
+      answerTimes.push(Math.round((nextTs - t) / 1000 * 10) / 10);
     }
     const totalTime = Math.round(answerTimes.reduce((a, b) => a + b, 0));
     const avgTime = Math.round(totalTime / total * 10) / 10;
 
-    // лог ответов
+    // лог ответов БЕЗ энергий (клиент их не знает)
     const answerLog = [];
     for (let i = 0; i < total; i++) {
-      const sel = userAnswers[i] || [];
       answerLog.push({
         q: QUESTIONS[i].id,
-        type: QUESTIONS[i].type,
-        selected: sel,
-        energies: sel.map(ai => QUESTIONS[i].answers[ai].energy),
-        multi: sel.length > 1,
+        selected: answers[i],
+        multi: answers[i].length > 1,
         time: answerTimes[i]
       });
     }
 
-    // legacy маппинг для screen4-9 которые ещё работают со старыми именами Ф/ЗН/СМ/Э/ЗВ
-    // соответствие: Ан=ЗН, Кж=Ф, Зр=Э, Ор=ЗВ, Зв=СМ
-    const NEW_TO_OLD = { 'Ан':'ЗН', 'Кж':'Ф', 'Зр':'Э', 'Ор':'ЗВ', 'Зв':'СМ' };
-    const scoresLegacy = {};
-    for (const v in scores) scoresLegacy[NEW_TO_OLD[v]] = scores[v];
-    const top3Legacy = top3.map(v => NEW_TO_OLD[v]);
-    const combinationLegacy = top3Legacy.join('-');
+    // ─── СКОРИНГ НА СЕРВЕРЕ ───
+    let result;
+    try {
+      const r = await fetch('https://maru-test.vercel.app/api/score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ answers: answers, timestamps: ts })
+      });
+      if (!r.ok) throw new Error('Server returned ' + r.status);
+      result = await r.json();
+      if (result.error) throw new Error(result.error);
+    } catch (err) {
+      console.error('Score API failed:', err);
+      document.getElementById('qText').textContent = 'Ошибка обработки. Попробуй ещё раз.';
+      return;
+    }
 
-    const result = {
-      archetypeName: archetypeName,
-      combination: combination,
-      combinationLegacy: combinationLegacy,
-      scores: scoresLegacy,        // отдаём в старом формате чтобы screen4 не падал
-      scoresNew: scores,           // новый формат рядом
-      top3: top3Legacy,            // top3 в старом формате
-      top3New: top3,               // и новый
-      gender: gender,
-      validity: validity,
-      mismatches: mismatches,
-      fastAnswers: fastAnswers,
-      totalTime: totalTime,
-      avgTime: avgTime,
-      completedAt: new Date().toISOString()
-    };
+    // дополняем то что считается на клиенте (тайминги)
+    result.totalTime = totalTime;
+    result.avgTime = avgTime;
 
     // основной результат
     localStorage.setItem('maru_block1', JSON.stringify(result));
