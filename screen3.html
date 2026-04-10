@@ -501,12 +501,11 @@
     max-width: 280px;
     line-height: 1.45;
     opacity: 0;
-    transform: scale(0.95);
-    transition: opacity 0.6s ease-out, transform 1.6s ease-out, color 2s ease-out;
+    transition: opacity 0.6s ease-out, font-size 1.6s ease-out, color 2.5s ease-out 0.6s;
   }
   .ov-multi-hint.show {
     opacity: 1;
-    transform: scale(1.10);
+    font-size: 16px;
     color: #FF6F61;
   }
 
@@ -607,7 +606,7 @@
 <div class="overlay" id="ov1">
   <div class="overlay-card">
     <div class="ov-brand">MARU</div>
-    <div class="ov-text">
+    <div class="ov-text" id="ov1Text">
       <span class="ov-typed" id="ov1Typed"></span><svg class="ov-heart-inline" id="ov1Heart" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path pathLength="100" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="#2c2c2c" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
     </div>
     <div class="ov-multi-hint" id="ov1MultiHint">можно выбрать один или 2 варианта если оба про него</div>
@@ -663,7 +662,7 @@
       const typed = document.getElementById('ov1Typed');
       const heart = document.getElementById('ov1Heart');
       const multiHint = document.getElementById('ov1MultiHint');
-      const ovText = document.querySelector('#ov1 .ov-text');
+      const ovText = document.getElementById('ov1Text');
       if (multiHint) multiHint.classList.remove('show');
       if (ovText) ovText.classList.remove('dimmed');
       if (typed) {
@@ -683,8 +682,8 @@
           });
         }, 350);
       }
-      // ov1: handwrite ~3.4s + сердце 1.3s + focus-shift 0.8s + hold 4s = ~9.5s
-      setTimeout(function() { closeOverlay(id); }, 9500);
+      // ov1: handwrite ~3.4s + сердце 1.3s + focus-shift 0.8s + hold 4.5s = ~10s
+      setTimeout(function() { closeOverlay(id); }, 10000);
     } else {
       setTimeout(function() { closeOverlay(id); }, 3000);
     }
