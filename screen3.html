@@ -221,11 +221,47 @@
 
   /* ANSWERS */
   .answers {
-    padding: 0 var(--sp3) calc(env(safe-area-inset-bottom,0px) + 32px);
+    padding: 0 var(--sp3) 16px;
     display: flex;
     flex-direction: column;
     gap: var(--sp1);
   }
+
+  /* кнопка «Дальше» — мелкая текстовая, появляется после первого выбора */
+  .next-wrap {
+    padding: 4px var(--sp3) calc(env(safe-area-inset-bottom,0px) + 28px);
+    display: flex;
+    justify-content: center;
+    min-height: 32px;
+  }
+  .next-btn {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--t1);
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+  .next-btn.show {
+    opacity: 0.85;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .next-btn:active { opacity: 1; transform: translateY(0) scale(0.97); }
+  .next-btn .arrow {
+    display: inline-block;
+    margin-left: 4px;
+    transition: transform 0.2s ease;
+  }
+  .next-btn:active .arrow { transform: translateX(2px); }
 
   .card {
     border-top: 1px solid rgba(0,0,0,0.08);
@@ -562,7 +598,7 @@
     <div class="ov-text">
       <span class="ov-typed" id="ov1Typed"></span><svg class="ov-heart-inline" id="ov1Heart" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path pathLength="100" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="#2c2c2c" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
     </div>
-    <div class="ov-multi-hint" id="ov1MultiHint">Можно выбрать один ответ — или два, если оба про него</div>
+    <div class="ov-multi-hint" id="ov1MultiHint">Можно выбрать два варианта, если оба про него</div>
   </div>
 </div>
 
@@ -591,6 +627,7 @@
 <div class="q-echo" id="qEcho"></div>
 
 <div class="answers" id="answers"></div>
+<div class="next-wrap"><button class="next-btn" id="nextBtn" type="button">Дальше<span class="arrow">→</span></button></div>
 
 <script>
   const tg = window.Telegram?.WebApp;
@@ -899,43 +936,23 @@
     wrap.style.transition = 'opacity 0.18s ease, transform 0.18s ease';
     wrap.style.opacity = '0'; wrap.style.transform = 'translateY(8px)';
 
+    const nextBtn = document.getElementById('nextBtn');
+    nextBtn.classList.remove('show');
+
     setTimeout(() => {
       wrap.innerHTML = '';
-      // локальный таймер auto-advance: запускается после первого выбора, рестартится при каждом изменении
-      let advanceTimer = null;
-      const ADVANCE_DELAY = 1300; // мс на возможность выбрать второй вариант
-
-      const armAdvance = () => {
-        if (advanceTimer) clearTimeout(advanceTimer);
-        // если ничего не выбрано — не запускаем
-        if (!userAnswers[idx] || userAnswers[idx].length === 0) return;
-        advanceTimer = setTimeout(() => {
-          // финализация выбора → dim неактивных, advance
-          wrap.querySelectorAll('.card').forEach(c => {
-            if (!c.classList.contains('selected')) c.classList.add('dimmed');
-          });
-          // пульс сердца на конце блока
-          var b = BLOCKS[getCurrentBlock(idx)];
-          if (idx === b.to) {
-            var hw = document.querySelector('.heart-wrap');
-            hw.classList.remove('pulse'); void hw.offsetWidth;
-            hw.classList.add('pulse');
-            hap('m');
-          }
-          setTimeout(() => {
-            const next = idx + 1;
-            if (shouldShowInsert(next)) {
-              showBlockInsert(next, () => renderQ(next));
-            } else {
-              renderQ(next);
-            }
-          }, 280);
-        }, ADVANCE_DELAY);
-      };
 
       // нормализуем legacy формат (число) → массив
       if (typeof userAnswers[idx] === 'number') userAnswers[idx] = [userAnswers[idx]];
       if (!Array.isArray(userAnswers[idx])) userAnswers[idx] = [];
+
+      const updateNextVisibility = () => {
+        if (userAnswers[idx] && userAnswers[idx].length > 0) {
+          nextBtn.classList.add('show');
+        } else {
+          nextBtn.classList.remove('show');
+        }
+      };
 
       q.answers.forEach((a, i) => {
         const card = document.createElement('div');
@@ -953,7 +970,7 @@
             card.classList.remove('selected');
             hap('l');
           } else if (sel.length >= 2) {
-            // лимит 2 — третий тап игнорируем
+            // лимит 2 — третий тап игнорируем + микро-shake
             hap('l');
             card.style.transform = 'scale(0.97)';
             setTimeout(() => { card.style.transform = ''; }, 120);
@@ -966,21 +983,48 @@
           }
 
           userAnswers[idx] = sel;
-          // снимаем dim если есть (юзер передумал)
-          wrap.querySelectorAll('.card.dimmed').forEach(c => c.classList.remove('dimmed'));
+          updateNextVisibility();
           // сохранение прогресса
           try { localStorage.setItem('maru_progress', JSON.stringify({current:idx, userAnswers:userAnswers})); } catch(e) {}
-          // (пере)запускаем auto-advance
-          armAdvance();
         };
         wrap.appendChild(card);
       });
+
+      // если возврат через goBack и уже что-то выбрано — кнопка сразу видна
+      updateNextVisibility();
+
       wrap.style.opacity = '1'; wrap.style.transform = 'translateY(0)';
       // echo-callbacks на ключевых вопросах (Q1, Q15, Q29)
       if (idx === 0)       setTimeout(() => showQEcho(1),  700);
       else if (idx === 14) setTimeout(() => showQEcho(15), 700);
       else if (idx === 28) setTimeout(() => showQEcho(29), 700);
     }, 200);
+
+    // обработчик кнопки «Дальше» (переустанавливаем при каждом renderQ)
+    nextBtn.onclick = () => {
+      if (!userAnswers[idx] || userAnswers[idx].length === 0) return;
+      hap('m');
+      // dim неактивных карточек на момент перехода
+      wrap.querySelectorAll('.card').forEach(c => {
+        if (!c.classList.contains('selected')) c.classList.add('dimmed');
+      });
+      nextBtn.classList.remove('show');
+      // пульс сердца на конце блока
+      var b = BLOCKS[getCurrentBlock(idx)];
+      if (idx === b.to) {
+        var hw = document.querySelector('.heart-wrap');
+        hw.classList.remove('pulse'); void hw.offsetWidth;
+        hw.classList.add('pulse');
+      }
+      setTimeout(() => {
+        const next = idx + 1;
+        if (shouldShowInsert(next)) {
+          showBlockInsert(next, () => renderQ(next));
+        } else {
+          renderQ(next);
+        }
+      }, 260);
+    };
   }
 
   function goBack() {
