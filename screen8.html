@@ -62,16 +62,26 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .price{text-align:center;margin-bottom:8px}
 .price-hint{text-align:center;font-size:11px;color:var(--t3);margin-bottom:24px}
 
-/* ═══ SEGMENTED CONTROL — pill + sliding indicator ═══ */
-.tabs{position:relative;display:flex;margin:16px 0 20px;padding:4px;background:rgba(0,0,0,0.04);border-radius:12px;-webkit-tap-highlight-color:transparent}
-.tabs-indicator{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);background:var(--bg);border-radius:9px;box-shadow:0 1px 4px rgba(0,0,0,0.08),0 0 0 0.5px rgba(0,0,0,0.03);transition:transform .38s cubic-bezier(0.4,0,0.2,1)}
-.tabs[data-active="arch"] .tabs-indicator{transform:translateX(100%)}
-.tab{position:relative;z-index:1;flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 0;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);cursor:pointer;transition:color .25s ease}
-.tab svg{width:13px;height:13px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0.6;transition:opacity .25s ease}
-.tab.active{color:var(--acc)}
-.tab.active svg{opacity:1}
-.tab-content{display:none}
-.tab-content.active{display:block}
+/* ═══ ARCH LINK — вход в оверлей с архетипом ═══ */
+.arch-link{display:flex;flex-direction:column;align-items:center;gap:14px;padding:8px 20px 20px;font-family:'EB Garamond',Georgia,serif;font-style:italic;font-size:15px;color:var(--acc);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .25s}
+.arch-link:active{opacity:0.6}
+.arch-link-line{width:40px;height:1px;background:rgba(0,0,0,0.12)}
+.arch-link-arr{display:inline-block;transition:transform .3s}
+.arch-link:active .arch-link-arr{transform:translateX(3px)}
+
+/* ═══ ARCH SHEET — полноэкранный slide-up оверлей ═══ */
+.arch-sheet{position:fixed;inset:0;z-index:100;background:var(--bg);transform:translateY(100%);transition:transform .45s cubic-bezier(.32,.72,.37,1);display:flex;flex-direction:column;max-width:390px;margin:0 auto;pointer-events:none}
+.arch-sheet.open{transform:translateY(0);pointer-events:auto}
+.arch-sheet-backdrop{position:fixed;inset:0;z-index:99;background:rgba(0,0,0,0);transition:background .45s;pointer-events:none}
+.arch-sheet-backdrop.open{background:rgba(0,0,0,0.18);pointer-events:auto}
+.arch-sheet-hdr{flex-shrink:0;display:flex;align-items:center;padding:max(calc(env(safe-area-inset-top,0px) + 8px),24px) 20px 8px}
+.arch-sheet-handle{flex:1;display:flex;justify-content:center}
+.arch-sheet-handle-bar{width:36px;height:4px;border-radius:2px;background:rgba(0,0,0,0.14)}
+.arch-sheet-close{position:absolute;right:16px;top:max(calc(env(safe-area-inset-top,0px) + 12px),28px);width:36px;height:36px;border-radius:10px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.arch-sheet-close:active{opacity:0.5}
+.arch-sheet-close svg{width:14px;height:14px;stroke:var(--t2);stroke-width:2;fill:none;stroke-linecap:round}
+.arch-sheet-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 24px calc(env(safe-area-inset-bottom,0px) + 40px)}
+.arch-sheet-body::-webkit-scrollbar{display:none}
 
 /* аккордеоны */
 .acc-label{font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--acc);text-align:center;margin-bottom:12px}
@@ -102,7 +112,8 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .drum-fade-t,.drum-fade-b{position:absolute;left:0;right:0;height:36px;pointer-events:none;z-index:2}
 .drum-fade-t{top:0;background:linear-gradient(to bottom,var(--bg) 15%,transparent)}
 .drum-fade-b{bottom:0;background:linear-gradient(to top,var(--bg) 15%,transparent)}
-.fb-confirm{display:none;text-align:center;font-size:12px;color:var(--t3);margin-top:10px}
+.fb-confirm{text-align:center;font-size:11px;letter-spacing:0.02em;color:var(--t3);margin-top:14px;opacity:0;transition:opacity .35s ease;min-height:16px}
+.fb-confirm.show{opacity:1}
 
 /* CTA */
 .foot{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;padding:16px 24px calc(env(safe-area-inset-bottom,0px) + 12px);background:linear-gradient(to bottom,rgba(239,239,238,0) 0%,rgba(239,239,238,1) 28%);z-index:10;pointer-events:none}
@@ -194,75 +205,51 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
     <!-- DAILY MODE (после подписки) -->
     <div id="modeDaily" style="display:none">
 
-      <div class="tabs" id="tabsRow" data-active="card">
-        <div class="tabs-indicator"></div>
-        <div class="tab active" onclick="switchTab('card')">
-          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M12 9l1.5 2.5L16 12l-2.5 1L12 15.5 10.5 13 8 12l2.5-1z"/></svg>
-          Карточка
-        </div>
-        <div class="tab" onclick="switchTab('arch')">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.5"/><path d="M5.5 19c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/></svg>
-          Твой архетип
-        </div>
-      </div>
-
-      <!-- TAB 1: Карточка + feedback -->
-      <div class="tab-content active" id="tabCard">
-        <div class="card" id="dailyCard" style="margin-top:16px">
-          <div class="card-photo"><img id="dailyPhotoImg" src="" alt=""></div>
-          <div class="card-noise"></div>
-          <div class="card-glow" id="dailyGlow"></div>
-          <div class="card-inner">
-            <div class="card-title" id="dailyH"></div>
-            <div style="flex:1"></div>
-            <div class="card-glass" id="dailyGlass">
-              <div class="card-pair" id="dailyPair"></div>
-              <div class="card-planet" id="dailyDay"></div>
-              <div class="card-echo" id="cardEcho" style="display:none">
-                <span class="card-echo-dot" id="echoDot"></span>
-                <span id="echoText"></span>
-              </div>
-            </div>
-            <div class="card-b" id="dailyB"></div>
-            <div class="card-line"></div>
-            <div class="card-t" id="dailyT"></div>
-          </div>
-        </div>
-
-        <div style="padding:16px 0 0">
-          <div style="font-size:14px;font-weight:500;color:var(--t1);text-align:center;margin-bottom:12px">Что сегодня между вами?</div>
-          <div>
-            <div class="drum" style="width:100%;height:108px" id="fbDrum">
-              <div class="drum-hl"></div>
-              <div class="drum-list" id="fbDrumList"></div>
-              <div class="drum-fade-t"></div>
-              <div class="drum-fade-b"></div>
+      <div class="card" id="dailyCard" style="margin-top:16px">
+        <div class="card-photo"><img id="dailyPhotoImg" src="" alt=""></div>
+        <div class="card-noise"></div>
+        <div class="card-glow" id="dailyGlow"></div>
+        <div class="card-inner">
+          <div class="card-title" id="dailyH"></div>
+          <div style="flex:1"></div>
+          <div class="card-glass" id="dailyGlass">
+            <div class="card-pair" id="dailyPair"></div>
+            <div class="card-planet" id="dailyDay"></div>
+            <div class="card-echo" id="cardEcho" style="display:none">
+              <span class="card-echo-dot" id="echoDot"></span>
+              <span id="echoText"></span>
             </div>
           </div>
-          <div style="text-align:center;margin-top:12px">
-            <button id="fbSend" style="font-family:inherit;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);background:none;border:none;cursor:pointer;padding:8px 24px;-webkit-tap-highlight-color:transparent">Сохранить</button>
-          </div>
-          <div class="fb-confirm" id="fbConfirm">Сохранено — утром увидишь</div>
-        </div>
-
-        <div style="width:40px;height:1px;background:rgba(0,0,0,0.06);margin:24px auto"></div>
-
-        <div style="text-align:center;padding:16px 20px 40px">
-          <div style="font-size:13px;color:var(--t2);margin-bottom:12px">Хочешь спросить его напрямую?</div>
-          <button onclick="window.location.href='screen9.html'" style="font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);background:transparent;padding:12px 32px;border-radius:12px;border-top:1px solid rgba(0,0,0,0.05);border-left:1px solid rgba(0,0,0,0.04);border-bottom:1px solid rgba(255,255,255,0.5);border-right:1px solid rgba(255,255,255,0.4);cursor:pointer;-webkit-tap-highlight-color:transparent">Открыть чат</button>
+          <div class="card-b" id="dailyB"></div>
+          <div class="card-line"></div>
+          <div class="card-t" id="dailyT"></div>
         </div>
       </div>
 
-      <!-- TAB 2: Архетип -->
-      <div class="tab-content" id="tabArch">
-        <div class="hero-female" id="heroFemale">
-          <div class="hero-female-photo"><img id="heroFemalePhoto" src="" alt=""></div>
-          <div class="hero-female-name" id="heroFemaleName"></div>
-          <div class="hero-female-core" id="heroFemaleCore"></div>
+      <div style="padding:16px 0 0">
+        <div style="font-size:14px;font-weight:500;color:var(--t1);text-align:center;margin-bottom:12px">Что сегодня между вами?</div>
+        <div class="drum" style="width:100%;height:108px" id="fbDrum">
+          <div class="drum-hl"></div>
+          <div class="drum-list" id="fbDrumList"></div>
+          <div class="drum-fade-t"></div>
+          <div class="drum-fade-b"></div>
         </div>
-        <div id="accList"></div>
-        <div style="height:40px"></div>
+        <div class="fb-confirm" id="fbConfirm">сохранено — утром увидишь</div>
       </div>
+
+      <div style="width:40px;height:1px;background:rgba(0,0,0,0.06);margin:24px auto"></div>
+
+      <div style="text-align:center;padding:16px 20px 32px">
+        <div style="font-size:13px;color:var(--t2);margin-bottom:12px">Хочешь спросить его напрямую?</div>
+        <button onclick="window.location.href='screen9.html'" style="font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);background:transparent;padding:12px 32px;border-radius:12px;border-top:1px solid rgba(0,0,0,0.05);border-left:1px solid rgba(0,0,0,0.04);border-bottom:1px solid rgba(255,255,255,0.5);border-right:1px solid rgba(255,255,255,0.4);cursor:pointer;-webkit-tap-highlight-color:transparent">Открыть чат</button>
+      </div>
+
+      <div class="arch-link" onclick="openArch()">
+        <div class="arch-link-line"></div>
+        твой архетип <span class="arch-link-arr">→</span>
+      </div>
+
+      <div style="height:40px"></div>
 
     </div>
 
@@ -272,6 +259,25 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 <div class="foot" id="foot">
   <button class="cta-btn pulse" id="ctaBtn">Попробовать 3 дня бесплатно</button>
   <div class="cta-hint" id="ctaHint">затем 33 ₽ в день · отмена в любой момент</div>
+</div>
+
+<!-- ═══ ARCH SHEET — оверлей с архетипом ═══ -->
+<div class="arch-sheet-backdrop" id="archBackdrop" onclick="closeArch()"></div>
+<div class="arch-sheet" id="archSheet">
+  <div class="arch-sheet-hdr">
+    <div class="arch-sheet-handle"><div class="arch-sheet-handle-bar"></div></div>
+    <button class="arch-sheet-close" onclick="closeArch()" aria-label="закрыть">
+      <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="arch-sheet-body">
+    <div class="hero-female" id="heroFemale">
+      <div class="hero-female-photo"><img id="heroFemalePhoto" src="" alt=""></div>
+      <div class="hero-female-name" id="heroFemaleName"></div>
+      <div class="hero-female-core" id="heroFemaleCore"></div>
+    </div>
+    <div id="accList"></div>
+  </div>
 </div>
 
 <script>
@@ -412,6 +418,17 @@ if(subscribed){
   FB_ITEMS.forEach(function(txt,i){
     var el=document.createElement('div');el.className='drum-item';el.textContent=txt;el.dataset.idx=i;fbList.appendChild(el);
   });
+  var fbSaveTimer=null;
+  function fbAutoSave(){
+    try{
+      var tKey=new Date().toISOString().slice(0,10);
+      var fb=JSON.parse(localStorage.getItem('maru_feedback')||'{}');
+      fb[tKey]={situation:FB_KEYS[fbCurrent],comment:'',ts:Date.now()};
+      localStorage.setItem('maru_feedback',JSON.stringify(fb));
+    }catch(e){}
+    var c=document.getElementById('fbConfirm');
+    if(c){c.classList.add('show');clearTimeout(c._hideT);c._hideT=setTimeout(function(){c.classList.remove('show')},3200);}
+  }
   function fbPosition(idx,animate){
     fbCurrent=Math.max(0,Math.min(FB_ITEMS.length-1,idx));
     var offset=midSlots*itemH-fbCurrent*itemH;
@@ -419,6 +436,7 @@ if(subscribed){
     fbList.style.transform='translateY('+offset+'px)';
     var all=fbList.children;
     for(var i=0;i<all.length;i++){all[i].classList.remove('active','near');if(i===fbCurrent)all[i].classList.add('active');else if(Math.abs(i-fbCurrent)===1)all[i].classList.add('near')}
+    if(animate){clearTimeout(fbSaveTimer);fbSaveTimer=setTimeout(fbAutoSave,1000);}
   }
   fbPosition(fbCurrent,false);
   var startY=0,startOff=0,dragging=false,movedY=0;
@@ -431,31 +449,40 @@ if(subscribed){
   fbList.addEventListener('click',function(e){var t=e.target.closest('.drum-item');if(t&&t.dataset.idx!==undefined)fbPosition(parseInt(t.dataset.idx),true)});
   fbContainer.addEventListener('wheel',function(e){e.preventDefault();fbPosition(fbCurrent+(e.deltaY>0?1:-1),true)},{passive:false});
 
-  document.getElementById('fbSend').addEventListener('click',function(){
-    try{
-      var tKey=new Date().toISOString().slice(0,10);
-      var fb=JSON.parse(localStorage.getItem('maru_feedback')||'{}');
-      fb[tKey]={situation:FB_KEYS[fbCurrent],comment:'',ts:Date.now()};
-      localStorage.setItem('maru_feedback',JSON.stringify(fb));
-    }catch(e){}
-    document.getElementById('fbConfirm').style.display='block';
-    document.getElementById('fbSend').style.display='none';
-  });
 }
 
-window.switchTab=function(id){
+window.openArch=function(){
   try{if(tg)tg.HapticFeedback.impactOccurred('light');}catch(e){}
-  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
-  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active')});
-  document.getElementById('tabsRow').setAttribute('data-active',id);
-  if(id==='card'){
-    document.querySelector('.tab:nth-child(2)').classList.add('active');
-    document.getElementById('tabCard').classList.add('active');
-  } else {
-    document.querySelector('.tab:nth-child(3)').classList.add('active');
-    document.getElementById('tabArch').classList.add('active');
-  }
+  document.getElementById('archSheet').classList.add('open');
+  document.getElementById('archBackdrop').classList.add('open');
 };
+window.closeArch=function(){
+  try{if(tg)tg.HapticFeedback.impactOccurred('light');}catch(e){}
+  document.getElementById('archSheet').classList.remove('open');
+  document.getElementById('archBackdrop').classList.remove('open');
+};
+/* swipe down по sheet header → закрыть */
+(function(){
+  var sheet=document.getElementById('archSheet');
+  if(!sheet)return;
+  var startY=0,active=false;
+  sheet.addEventListener('touchstart',function(e){
+    if(!sheet.classList.contains('open'))return;
+    if(sheet.querySelector('.arch-sheet-body').scrollTop>0)return;
+    startY=e.touches[0].clientY;active=true;
+  },{passive:true});
+  sheet.addEventListener('touchmove',function(e){
+    if(!active)return;
+    var dy=e.touches[0].clientY-startY;
+    if(dy>0)sheet.style.transform='translateY('+dy+'px)';
+  },{passive:true});
+  sheet.addEventListener('touchend',function(e){
+    if(!active)return;active=false;
+    var dy=e.changedTouches[0].clientY-startY;
+    sheet.style.transform='';
+    if(dy>80)closeArch();
+  },{passive:true});
+})();
 
 document.getElementById('btnBack').addEventListener('click',function(){
   /* при возврате сбрасываем подписку для тестирования */
