@@ -71,21 +71,21 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 
 /* аккордеоны */
 .acc-label{font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--acc);text-align:center;margin-bottom:12px}
-.acc-item{cursor:pointer;-webkit-tap-highlight-color:transparent;border-top:1px solid rgba(0,0,0,0.07)}
-.acc-item:last-child{border-bottom:1px solid rgba(0,0,0,0.07)}
-.acc-head{display:flex;align-items:flex-start;padding:22px 4px;gap:18px}
-.acc-num{width:28px;flex-shrink:0;font-family:'EB Garamond',Georgia,serif;font-style:italic;font-size:22px;font-weight:400;color:var(--t3);line-height:1;padding-top:2px;transition:color .3s}
+.acc-item{border-top:none;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-bottom:6px}
+.acc-item:first-child{margin-top:0}
+.acc-head{display:flex;align-items:center;padding:14px 16px;gap:12px}
+.acc-num{font-size:9px;font-weight:600;letter-spacing:.1em;color:var(--t3);flex-shrink:0;font-variant-numeric:tabular-nums;transition:color .2s}
 .acc-item.open .acc-num{color:var(--acc)}
 .acc-head:active{opacity:.7}
 .acc-texts{flex:1;min-width:0}
-.acc-title{font-size:14px;font-weight:600;color:var(--t1);line-height:1.3;margin-bottom:4px;letter-spacing:-0.005em}
-.acc-sub{font-size:11px;color:var(--t3);font-weight:400;letter-spacing:0.005em}
-.acc-arr{width:14px;height:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;opacity:.3;margin-top:4px}
-.acc-arr svg{width:14px;height:14px;stroke:var(--t2);stroke-width:1.5;fill:none;stroke-linecap:round;transition:transform .3s}
+.acc-title{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:2px}
+.acc-sub{font-size:11px;color:var(--t3)}
+.acc-arr{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;opacity:.4}
+.acc-arr svg{width:16px;height:16px;stroke:var(--t2);stroke-width:1.5;fill:none;stroke-linecap:round;transition:transform .2s}
 .acc-item.open .acc-arr svg{transform:rotate(180deg)}
-.acc-body{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1)}
 .acc-item.open .acc-body{max-height:2000px}
-.acc-body-in{padding:0 4px 22px 46px;font-size:13px;color:var(--t2);line-height:1.7}
+.acc-body-in{padding:0 16px 14px 16px;font-size:13px;color:var(--t2);line-height:1.65}
 
 /* feedback drum */
 .drum{position:relative;overflow:hidden;border-radius:16px;background:rgba(255,255,255,0.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:inset 2px 2px 5px rgba(0,0,0,0.08),inset -2px -2px 5px rgba(255,255,255,0.6);border-top:1px solid rgba(0,0,0,0.06);border-left:1px solid rgba(0,0,0,0.05);border-bottom:1px solid rgba(255,255,255,0.55);border-right:1px solid rgba(255,255,255,0.45)}
@@ -109,7 +109,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .cta-btn.pulse{animation:btnPulse 2s ease 0s 1}
 
 /* ═══ HERO FEMALE — открытый блок над аккордеонами ═══ */
-.hero-female{display:flex;flex-direction:column;align-items:center;padding:8px 16px 40px;opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s}
+.hero-female{display:flex;flex-direction:column;align-items:center;padding:8px 16px 28px;opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s}
 .hero-female.vis{opacity:1;transform:none}
 .hero-female-photo{width:119px;height:119px;border-radius:50%;overflow:hidden;margin-bottom:14px;border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br)}
 .hero-female-photo img{width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.15) brightness(1.02)}
@@ -368,7 +368,7 @@ if(subscribed){
       var body=blocks[b.key]||'';
       var el=document.createElement('div');
       el.className='acc-item';
-      el.innerHTML='<div class="acc-head"><div class="acc-num">'+(i+1)+'</div><div class="acc-texts"><div class="acc-title">'+b.t+'</div><div class="acc-sub">'+b.s+'</div></div><div class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div></div><div class="acc-body"><div class="acc-body-in">'+body+'</div></div>';
+      el.innerHTML='<div class="acc-head"><div class="acc-num">'+(i+1)+'/6</div><div class="acc-texts"><div class="acc-title">'+b.t+'</div><div class="acc-sub">'+b.s+'</div></div><div class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div></div><div class="acc-body"><div class="acc-body-in">'+body+'</div></div>';
       el.addEventListener('click',function(){
         var was=el.classList.contains('open');
         document.querySelectorAll('.acc-item').forEach(function(x){x.classList.remove('open')});
