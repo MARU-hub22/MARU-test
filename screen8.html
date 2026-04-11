@@ -12,19 +12,13 @@
 html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothing:antialiased;font-family:'Inter',-apple-system,sans-serif;color:var(--t1)}
 
 .screen{position:relative;width:100%;max-width:390px;height:100dvh;margin:0 auto;display:flex;flex-direction:column;padding-top:max(calc(env(safe-area-inset-top,0px) + 8px),24px)}
-.hdr{flex-shrink:0;display:flex;align-items:center;padding:0 20px 8px}
-.hdr-left{width:88px;display:flex;gap:4px;flex-shrink:0}
+.hdr{flex-shrink:0;display:flex;align-items:center;padding:0 24px 8px}
 .hdr-center{flex:1;text-align:center}
-.hdr-right{width:88px;display:flex;justify-content:flex-end;flex-shrink:0}
-.m-logo{font-size:24px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--bg);text-shadow:-1px -1px 1px rgba(0,0,0,0.2),1px 1px 1px rgba(255,255,255,0.75),0 0 3px rgba(0,0,0,0.04);user-select:none}
+.m-logo{font-size:24px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--bg);text-shadow:-1px -1px 1px rgba(0,0,0,0.2),1px 1px 1px rgba(255,255,255,0.75),0 0 3px rgba(0,0,0,0.04);user-select:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .btn-back{width:44px;height:44px;border-radius:10px;border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
 .btn-back:active{transform:scale(0.9);opacity:0.6}
 .btn-back svg{width:14px;height:14px;stroke:var(--t2);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .hdr-spacer{width:44px;flex-shrink:0}
-.hdr-ico{width:40px;height:40px;border-radius:10px;border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;visibility:hidden;transition:opacity .2s}
-.hdr-ico.show{visibility:visible}
-.hdr-ico:active{opacity:0.5}
-.hdr-ico svg{width:17px;height:17px;stroke:var(--t2);stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
 
 .content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 24px}
 .content::-webkit-scrollbar{display:none}
@@ -68,12 +62,21 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .price{text-align:center;margin-bottom:8px}
 .price-hint{text-align:center;font-size:11px;color:var(--t3);margin-bottom:24px}
 
-/* ═══ ARCH LINK — вход в оверлей с архетипом ═══ */
-.arch-link{display:flex;flex-direction:column;align-items:center;gap:14px;padding:8px 20px 20px;font-family:'EB Garamond',Georgia,serif;font-style:italic;font-size:15px;color:var(--acc);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .25s}
-.arch-link:active{opacity:0.6}
-.arch-link-line{width:40px;height:1px;background:rgba(0,0,0,0.12)}
-.arch-link-arr{display:inline-block;transition:transform .3s}
-.arch-link:active .arch-link-arr{transform:translateX(3px)}
+/* ═══ ASK HIM — единственная постоянная ссылка ═══ */
+.ask-him{text-align:center;padding:16px 20px 0;font-family:'EB Garamond',Georgia,serif;font-style:italic;font-size:15px;color:var(--acc);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .25s}
+.ask-him:active{opacity:0.6}
+
+/* ═══ MIRROR HINT — онбординг shake ═══ */
+.mirror-hint{text-align:center;padding:26px 20px 0;font-family:'EB Garamond',Georgia,serif;font-style:italic;font-size:12px;color:var(--t3);opacity:0;transition:opacity 0.6s ease;pointer-events:none;letter-spacing:0.01em}
+.mirror-hint.show{opacity:1}
+
+/* ═══ MIRROR REVEAL — появление фразы архетипа ═══ */
+.mirror-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0);transition:background 0.45s ease;pointer-events:none;z-index:120}
+.mirror-backdrop.show{background:rgba(239,239,238,0.88);pointer-events:auto;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.mirror-reveal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:40px 32px;z-index:121;pointer-events:none;max-width:390px;margin:0 auto;opacity:0;transition:opacity 0.5s ease,transform 0.5s cubic-bezier(0.22,1,0.36,1);transform:translateY(8px)}
+.mirror-reveal.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+.mirror-text{font-family:'EB Garamond',Georgia,serif;font-style:italic;font-size:22px;line-height:1.5;color:var(--t1);text-align:center;max-width:320px;text-wrap:balance;cursor:pointer;-webkit-tap-highlight-color:transparent;letter-spacing:-0.005em}
+.mirror-text strong{font-weight:500;color:var(--acc)}
 
 /* ═══ ARCH SHEET — полноэкранный slide-up оверлей ═══ */
 .arch-sheet{position:fixed;inset:0;z-index:100;background:var(--bg);transform:translateY(100%);transition:transform .45s cubic-bezier(.32,.72,.37,1);display:flex;flex-direction:column;max-width:390px;margin:0 auto;pointer-events:none}
@@ -143,19 +146,9 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 
 <div class="screen">
   <div class="hdr">
-    <div class="hdr-left">
-      <button class="hdr-ico" id="hdrArch" onclick="openArch()" aria-label="твой архетип">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.5"/><path d="M5.5 19c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/></svg>
-      </button>
-      <button class="hdr-ico" id="hdrChat" onclick="location.href='screen9.html'" aria-label="чат с ним">
-        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/></svg>
-      </button>
-    </div>
-    <div class="hdr-center"><div class="m-logo">MARU</div></div>
-    <div class="hdr-right">
-      <div class="hdr-spacer"></div>
-      <button class="btn-back" id="btnBack"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
-    </div>
+    <div class="hdr-spacer"></div>
+    <div class="hdr-center"><div class="m-logo" id="logoMaru">MARU</div></div>
+    <button class="btn-back" id="btnBack"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
   </div>
 
   <div class="content">
@@ -253,7 +246,12 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
         <div class="fb-confirm" id="fbConfirm">сохранено — утром увидишь</div>
       </div>
 
-      <div style="height:80px"></div>
+      <div class="mirror-hint" id="mirrorHint">потряси — увидишь себя</div>
+
+      <div style="width:40px;height:1px;background:rgba(0,0,0,0.06);margin:28px auto 0"></div>
+      <div class="ask-him" onclick="location.href='screen9.html'">задать ему вопрос →</div>
+
+      <div style="height:60px"></div>
 
     </div>
 
@@ -265,7 +263,13 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
   <div class="cta-sub" id="ctaHint">три дня бесплатно · потом 33 ₽, отменишь когда угодно</div>
 </div>
 
-<!-- ═══ ARCH SHEET — оверлей с архетипом ═══ -->
+<!-- ═══ MIRROR — фраза архетипа на 4 сек ═══ -->
+<div class="mirror-backdrop" id="mirrorBackdrop" onclick="hideMirror()"></div>
+<div class="mirror-reveal" id="mirrorReveal">
+  <div class="mirror-text" id="mirrorText"></div>
+</div>
+
+<!-- ═══ ARCH SHEET — оверлей с полным архетипом ═══ -->
 <div class="arch-sheet-backdrop" id="archBackdrop" onclick="closeArch()"></div>
 <div class="arch-sheet" id="archSheet">
   <div class="arch-sheet-hdr">
@@ -347,8 +351,6 @@ if(subscribed){
   document.getElementById('modePaywall').style.display='none';
   document.getElementById('modeDaily').style.display='block';
   document.getElementById('foot').style.display='none';
-  document.getElementById('hdrArch').classList.add('show');
-  document.getElementById('hdrChat').classList.add('show');
 
   fillCard('dailyPhotoImg','dailyGlow','dailyGlass','dailyPair');
   document.getElementById('dailyPair').innerHTML=hisName+' <span class="card-pair-x">×</span> '+herName;
@@ -425,6 +427,7 @@ if(subscribed){
     var el=document.createElement('div');el.className='drum-item';el.textContent=txt;el.dataset.idx=i;fbList.appendChild(el);
   });
   var fbSaveTimer=null;
+  var CRISIS_KEYS=['distant','silent','conflict'];
   function fbAutoSave(){
     try{
       var tKey=new Date().toISOString().slice(0,10);
@@ -434,6 +437,10 @@ if(subscribed){
     }catch(e){}
     var c=document.getElementById('fbConfirm');
     if(c){c.classList.add('show');clearTimeout(c._hideT);c._hideT=setTimeout(function(){c.classList.remove('show')},3200);}
+    /* кризисный триггер — Зеркало появляется само */
+    if(CRISIS_KEYS.indexOf(FB_KEYS[fbCurrent])!==-1){
+      setTimeout(function(){if(window.showMirror)showMirror();},1600);
+    }
   }
   function fbPosition(idx,animate){
     fbCurrent=Math.max(0,Math.min(FB_ITEMS.length-1,idx));
@@ -467,6 +474,90 @@ window.closeArch=function(){
   document.getElementById('archSheet').classList.remove('open');
   document.getElementById('archBackdrop').classList.remove('open');
 };
+
+/* ═══ MIRROR — shake / double-tap / crisis trigger ═══ */
+var mirrorTimer=null;
+function firstSentence(s){
+  if(!s)return '';
+  var m=s.match(/^[^.!?]+[.!?]/);
+  return m?m[0].trim():s;
+}
+window.showMirror=function(){
+  if(!herArchetype)return;
+  var name=herArchetype.name||'';
+  var phrase=firstSentence(herArchetype.core);
+  var html='<strong>Ты — '+name+'.</strong><br>'+phrase;
+  document.getElementById('mirrorText').innerHTML=html;
+  document.getElementById('mirrorBackdrop').classList.add('show');
+  document.getElementById('mirrorReveal').classList.add('show');
+  try{if(tg)tg.HapticFeedback.impactOccurred('light');}catch(e){}
+  try{localStorage.setItem('maru_mirror_used','1');}catch(e){}
+  var hint=document.getElementById('mirrorHint');if(hint)hint.classList.remove('show');
+  clearTimeout(mirrorTimer);
+  mirrorTimer=setTimeout(hideMirror,4200);
+};
+window.hideMirror=function(){
+  clearTimeout(mirrorTimer);
+  document.getElementById('mirrorReveal').classList.remove('show');
+  document.getElementById('mirrorBackdrop').classList.remove('show');
+};
+/* тап по фразе → полный архетип */
+document.getElementById('mirrorText').addEventListener('click',function(){
+  hideMirror();
+  setTimeout(openArch,280);
+});
+/* double tap на MARU logo */
+(function(){
+  var logo=document.getElementById('logoMaru');
+  if(!logo)return;
+  var last=0;
+  logo.addEventListener('click',function(){
+    var now=Date.now();
+    if(now-last<400){showMirror();last=0;}
+    else last=now;
+  });
+})();
+/* shake detection */
+(function(){
+  if(!window.DeviceMotionEvent)return;
+  var lastX=null,lastY=null,lastZ=null,hits=0,hitTime=0;
+  function onMotion(e){
+    var a=e.accelerationIncludingGravity;
+    if(!a)return;
+    var x=a.x||0,y=a.y||0,z=a.z||0;
+    if(lastX===null){lastX=x;lastY=y;lastZ=z;return;}
+    var delta=Math.abs(x-lastX)+Math.abs(y-lastY)+Math.abs(z-lastZ);
+    if(delta>24){
+      var now=Date.now();
+      if(now-hitTime>700)hits=0;
+      hitTime=now;hits++;
+      if(hits>=3){hits=0;showMirror();}
+    }
+    lastX=x;lastY=y;lastZ=z;
+  }
+  if(typeof DeviceMotionEvent.requestPermission==='function'){
+    /* iOS 13+: просим permission один раз при первом тапе */
+    var asked=false;
+    document.addEventListener('click',function ask(){
+      if(asked)return;asked=true;
+      DeviceMotionEvent.requestPermission().then(function(s){
+        if(s==='granted')window.addEventListener('devicemotion',onMotion);
+      }).catch(function(){});
+    },{once:true});
+  }else{
+    window.addEventListener('devicemotion',onMotion);
+  }
+})();
+/* mirror hint onboarding — до первого использования */
+(function(){
+  var used=false;
+  try{used=localStorage.getItem('maru_mirror_used')==='1';}catch(e){}
+  if(used)return;
+  setTimeout(function(){
+    var h=document.getElementById('mirrorHint');
+    if(h){h.classList.add('show');setTimeout(function(){h.classList.remove('show');},5200);}
+  },2500);
+})();
 /* swipe down по sheet header → закрыть */
 (function(){
   var sheet=document.getElementById('archSheet');

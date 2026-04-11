@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>MARU</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <style>
@@ -270,9 +270,10 @@ html, body {
   object-fit: cover; background: #ddd;
   border: 1px solid rgba(0,0,0,0.06);
 }
-.chat-info { flex: 1 }
+.chat-info { flex: 1; cursor: pointer; -webkit-tap-highlight-color: transparent }
+.chat-info:active { opacity: 0.6 }
 .chat-title { font-size: 14px; font-weight: 600; color: var(--t1) }
-.chat-sub { font-size: 9px; color: var(--t3); letter-spacing: .06em; text-transform: uppercase }
+.chat-sub { font-size: 9px; color: var(--acc); letter-spacing: .06em; text-transform: uppercase }
 
 .chat-messages {
   flex: 1; overflow-y: auto;
@@ -365,6 +366,14 @@ html, body {
 .chat-send:disabled { opacity: 0.25; pointer-events: none }
 .chat-send svg { width: 18px; height: 18px }
 
+/* ═══ HIS TOAST — reminder архетипа мужчины ═══ */
+.his-toast-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0);transition:background 0.45s ease;pointer-events:none;z-index:120}
+.his-toast-backdrop.show{background:rgba(239,239,238,0.88);pointer-events:auto;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.his-toast{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:40px 32px;z-index:121;pointer-events:none;max-width:390px;margin:0 auto;opacity:0;transform:translateY(8px);transition:opacity 0.5s ease,transform 0.5s cubic-bezier(0.22,1,0.36,1)}
+.his-toast.show{opacity:1;transform:translateY(0);pointer-events:auto}
+.his-toast-text{font-family:'EB Garamond',Georgia,serif;font-style:italic;font-size:22px;line-height:1.5;color:var(--t1);text-align:center;max-width:320px;text-wrap:balance;letter-spacing:-0.005em}
+.his-toast-text strong{font-weight:500;color:var(--acc)}
+
 /* ═══ PAYWALL ═══ */
 .pw {
   position: fixed; inset: 0; z-index: 100;
@@ -436,10 +445,10 @@ html, body {
 <!-- ═══ CHAT ═══ -->
 <div class="view hidden" id="chatView">
   <div class="chat-hdr">
-    <img class="chat-avatar" id="chatAvatar" src="" alt="">
-    <div class="chat-info">
+    <img class="chat-avatar" id="chatAvatar" src="" alt="" onclick="openHisArch()" style="cursor:pointer">
+    <div class="chat-info" onclick="openHisArch()">
       <div class="chat-title" id="chatName"></div>
-      <div class="chat-sub">его механика</div>
+      <div class="chat-sub">тап — узнать кто он</div>
     </div>
     <button class="chat-back" id="chatBack">
       <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
@@ -456,6 +465,12 @@ html, body {
 </div>
 
 <!-- ═══ PAYWALL ═══ -->
+<!-- ═══ HIS TOAST ═══ -->
+<div class="his-toast-backdrop" id="hisToastBackdrop" onclick="hideHisToast()"></div>
+<div class="his-toast" id="hisToast" onclick="hideHisToast()">
+  <div class="his-toast-text" id="hisToastText"></div>
+</div>
+
 <div class="pw" id="paywall">
   <div class="pw-icon">&#128274;</div>
   <div class="pw-title">3 сообщения использованы</div>
@@ -663,6 +678,29 @@ var QUICK_FACTS = {
 var archetypes = {};
 var archKeys = [];
 var currentArch = null;
+var hisToastTimer = null;
+window.openHisArch = function(){
+  if (!currentArch) return;
+  try{if(window.Telegram&&Telegram.WebApp)Telegram.WebApp.HapticFeedback.impactOccurred('light');}catch(e){}
+  var toast = document.getElementById('hisToast');
+  var backdrop = document.getElementById('hisToastBackdrop');
+  var textEl = document.getElementById('hisToastText');
+  var phrase = (currentArch.data && (currentArch.data.first_para || currentArch.data.insight)) || '';
+  if (!phrase) return;
+  /* первое предложение */
+  var m = phrase.match(/^[^.!?]+[.!?]/);
+  phrase = m ? m[0].trim() : phrase.split('.')[0] + '.';
+  textEl.innerHTML = '<strong>Он — ' + currentArch.name + '.</strong><br>' + phrase;
+  backdrop.classList.add('show');
+  toast.classList.add('show');
+  clearTimeout(hisToastTimer);
+  hisToastTimer = setTimeout(hideHisToast, 4500);
+};
+window.hideHisToast = function(){
+  clearTimeout(hisToastTimer);
+  document.getElementById('hisToast').classList.remove('show');
+  document.getElementById('hisToastBackdrop').classList.remove('show');
+};
 var myArchKey = '';
 var swiper = null;
 var msgCount = {};
