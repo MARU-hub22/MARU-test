@@ -174,9 +174,9 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .ef-col:nth-child(1) .ef-name{color:rgba(74,158,255,1)}
 .ef-col:nth-child(2) .ef-name{color:rgba(74,158,255,0.75)}
 .ef-col:nth-child(3) .ef-name{color:var(--t2)}
-.ef-hint{text-align:center;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(0,0,0,0.28);padding:14px 0 14px;transition:opacity .2s;}
-@keyframes hintPulse{0%,100%{color:rgba(0,0,0,0.28)}50%{color:var(--acc)}}
-.ef-hint.pulse{animation:hintPulse 1.2s ease 1}
+.ef-hint{text-align:center;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(0,0,0,0.40);padding:14px 0 14px;transition:opacity .3s;}
+@keyframes hintBreathe{0%,100%{opacity:0.55}50%{opacity:1}}
+.ef-hint.breathe{animation:hintBreathe 3s ease-in-out infinite}
 .ef-desc{margin:0 16px 16px;padding:10px 14px;border-radius:10px;border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br);display:none;}
 .ef-desc.show{display:block}
 .ef-desc-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
@@ -1033,8 +1033,8 @@ function animBars(){
           hap('l');
         },i*120);
       });
-      /* hint мигает после баров */
-      setTimeout(function(){var h=document.getElementById('efHint');if(h)h.classList.add('pulse');},fills.length*120+800);
+      /* hint дышит после баров, пока юзер не тапнул */
+      setTimeout(function(){var h=document.getElementById('efHint');if(h)h.classList.add('breathe');},fills.length*120+800);
       return;
     }
     if(done)return;
