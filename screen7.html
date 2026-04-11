@@ -400,13 +400,13 @@ function buildDrum(containerId,listId,items,startIdx,onChange,renderItem){
 
 var days=[];for(var d=1;d<=31;d++)days.push(String(d));
 var years=[];for(var y=2008;y>=1960;y--)years.push(String(y));
-var luckyNums=[];for(var n=1;n<=9;n++)luckyNums.push(String(n));
+var luckyNums=[];for(var n=0;n<=99;n++)luckyNums.push(String(n));
 var colorNames=COLORS.map(function(c){return c.name});
 
 buildDrum('drDay','drDayL',days,13,function(idx){selDay=idx+1});
 buildDrum('drMon','drMonL',MONTHS_NOM,3);
 buildDrum('drYr','drYrL',years,10);
-buildDrum('drLucky','drLuckyL',luckyNums,4,function(idx){document.getElementById('accuracyVal').textContent=ACCURACY[idx]+'%'});
+buildDrum('drLucky','drLuckyL',luckyNums,7,function(idx){document.getElementById('accuracyVal').textContent=ACCURACY[idx%ACCURACY.length]+'%'});
 buildDrum('drColor','drColorL',colorNames,0,function(idx){selColor=COLORS[idx]},function(name,i){return '<span class="color-row"><span class="color-dot" style="background:'+COLORS[i].hex+'"></span>'+name+'</span>'});
 
 function showPhase(n){
