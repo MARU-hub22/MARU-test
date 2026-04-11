@@ -73,9 +73,9 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .acc-label{font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--acc);text-align:center;margin-bottom:12px}
 .acc-item{border-top:none;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-bottom:6px}
 .acc-item:first-child{margin-top:0}
-.acc-head{display:flex;align-items:center;padding:14px 16px;gap:10px}
-.acc-dot{width:5px;height:5px;border-radius:50%;background:var(--acc);opacity:0.3;flex-shrink:0;transition:opacity .2s}
-.acc-item.open .acc-dot{opacity:1}
+.acc-head{display:flex;align-items:center;padding:14px 16px;gap:12px}
+.acc-num{font-size:9px;font-weight:600;letter-spacing:.1em;color:var(--t3);flex-shrink:0;font-variant-numeric:tabular-nums;transition:color .2s}
+.acc-item.open .acc-num{color:var(--acc)}
 .acc-head:active{opacity:.7}
 .acc-texts{flex:1;min-width:0}
 .acc-title{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:2px}
@@ -114,7 +114,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .hero-female-photo{width:119px;height:119px;border-radius:50%;overflow:hidden;margin-bottom:14px;border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br)}
 .hero-female-photo img{width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.15) brightness(1.02)}
 .hero-female-name{font-size:24px;font-weight:700;color:var(--t1);letter-spacing:-.01em;margin-bottom:14px;text-align:center}
-.hero-female-core{font-family:'EB Garamond',Georgia,serif;font-style:italic;font-size:16px;line-height:1.5;color:var(--t2);text-align:center;max-width:320px;text-wrap:balance;padding:20px 22px;border-radius:var(--r);border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br)}
+.hero-female-core{font-family:'EB Garamond',Georgia,serif;font-style:italic;font-size:16px;line-height:1.5;color:var(--t2);text-align:center;max-width:320px;text-wrap:balance}
 </style>
 </head>
 <body>
@@ -368,7 +368,7 @@ if(subscribed){
       var body=blocks[b.key]||'';
       var el=document.createElement('div');
       el.className='acc-item';
-      el.innerHTML='<div class="acc-head"><div class="acc-dot"></div><div class="acc-texts"><div class="acc-title">'+b.t+'</div><div class="acc-sub">'+b.s+'</div></div><div class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div></div><div class="acc-body"><div class="acc-body-in">'+body+'</div></div>';
+      el.innerHTML='<div class="acc-head"><div class="acc-num">'+(i+1)+'/6</div><div class="acc-texts"><div class="acc-title">'+b.t+'</div><div class="acc-sub">'+b.s+'</div></div><div class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div></div><div class="acc-body"><div class="acc-body-in">'+body+'</div></div>';
       el.addEventListener('click',function(){
         var was=el.classList.contains('open');
         document.querySelectorAll('.acc-item').forEach(function(x){x.classList.remove('open')});
