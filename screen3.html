@@ -197,10 +197,10 @@
   .q-echo {
     padding: 0 var(--sp3);
     font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
-    font-size: 14px;
+    font-size: 17px;
     font-style: italic;
     font-weight: 500;
-    line-height: 1.5;
+    line-height: 1.45;
     color: #E63946;
     letter-spacing: 0;
     opacity: 0;
@@ -211,7 +211,7 @@
   }
   .q-echo.show {
     opacity: 1;
-    max-height: 80px;
+    max-height: 100px;
     padding: 0 var(--sp3) 12px;
   }
   @keyframes fadeInUp {
@@ -1000,6 +1000,10 @@
           updateNextVisibility();
           // сохранение прогресса
           try { localStorage.setItem('maru_progress', JSON.stringify({current:idx, userAnswers:userAnswers})); } catch(e) {}
+          // auto-next при выборе 2-го варианта (400мс hold для визуального подтверждения)
+          if (sel.length === 2) {
+            setTimeout(function() { nextBtn.onclick(); }, 400);
+          }
         };
         wrap.appendChild(card);
       });
