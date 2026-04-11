@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>MARU</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -107,6 +107,14 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .cta-hint{text-align:center;font-size:11px;color:var(--t3);margin-top:8px;pointer-events:none}
 @keyframes btnPulse{0%{box-shadow:0 0 0 0 rgba(255,111,97,0)}40%{box-shadow:0 0 0 6px rgba(255,111,97,0.3)}100%{box-shadow:0 0 0 0 rgba(255,111,97,0)}}
 .cta-btn.pulse{animation:btnPulse 2s ease 0s 1}
+
+/* ═══ HERO FEMALE — открытый блок над аккордеонами ═══ */
+.hero-female{display:flex;flex-direction:column;align-items:center;padding:8px 16px 28px;opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s}
+.hero-female.vis{opacity:1;transform:none}
+.hero-female-photo{width:119px;height:119px;border-radius:50%;overflow:hidden;margin-bottom:14px;border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br)}
+.hero-female-photo img{width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.15) brightness(1.02)}
+.hero-female-name{font-size:24px;font-weight:700;color:var(--t1);letter-spacing:-.01em;margin-bottom:14px;text-align:center}
+.hero-female-core{font-family:'EB Garamond',Georgia,serif;font-style:italic;font-size:16px;line-height:1.5;color:var(--t2);text-align:center;max-width:320px;text-wrap:balance}
 </style>
 </head>
 <body>
@@ -235,10 +243,13 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 
       <!-- TAB 2: Архетип -->
       <div class="tab-content" id="tabArch">
-        <div style="padding-top:20px">
-          <div class="acc-label" id="accLabel"></div>
-          <div id="accList"></div>
+        <div class="hero-female" id="heroFemale">
+          <div class="hero-female-photo"><img id="heroFemalePhoto" src="" alt=""></div>
+          <div class="hero-female-name" id="heroFemaleName"></div>
+          <div class="hero-female-core" id="heroFemaleCore"></div>
         </div>
+        <div class="acc-label" id="accLabel"></div>
+        <div id="accList"></div>
         <div style="height:40px"></div>
       </div>
 
@@ -273,14 +284,14 @@ var CARDS={
   5:{h:'Он отпустит контроль.',b:'Венера переключает из головы в тело. Он сегодня мягче. Подойди первая. Прикоснись.',t:'Задание: заметь, когда он прикоснётся первым'},
   6:{h:'Маски снимаются.',b:'Сатурн убирает роли. Он непривычно честен. Не пугайся — так он выглядит без брони.',t:'Задание: заметь, чем он отличается от «рабочего» себя'}
 };
-var ACC_BLOCKS=[
-  {t:'Почему ты выбираешь именно таких',s:'паттерн притяжения',b:'Твой архетип определяет паттерн: кого ты замечаешь, кого пропускаешь, и почему «не те» кажутся магнитом. Это не случайность — это программа, записанная в детстве.'},
-  {t:'Где ты теряешь себя',s:'слепое пятно',b:'Каждый архетип имеет точку растворения — момент, когда ты перестаёшь быть собой и начинаешь быть «для него». Твоя точка — потребность в определённости.'},
-  {t:'Как ты любишь на самом деле',s:'стиль привязанности',b:'Твой стиль — тревожная привязанность с элементами избегания. Ты хочешь близости, но боишься её. Это создаёт цикл: притяжение → страх → отдаление → тоска.'},
-  {t:'Чего ты боишься в паре',s:'главный страх',b:'Главный страх твоего архетипа — быть ненужной. Не брошенной, а именно ненужной. Когда он не спрашивает, не замечает, не ищет — ты разрушаешься.'},
-  {t:'Что он видит, а ты — нет',s:'его взгляд на тебя',b:'Он видит в тебе силу, которую ты не замечаешь. Он видит, как ты держишь пространство. Как ты чувствуешь раньше, чем он успевает подумать.'},
-  {t:'Твоя суперсила в паре',s:'уникальная энергия',b:'То, за что он рядом. Не внешность — твоя уникальная энергия, которую невозможно заменить. Ты создаёшь пространство, в котором он может быть настоящим.'},
-  {t:'Ваш сценарий',s:'динамика пары',b:'Ваши архетипы создают уникальную динамику. Он контролирует — ты чувствуешь. Он отдаляется — ты приближаешься. Выход: сломать цикл первой.'}
+var FEMALE_URL='https://cdn.jsdelivr.net/gh/MARU-hub22/maru-data@main/maru_archetypes_v7.json';
+var FEMALE_BLOCKS=[
+  {key:'who_you_are',     t:'Кто ты на самом деле',             s:'твоя настоящая природа'},
+  {key:'how_you_choose',  t:'Как ты выбираешь мужчину',         s:'паттерн притяжения'},
+  {key:'in_couple',       t:'Кто ты в паре',                    s:'твоя роль рядом'},
+  {key:'feared_to_learn', t:'То, что ты боялась о себе узнать', s:'твоя тень'},
+  {key:'sexuality',       t:'Твоя сексуальность',               s:'как ты открываешься'},
+  {key:'strength',        t:'Сила внутри тебя',                 s:'твой настоящий ресурс'},
 ];
 
 var NAMES_MAP={'Конвертер':'konverter','Методолог':'metodolog','Теоретик':'teoretik','Режиссер':'rezhisser','Транслятор':'translyator','Генератор':'generator','Полемик':'polemik','Аналитик':'analitik','Оракул':'orakul','Созерцатель':'sozertatel','Концептуалист':'kontseptualist','Интерпретатор':'interpretator','Идеолог':'ideolog','Дизайнер':'dizayner','Инструктор':'instruktor','Педагог':'pedagog','Лидер':'lider','Ментор':'mentor','Продавец':'prodavets','Герой':'geroy','Командир':'komandir','Философ':'filosof','Историк':'istorik','Наставник':'nastavnik','Инженер':'inzhener','Декоратор':'dekorator','Законодатель':'zakonodatel','Продюсер':'produser','Драматург':'dramaturg','Агент':'agent'};
@@ -337,19 +348,37 @@ if(subscribed){
     }
   }catch(e){}
 
-  /* аккордеоны */
-  document.getElementById('accLabel').textContent='архетип · '+herName;
-  var list=document.getElementById('accList');
-  ACC_BLOCKS.forEach(function(a,i){
-    var el=document.createElement('div');el.className='acc-item'+(i===0?' open':'');
-    el.innerHTML='<div class="acc-head"><div class="acc-dot"></div><div class="acc-texts"><div class="acc-title">'+a.t+'</div><div class="acc-sub">'+a.s+'</div></div><div class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div></div><div class="acc-body"><div class="acc-body-in">'+a.b+'</div></div>';
-    el.addEventListener('click',function(){
-      var was=el.classList.contains('open');
-      document.querySelectorAll('.acc-item').forEach(function(x){x.classList.remove('open')});
-      if(!was)el.classList.add('open');
+  /* архетип Ж — hero + аккордеоны из CDN */
+  var herDay=parseInt(localStorage.getItem('maru_her_day')||'14',10);
+  fetch(FEMALE_URL+'?t='+Date.now())
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var a=d.female[String(herDay)];
+      if(!a)return;
+      document.getElementById('heroFemalePhoto').src='her_photos/'+a.photo+'.jpg';
+      document.getElementById('heroFemaleName').textContent=a.name;
+      document.getElementById('heroFemaleCore').textContent=a.core;
+      document.getElementById('heroFemale').classList.add('vis');
+      document.getElementById('accLabel').textContent='архетип · '+a.name;
+      buildFemaleAccordions(a.blocks);
+    })
+    .catch(function(){});
+  function buildFemaleAccordions(blocks){
+    var list=document.getElementById('accList');
+    list.innerHTML='';
+    FEMALE_BLOCKS.forEach(function(b,i){
+      var body=blocks[b.key]||'';
+      var el=document.createElement('div');
+      el.className='acc-item'+(i===0?' open':'');
+      el.innerHTML='<div class="acc-head"><div class="acc-dot"></div><div class="acc-texts"><div class="acc-title">'+b.t+'</div><div class="acc-sub">'+b.s+'</div></div><div class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div></div><div class="acc-body"><div class="acc-body-in">'+body+'</div></div>';
+      el.addEventListener('click',function(){
+        var was=el.classList.contains('open');
+        document.querySelectorAll('.acc-item').forEach(function(x){x.classList.remove('open')});
+        if(!was)el.classList.add('open');
+      });
+      list.appendChild(el);
     });
-    list.appendChild(el);
-  });
+  }
 
 } else {
   /* PAYWALL MODE */
