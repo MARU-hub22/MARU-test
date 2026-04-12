@@ -211,7 +211,7 @@ html,body{height:100%;background:var(--bg);overflow:hidden;-webkit-font-smoothin
 .acc-item:first-child{margin-top:0}
 .acc-item.vis{opacity:1;transform:none}
 .acc-head{display:flex;align-items:center;padding:14px 16px;gap:10px;}
-.acc-dot{width:5px;height:5px;border-radius:50%;background:var(--acc);opacity:0.35;flex-shrink:0;transition:opacity .2s}
+.acc-dot{width:2px;height:14px;border-radius:1px;background:var(--acc);opacity:0.2;flex-shrink:0;transition:opacity .25s}
 .acc-item.open .acc-dot{opacity:1}
 .acc-head:active{opacity:.7}
 .acc-texts{flex:1;min-width:0}
@@ -760,7 +760,7 @@ function startRarity(){
 }
 
 document.getElementById('heroRarity').textContent='один из 30 архетипов';
-document.getElementById('insTitle').textContent=(NAME[dom]||dom)+' · '+domPct+'%';
+document.getElementById('insTitle').textContent='главная сила — '+(NAME[dom]||dom).toLowerCase();
 document.getElementById('insTextInner').textContent=curPov==='m'?(INS_M[dom]||''):(INS_F[dom]||'');
 clampIns();
 
