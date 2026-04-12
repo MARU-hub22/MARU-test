@@ -891,9 +891,9 @@ function buildAccordions(accs){
   accs.forEach(function(a,i){
     ah+='<div class="acc-item" id="acc'+i+'" onclick="tAcc('+i+')">'+
       '<div class="acc-head">'+
-        '
         '<div class="acc-texts">'+
           '<div class="acc-title">'+a.t+'</div>'+
+          '<div class="acc-sub">'+a.s+'</div>'+
         '</div>'+
         '<div class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>'+
       '</div>'+
