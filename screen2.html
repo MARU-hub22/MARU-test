@@ -80,6 +80,7 @@ body{background:var(--bg)}
 }
 .breath.visible{opacity:1}
 .body-lead{font-size:15px;color:var(--t1)}
+.name-inline{font-size:20px;font-weight:600;color:var(--acc);letter-spacing:-0.01em}
 
 /* ══════ CTA ══════ */
 .btn-wrap{
@@ -133,13 +134,12 @@ body{background:var(--bg)}
       <div class="avatar-wrap"><div class="avatar avatar--initial" id="avatarWrap">
         <span class="avatar-letter" id="avatarLetter">А</span>
       </div></div>
-      <div class="profile-name" id="userName">Анна</div>
     </div>
 
     <!-- ТЕКСТ -->
-    <div style="margin-top:24px;padding:20px;border-radius:16px;border-top:var(--bt);border-left:var(--bl);border-bottom:var(--bb);border-right:var(--br)">
+    <div style="margin-top:24px;padding:20px;text-align:center">
       <div class="text-flow">
-        <span class="breath" id="b1">Привет</span><br>
+        <span class="breath name-inline" id="b1">Анна,</span><br>
         <span class="breath" id="b2">Я знаю, что ты хочешь решить проблему.</span><br>
         <span class="breath" id="b3">Я сама через это прошла.</span>
       </div>
@@ -176,12 +176,12 @@ if(tg){tg.ready();tg.expand();try{tg.disableVerticalSwipes&&tg.disableVerticalSw
 /* Имя + аватар */
 (function(){
   var user=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;
-  var nameEl=document.getElementById('userName');
   var letterEl=document.getElementById('avatarLetter');
+  var b1El=document.getElementById('b1');
 
-  /* Имя и инициал сразу из initDataUnsafe */
+  /* Имя в текст + инициал в аватар */
   if(user&&user.first_name){
-    nameEl.textContent=user.first_name;
+    b1El.textContent=user.first_name+',';
     letterEl.textContent=user.first_name.charAt(0).toUpperCase();
   }
 
@@ -205,7 +205,7 @@ if(tg){tg.ready();tg.expand();try{tg.disableVerticalSwipes&&tg.disableVerticalSw
     })
     .then(function(r){return r.json();})
     .then(function(data){
-      if(data.first_name){nameEl.textContent=data.first_name;}
+      if(data.first_name){b1El.textContent=data.first_name+',';}
       if(data.photo_url){
         var tgImg=new Image();
         tgImg.style.cssText='width:100%;height:100%;object-fit:cover;display:block;border-radius:50%';
@@ -226,18 +226,44 @@ function hap(t){
   try{if(tg)tg.HapticFeedback.impactOccurred(t==='h'?'medium':'light');}catch(e){}
 }
 
-/* Каскад — дыхание */
+/* handwrite — каждая буква проявляется */
+function hw(el,speed,cb){
+  var text=el.textContent;
+  el.innerHTML='';
+  var spans=[];
+  for(var k=0;k<text.length;k++){
+    if(text[k]===' '){el.appendChild(document.createTextNode(' '));continue;}
+    var s=document.createElement('span');
+    s.style.cssText='display:inline;opacity:0;transition:opacity 0.25s ease';
+    s.textContent=text[k];el.appendChild(s);spans.push(s);
+  }
+  el.style.opacity='1';
+  var i=0;
+  (function step(){if(i<spans.length){spans[i].style.opacity='1';i++;setTimeout(step,speed);}else if(cb)cb();})();
+}
+
+/* Каскад — профиль + handwrite первых 3 фраз + breath остальных */
+setTimeout(function(){document.getElementById('prof').classList.add('visible');},100);
 setTimeout(function(){
-  document.getElementById('prof').classList.add('visible');
-},100);
-setTimeout(function(){document.getElementById('b1').classList.add('visible')},500);
-setTimeout(function(){document.getElementById('b2').classList.add('visible')},800);
-setTimeout(function(){document.getElementById('b3').classList.add('visible')},1100);
-setTimeout(function(){document.getElementById('b4').classList.add('visible')},1500);
-setTimeout(function(){document.getElementById('b5').classList.add('visible')},1800);
-setTimeout(function(){document.getElementById('b6').classList.add('visible')},2200);
-setTimeout(function(){document.getElementById('b7').classList.add('visible')},2500);
-setTimeout(function(){
+  hw(document.getElementById('b1'),30,function(){
+    setTimeout(function(){
+      hw(document.getElementById('b2'),25,function(){
+        setTimeout(function(){
+          hw(document.getElementById('b3'),25,function(){
+            /* fade-in остальных */
+            setTimeout(function(){document.getElementById('b4').classList.add('visible')},300);
+            setTimeout(function(){document.getElementById('b5').classList.add('visible')},600);
+            setTimeout(function(){document.getElementById('b6').classList.add('visible')},900);
+            setTimeout(function(){document.getElementById('b7').classList.add('visible')},1100);
+            setTimeout(showCTA,1400);
+          });
+        },200);
+      });
+    },200);
+  });
+},500);
+
+function showCTA(){
   var bw=document.getElementById('btnWrap');
   bw.classList.add('visible');
   setTimeout(function(){
@@ -245,23 +271,20 @@ setTimeout(function(){
     var svg=document.getElementById('btnSpark');
     var sp=document.getElementById('sparkPath');
     var w=btn.offsetWidth,h=btn.offsetHeight,r=16;
-    sp.setAttribute('d',
-      'M'+r+','+(h-1)+' L'+(w-r)+','+(h-1)+
-      ' Q'+(w-1)+','+(h-1)+' '+(w-1)+','+(h-r)+
-      ' L'+(w-1)+','+r
-    );
-    /* spark один раз */
+    sp.setAttribute('d','M'+r+','+(h-1)+' L'+(w-r)+','+(h-1)+' Q'+(w-1)+','+(h-1)+' '+(w-1)+','+(h-r)+' L'+(w-1)+','+r);
     svg.classList.add('run');
     sp.addEventListener('animationend',function(){
       svg.classList.remove('run');
-      /* пульс бордера один раз */
       btn.classList.remove('pulse');btn.offsetHeight;btn.classList.add('pulse');
       btn.addEventListener('animationend',function(){btn.classList.remove('pulse');},{once:true});
     },{once:true});
+    /* повторный spark каждые 6 сек */
+    setInterval(function(){
+      svg.classList.remove('run');void svg.offsetWidth;svg.classList.add('run');
+      svg.addEventListener('animationend',function(){svg.classList.remove('run');},{once:true});
+    },6000);
   },200);
-
-  /* одноразовая смена текста убрана — один CTA */
-},2900);
+}
 
 /* Переход */
 function go(){
