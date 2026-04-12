@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>MARU</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
@@ -81,6 +81,38 @@ body{
 }
 .carousel-img.active{
   opacity:1;
+}
+.carousel-phrase{
+  position:absolute;
+  left:0;right:0;bottom:36px;
+  text-align:center;
+  font-family:'EB Garamond',Georgia,serif;
+  font-style:italic;font-size:14px;
+  color:rgba(255,255,255,0.7);
+  letter-spacing:0.01em;
+  z-index:3;
+  opacity:0;
+  transition:opacity 0.8s ease;
+  pointer-events:none;
+}
+.carousel-phrase.active{opacity:1}
+
+/* mood — открытый блок вместо аккордеона */
+.mood-block{
+  margin:16px 24px 0;
+  text-align:center;
+  opacity:0;transform:translateY(12px);
+  transition:opacity .5s ease,transform .5s ease;
+}
+.mood-block.stg{opacity:1;transform:translateY(0)}
+.mood-title{
+  font-size:14px;font-weight:600;color:#111;
+  letter-spacing:0.01em;
+  margin-bottom:14px;
+}
+.mood-chips{
+  display:flex;flex-wrap:wrap;gap:8px;
+  justify-content:center;
 }
 
 /* dots */
@@ -252,40 +284,37 @@ body{
     <div class="hero-main">Когда не понимаешь, что происходит — тяжелее всего</div>
   </div>
 
-  <!-- Карусель девушек -->
+  <!-- Карусель девушек с фразами-реакциями -->
   <div class="carousel stg d3">
     <img class="carousel-img active" src="her_photos/5.jpg" alt="">
     <img class="carousel-img" src="her_photos/3.jpg" alt="">
     <img class="carousel-img" src="her_photos/7.jpg" alt="">
     <img class="carousel-img" src="her_photos/9.jpg" alt="">
     <img class="carousel-img" src="her_photos/19.jpg" alt="">
+    <div class="carousel-phrase active" data-idx="0">она тоже не понимала</div>
+    <div class="carousel-phrase" data-idx="1">она уже знает</div>
+    <div class="carousel-phrase" data-idx="2">она перестала гадать</div>
+    <div class="carousel-phrase" data-idx="3">она действует</div>
+    <div class="carousel-phrase" data-idx="4">она спокойна</div>
   </div>
 
-  <!-- Аккордеон -->
-  <div class="acc-card stg d4" id="card1">
-    <button class="acc-trigger" onclick="toggleCard('card1')">
-      <span class="acc-question">Что привело тебя сюда?</span>
-      <span class="acc-answer" id="ans1"></span>
-      <span class="acc-arrow">
-        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-      </span>
-    </button>
-    <div class="acc-panel">
-      <div class="acc-chips" id="chips1">
-        <button class="chip" onclick="pick(this,'1','тревожно')">тревожно</button>
-        <button class="chip" onclick="pick(this,'1','он отдалился')">он отдалился</button>
-        <button class="chip" onclick="pick(this,'1','в ссоре')">в ссоре</button>
-        <button class="chip" onclick="pick(this,'1','не понимаю его')">не понимаю его</button>
-        <button class="chip" onclick="pick(this,'1','хочу ясность')">хочу ясность</button>
-      </div>
+  <!-- Что тебя волнует — открытый блок -->
+  <div class="mood-block stg d4">
+    <div class="mood-title">Что тебя волнует?</div>
+    <div class="mood-chips" id="chips1">
+      <button class="chip" onclick="pick(this,'1','хочу ясность')">хочу ясность</button>
+      <button class="chip" onclick="pick(this,'1','тревожно')">тревожно</button>
+      <button class="chip" onclick="pick(this,'1','не понимаю его')">не понимаю его</button>
+      <button class="chip" onclick="pick(this,'1','он отдалился')">он отдалился</button>
+      <button class="chip" onclick="pick(this,'1','в ссоре')">в ссоре</button>
     </div>
   </div>
 
 </div>
 
 <div class="cta-wrap">
-  <button class="cta-btn" id="ctaBtn" onclick="startTest()">НАЙТИ ОТВЕТ</button>
-  <div class="cta-sub">Нажимая — принимаю <span class="link" onclick="openAo()">условия</span></div>
+  <button class="cta-btn" id="ctaBtn" onclick="startTest()">НАЧАТЬ</button>
+  <div class="cta-sub"><span class="link" onclick="openAo()">условия</span></div>
 </div>
 
 <div class="ao" id="ao"><div class="ap">
@@ -401,15 +430,20 @@ body{
 <script>
 (function(){var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;if(tg){tg.ready();tg.expand();try{tg.disableVerticalSwipes&&tg.disableVerticalSwipes();}catch(e){}try{tg.setBackgroundColor('#efefee');tg.setHeaderColor('#efefee');}catch(e){}}})();
 
-/* ─── Карусель crossfade ─── */
+/* ─── Карусель crossfade + фразы ─── */
 (function(){
   var imgs=document.querySelectorAll('.carousel-img');
+  var phrases=document.querySelectorAll('.carousel-phrase');
   var cur=0;
   var total=imgs.length;
   setInterval(function(){
     imgs[cur].classList.remove('active');
+    if(phrases[cur])phrases[cur].classList.remove('active');
     var next=(cur+1)%total;
-    setTimeout(function(){imgs[next].classList.add('active');},300);
+    setTimeout(function(){
+      imgs[next].classList.add('active');
+      if(phrases[next])phrases[next].classList.add('active');
+    },300);
     cur=next;
   },3500);
 })();
@@ -422,13 +456,6 @@ document.getElementById('fullBtn').onclick=function(){this.classList.toggle('ope
 function openPrv(){document.getElementById('prv').classList.add('open');hap('l');}
 function closePrv(){document.getElementById('prv').classList.remove('open');hap('l');}
 function hap(t){try{if(navigator.vibrate)navigator.vibrate(t==='m'?14:7);}catch(e){}}
-
-function toggleCard(id){
-  var card=document.getElementById(id);
-  var isOpen=card.classList.contains('open');
-  document.querySelectorAll('.acc-card').forEach(function(c){c.classList.remove('open');});
-  if(!isOpen)card.classList.add('open');
-}
 
 function startTest(){
   hap('m');
@@ -444,15 +471,19 @@ function startTest(){
   setTimeout(function(){window.location.href='screen2.html';},500);
 }
 
+var CTA_MAP={
+  'хочу ясность':'НАЙТИ ЯСНОСТЬ',
+  'тревожно':'РАЗОБРАТЬСЯ',
+  'не понимаю его':'ПОНЯТЬ ЕГО',
+  'он отдалился':'ПОНЯТЬ ПОЧЕМУ',
+  'в ссоре':'НАЙТИ ВЫХОД'
+};
 function pick(el,group,val){
   document.querySelectorAll('#chips'+group+' .chip').forEach(function(c){c.classList.remove('sel');});
   el.classList.add('sel');
-  var ans=document.getElementById('ans'+group);
-  ans.textContent=val;
-  ans.classList.add('visible');
-  setTimeout(function(){
-    document.getElementById('card'+group).classList.remove('open');
-  },200);
+  hap('l');
+  var btn=document.getElementById('ctaBtn');
+  if(CTA_MAP[val])btn.textContent=CTA_MAP[val];
 }
 </script>
 </body>
