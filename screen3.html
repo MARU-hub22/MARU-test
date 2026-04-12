@@ -678,12 +678,12 @@
             setTimeout(function() {
               if (ovText) ovText.classList.add('dimmed');
               if (multiHint) multiHint.classList.add('show');
-            }, 800);
+            }, 1600);
           });
         }, 350);
       }
-      // ov1: handwrite ~3.4s + сердце 1.3s + focus-shift 0.8s + hold 5.3s = ~10.8s
-      setTimeout(function() { closeOverlay(id); }, 10800);
+      // ov1: handwrite ~3.4s + сердце 1.3s + focus-shift 1.6s + hold 5.3s = ~11.6s
+      setTimeout(function() { closeOverlay(id); }, 11600);
     } else {
       setTimeout(function() { closeOverlay(id); }, 3000);
     }
